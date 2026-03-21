@@ -11,6 +11,7 @@ export default defineConfig({
     // Pooled connection for runtime queries
     url: process.env.DATABASE_URL!,
     // Direct connection for migrations (bypasses PgBouncer)
+    // @ts-ignore
     directUrl: process.env.DATABASE_URL_UNPOOLED,
   },
 })
