@@ -16,6 +16,24 @@ function LandingPageContent() {
   const [lang, setLang] = useState<Language>("fr");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [view, setView] = useState<'landing' | 'dashboard'>('landing');
+  const [user, setUser] = useState<any>(null);
+  const [userCases, setUserCases] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.ok ? res.json() : { user: null })
+      .then(data => setUser(data.user))
+      .catch(() => setUser(null));
+  }, []);
+
+  useEffect(() => {
+    if (user && view === 'dashboard') {
+      fetch('/api/cases')
+        .then(res => res.json())
+        .then(data => setUserCases(data.cases || []))
+        .catch(() => setUserCases([]));
+    }
+  }, [user, view]);
 
   // Trigger dashboard view if passed via URL after login
   useEffect(() => {
@@ -28,9 +46,31 @@ function LandingPageContent() {
   const isRtl = lang === "ar";
 
   const handleGeneratePDF = async (formData: any) => {
+    if (!user) {
+      alert(t('pleaseLoginToSubmit'));
+      router.push('/login');
+      return;
+    }
+
     try {
+      // 1. Post to API cases
+      const caseRes = await fetch('/api/cases', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documentType: activeCategory,
+          title: t('casePrefix') + String(t(activeCategory || 'document')),
+          plaintiffName: formData.plaintiffName,
+          defendantName: formData.defendantName,
+          description: formData.description || t('submittedViaForm'),
+          amount: formData.amount,
+        })
+      });
+      if (!caseRes.ok) throw new Error('Failed to create case');
+
       await new Promise(r => setTimeout(r, 1500));
 
+      // 2. Download the generated PDF
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -109,14 +149,26 @@ function LandingPageContent() {
             </select>
           </div>
 
-          {/* Login Button */}
-          <button
-            onClick={() => router.push('/login')}
-            className="hidden sm:flex items-center gap-2 bg-primary-600 text-white px-5 py-2 rounded-full font-bold shadow-md hover:bg-primary-700 transition-colors"
-          >
-            <LogIn className="w-4 h-4" />
-            {t('login')}
-          </button>
+          {/* Auth Button */}
+          {user ? (
+            <div className="hidden sm:flex items-center gap-4">
+              <span className="text-sm font-bold text-gray-700 bg-gray-100 rounded-full px-3 py-1">{user.name || user.email}</span>
+              <button
+                onClick={() => setView(view === 'dashboard' ? 'landing' : 'dashboard')}
+                className="flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full font-bold shadow-sm hover:bg-primary-200 transition-colors"
+              >
+                {view === 'dashboard' ? t('home') : t('dashboard')}
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => router.push('/login')}
+              className="hidden sm:flex items-center gap-2 bg-primary-600 text-white px-5 py-2 rounded-full font-bold shadow-md hover:bg-primary-700 transition-colors"
+            >
+              <LogIn className="w-4 h-4" />
+              {t('login')}
+            </button>
+          )}
         </div>
       </header>
 
@@ -273,10 +325,10 @@ function LandingPageContent() {
       )}
 
       {view === 'dashboard' && (
-        <main className="flex-1 bg-gray-50 pt-32 px-6 sm:px-12">
+        <main className="flex-1 bg-gray-50 pt-32 px-6 sm:px-12 pb-24">
           <div className="max-w-5xl mx-auto">
             <div className="flex justify-between items-end mb-8">
-              <h2 className="text-3xl font-extrabold text-primary-500">{t('dashboard')}</h2>
+              <h2 className="text-3xl font-extrabold text-primary-500">{t('myCases')}</h2>
               <button
                 onClick={() => setView('landing')}
                 className="bg-primary-500 text-white px-4 py-2 text-sm rounded-lg font-bold hover:bg-primary-600 transition-colors"
@@ -285,47 +337,42 @@ function LandingPageContent() {
               </button>
             </div>
 
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="p-8 border-b border-gray-100 flex items-center gap-6 bg-green-50/50">
-                <div className="bg-green-100 text-green-600 p-4 rounded-2xl">
-                  <CheckCircle className="w-8 h-8" />
+            {userCases.length === 0 ? (
+              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 text-center">
+                <div className="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8" />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">{t('caseValidated')}</h3>
-                  <p className="text-gray-500 mt-1 font-medium">{t('pdfGeneratedDesc')}</p>
-                </div>
+                <p className="text-gray-500 text-lg font-medium">{t('noCases')}</p>
               </div>
-
-              <div className="p-8">
-                <h4 className="font-bold text-gray-400 uppercase tracking-widest text-xs mb-8">{t('logisticsTimeline')}</h4>
-
-                <div className="space-y-8 ml-4 border-l-2 border-gray-100 pl-8 relative">
-                  <div className="relative">
-                    <div className="absolute w-4 h-4 bg-green-500 rounded-full -left-[41px] border-4 border-white top-1 shadow-sm"></div>
-                    <h5 className="font-bold text-primary-500">{t('paymentReceived')}</h5>
-                    <span className="text-sm font-medium text-gray-400">{t('todayLabel')}, 09:41</span>
+            ) : (
+              <div className="space-y-4">
+                {userCases.map(c => (
+                  <div key={c.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row justify-between items-center gap-4 hover:shadow-md transition-shadow">
+                    <div className="flex-1 w-full">
+                      <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-secondary-500 flex-shrink-0" />
+                        <span className="truncate">{c.title || t('legalCase')}</span>
+                      </h3>
+                      <div className="flex items-center gap-4 mt-2">
+                        <p className="text-sm text-gray-500 font-medium truncate">{t('against')} <span className="text-gray-700">{c.defendantName || t('notDefined')}</span></p>
+                        <p className="text-xs text-gray-400 flex-shrink-0">{t('submittedOn')} {new Date(c.createdAt).toLocaleDateString('fr-DZ')}</p>
+                      </div>
+                    </div>
+                    <div className="w-full md:w-auto flex justify-end">
+                      <span className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide
+                         ${c.status === 'OPEN' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
+                          c.status === 'IN_PROGRESS' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                            c.status === 'RESOLVED' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+                              'bg-red-100 text-red-700 border border-red-200'}`}>
+                        {c.status === 'OPEN' ? t('statusOpen') :
+                          c.status === 'IN_PROGRESS' ? t('statusInProgress') :
+                            c.status === 'RESOLVED' ? t('statusResolved') : t('statusRejected')}
+                      </span>
+                    </div>
                   </div>
-
-                  <div className="relative">
-                    <div className="absolute w-4 h-4 bg-green-500 rounded-full -left-[41px] border-4 border-white top-1 shadow-sm"></div>
-                    <h5 className="font-bold text-primary-500">{t('documentPrinted')}</h5>
-                    <span className="text-sm font-medium text-gray-400">{t('todayLabel')}, 10:05</span>
-                  </div>
-
-                  <div className="relative opacity-60">
-                    <div className="absolute w-4 h-4 bg-gray-200 rounded-full -left-[41px] border-4 border-white top-1"></div>
-                    <h5 className="font-bold text-primary-500 flex items-center gap-2">{t('depositedPostOffice')} <span className="bg-secondary-100 text-secondary-600 text-[10px] uppercase font-black tracking-wider px-2 py-1 rounded-md">{t('pending')}</span></h5>
-                    <span className="text-sm font-medium text-gray-400">{t('scheduledTomorrow')}</span>
-                  </div>
-
-                  <div className="relative opacity-40">
-                    <div className="absolute w-4 h-4 bg-gray-200 rounded-full -left-[41px] border-4 border-white top-1"></div>
-                    <h5 className="font-bold text-primary-500">{t('receptionByAdversary')}</h5>
-                    <span className="text-sm font-medium text-gray-400">{t('estimatedTime')}</span>
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </main>
       )}

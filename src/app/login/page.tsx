@@ -116,13 +116,12 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {isSignUp && (
               <div>
-                <label className="block text-sm font-bold text-primary-500 mb-2">Nom complet</label>
+                <label className="block text-sm font-bold text-primary-500 mb-2">{t('name')}</label>
                 <input
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
                   className={`w-full border-2 border-gray-200 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
-                  placeholder="Votre nom"
                 />
               </div>
             )}
@@ -136,7 +135,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   className={`w-full border-2 border-gray-200 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'pl-4 pr-12' : 'pl-12 pr-4'}`}
-                  placeholder="nom@email.com"
+                  placeholder="name@email.com"
                 />
                 <Mail className={`absolute top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 ${isRtl ? 'right-4' : 'left-4'}`} />
               </div>
@@ -163,7 +162,7 @@ export default function LoginPage() {
               className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white p-4 rounded-xl font-bold hover:bg-primary-700 shadow-md transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed mt-4"
             >
               {isLoading ? (
-                <><Loader2 className="w-5 h-5 animate-spin" />{isSignUp ? 'Inscription...' : t('signingIn')}</>
+                <><Loader2 className="w-5 h-5 animate-spin" />{isSignUp ? t('signingUp') : t('signingIn')}</>
               ) : (
                 <>
                   {isSignUp ? <UserPlus className="w-5 h-5" /> : <LogIn className="w-5 h-5" />}
@@ -175,7 +174,7 @@ export default function LoginPage() {
 
           <div className="mt-8 pt-6 border-t border-gray-100 text-center">
             <p className="text-gray-500 text-sm">
-              {isSignUp ? 'Déjà un compte ?' : t('noAccount')}{' '}
+              {isSignUp ? t('alreadyAccount') : t('noAccount')}{' '}
               <button
                 type="button"
                 onClick={() => { setIsSignUp(!isSignUp); setErrorMsg(null); }}

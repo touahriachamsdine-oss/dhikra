@@ -373,5 +373,280 @@
     "ar": "جارٍ إنشاء الحساب...",
     "fr": "Inscription en cours...",
     "en": "Signing up..."
+  },
+  "myCases": {
+    "ar": "ملفاتي",
+    "fr": "Mes Dossiers",
+    "en": "My Cases"
+  },
+  "noCases": {
+    "ar": "لم تقم بتقديم أي ملف حتى الآن.",
+    "fr": "Vous n'avez soumis aucun dossier pour le moment.",
+    "en": "You have not submitted any cases yet."
+  },
+  "against": {
+    "ar": "ضد: ",
+    "fr": "Contre: ",
+    "en": "Against: "
+  },
+  "submittedOn": {
+    "ar": "تم التقديم في ",
+    "fr": "Soumis le ",
+    "en": "Submitted on "
+  },
+  "statusOpen": {
+    "ar": "مفتوح",
+    "fr": "Ouvert",
+    "en": "Open"
+  },
+  "statusInProgress": {
+    "ar": "قيد المعالجة",
+    "fr": "En cours",
+    "en": "In Progress"
+  },
+  "statusResolved": {
+    "ar": "تم الحل",
+    "fr": "Résolu",
+    "en": "Resolved"
+  },
+  "statusRejected": {
+    "ar": "مرفوض",
+    "fr": "Rejeté",
+    "en": "Rejected"
+  },
+  "home": {
+    "ar": "الرئيسية",
+    "fr": "Accueil",
+    "en": "Home"
+  },
+  "pleaseLoginToSubmit": {
+    "ar": "يرجى تسجيل الدخول لتقديم الملف.",
+    "fr": "Veuillez vous connecter pour soumettre un dossier.",
+    "en": "Please login to submit a case."
+  },
+  "casePrefix": {
+    "ar": "طلب: ",
+    "fr": "Requête: ",
+    "en": "Request: "
+  },
+  "submittedViaForm": {
+    "ar": "مقدم عبر نموذج العميل.",
+    "fr": "Soumis via formulaire client.",
+    "en": "Submitted via client form."
+  },
+  "legalCase": {
+    "ar": "ملف قانوني",
+    "fr": "Dossier Juridique",
+    "en": "Legal Case"
+  },
+  "adminCentral": {
+    "ar": "المركز الإداري",
+    "fr": "Admin Central",
+    "en": "Admin Central"
+  },
+  "overview": {
+    "ar": "نظرة عامة",
+    "fr": "Vue d'ensemble",
+    "en": "Overview"
+  },
+  "users": {
+    "ar": "المستخدمين",
+    "fr": "Utilisateurs",
+    "en": "Users"
+  },
+  "loggedInAs": {
+    "ar": "مسجل الدخول كـ",
+    "fr": "Connecté en tant que",
+    "en": "Logged in as"
+  },
+  "logout": {
+    "ar": "تسجيل الخروج",
+    "fr": "Déconnexion",
+    "en": "Logout"
+  },
+  "adminDashboard": {
+    "ar": "لوحة تحكم المسؤول",
+    "fr": "Tableau de Bord Administrateur",
+    "en": "Admin Dashboard"
+  },
+  "centralManagement": {
+    "ar": "الإدارة المركزية لجميع الملفات القانونية",
+    "fr": "Gestion centralisée de tous les dossiers juridiques",
+    "en": "Centralized management of all legal cases"
+  },
+  "refresh": {
+    "ar": "تحديث",
+    "fr": "Actualiser",
+    "en": "Refresh"
+  },
+  "totalCases": {
+    "ar": "إجمالي الملفات",
+    "fr": "Total Dossiers",
+    "en": "Total Cases"
+  },
+  "ofTotal": {
+    "ar": "من الإجمالي",
+    "fr": "du total",
+    "en": "of total"
+  },
+  "searchPlaceholder": {
+    "ar": "البحث بالمعرف، البريد الإلكتروني، الاسم...",
+    "fr": "Rechercher par ID, email, nom...",
+    "en": "Search by ID, email, name..."
+  },
+  "allStatuses": {
+    "ar": "كل الحالات",
+    "fr": "Tous les statuts",
+    "en": "All statuses"
+  },
+  "caseCount": {
+    "ar": "ملف(ات)",
+    "fr": "dossier(s)",
+    "en": "case(s)"
+  },
+  "export": {
+    "ar": "تصدير",
+    "fr": "Exporter",
+    "en": "Export"
+  },
+  "loadingCases": {
+    "ar": "جاري تحميل الملفات...",
+    "fr": "Chargement des dossiers...",
+    "en": "Loading cases..."
+  },
+  "noCasesFound": {
+    "ar": "لم يتم العثور على أي ملفات",
+    "fr": "Aucun dossier trouvé",
+    "en": "No cases found"
+  },
+  "noCriteriaMatch": {
+    "ar": "لا توجد ملفات تطابق معايير البحث الخاصة بك.",
+    "fr": "Aucun dossier ne correspond à vos critères de recherche.",
+    "en": "No cases match your search criteria."
+  },
+  "details": {
+    "ar": "التفاصيل",
+    "fr": "Détails",
+    "en": "Details"
+  },
+  "caseDetail": {
+    "ar": "تفاصيل الملف",
+    "fr": "Détail du Dossier",
+    "en": "Case Detail"
+  },
+  "documentType": {
+    "ar": "نوع المستند",
+    "fr": "Type de document",
+    "en": "Document Type"
+  },
+  "title": {
+    "ar": "العنوان",
+    "fr": "Titre",
+    "en": "Title"
+  },
+  "plaintiffEmail": {
+    "ar": "البريد الإلكتروني للمدعي",
+    "fr": "Email plaignant",
+    "en": "Plaintiff Email"
+  },
+  "createdOn": {
+    "ar": "تاريخ الإنشاء",
+    "fr": "Créé le",
+    "en": "Created on"
+  },
+  "updatedOn": {
+    "ar": "تم التعديل في",
+    "fr": "Modifié le",
+    "en": "Updated on"
+  },
+  "changeStatus": {
+    "ar": "تغيير الحالة",
+    "fr": "Changer le statut",
+    "en": "Change Status"
+  },
+  "userList": {
+    "ar": "قائمة المستخدمين",
+    "fr": "Liste des Utilisateurs",
+    "en": "User List"
+  },
+  "noUserFound": {
+    "ar": "لم يتم العثور على أي مستخدم",
+    "fr": "Aucun utilisateur trouvé",
+    "en": "No user found"
+  },
+  "notDefined": {
+    "ar": "(غير محدد)",
+    "fr": "(Non défini)",
+    "en": "(Not defined)"
+  },
+  "automatedFormalNotices": {
+    "ar": "إعذارات آلية",
+    "fr": "Mises en demeure automatisées",
+    "en": "Automated Formal Notices"
+  },
+  "automatedFormalNoticesDesc": {
+    "ar": "إنشاء إعذارات متوافقة قانونياً في دقائق.",
+    "fr": "Générez des mises en demeure conformes en quelques minutes.",
+    "en": "Generate legally compliant formal notices in minutes."
+  },
+  "bailiffIntermediation": {
+    "ar": "وساطة المحضرين",
+    "fr": "Intermédiation d'Huissiers",
+    "en": "Bailiff Intermediation"
+  },
+  "bailiffIntermediationDesc": {
+    "ar": "تواصل مباشرة مع محضرين معتمدين لإرسال المستندات الرسمية.",
+    "fr": "Connectez-vous directement avec des huissiers pour l'envoi de documents.",
+    "en": "Connect directly with certified bailiffs for official document serving."
+  },
+  "claimsManagement": {
+    "ar": "إدارة المطالبات",
+    "fr": "Gestion des réclamations",
+    "en": "Claims Management"
+  },
+  "claimsManagementDesc": {
+    "ar": "تتبع وإدارة مطالباتك بسهولة من لوحة تحكم واحدة.",
+    "fr": "Suivez et gérez vos réclamations facilement depuis un seul tableau de bord.",
+    "en": "Track and manage your outstanding claims easily from a single dashboard."
+  },
+  "legalAdviceConsultation": {
+    "ar": "استشارة قانونية",
+    "fr": "Consultation Juridique",
+    "en": "Legal Advice Consultation"
+  },
+  "legalAdviceConsultationDesc": {
+    "ar": "احصل على رؤى أولية حول موقفك القانوني من الخبراء.",
+    "fr": "Obtenez des conseils préliminaires d'experts sur votre situation.",
+    "en": "Get preliminary insights into your legal standing from experts."
+  },
+  "servicesDesc": {
+    "ar": "اكتشف كيف نسهل الإجراءات القانونية من خلال الأتمتة.",
+    "fr": "Découvrez comment nous simplifions les procédures juridiques.",
+    "en": "Discover how we simplify legal procedures through automation."
+  },
+  "articlesTitle": {
+    "ar": "المقالات والرؤى",
+    "fr": "Articles & Insights",
+    "en": "Articles & Insights"
+  },
+  "articlesDesc": {
+    "ar": "اكتشف مقالات لفهم حقوقك والإجراءات القانونية.",
+    "fr": "Découvrez des articles pour comprendre vos droits et les procédures juridiques.",
+    "en": "Discover articles to understand your rights and legal procedures."
+  },
+  "noArticles": {
+    "ar": "لا توجد مقالات في الوقت الحالي",
+    "fr": "Aucun article pour le moment",
+    "en": "No articles at the moment"
+  },
+  "noArticlesDesc": {
+    "ar": "عد لاحقاً للحصول على محتوى جديد.",
+    "fr": "Revenez plus tard pour du nouveau contenu.",
+    "en": "Check back later for new content."
+  },
+  "readTime": {
+    "ar": "دقائق للقراءة",
+    "fr": "min de lecture",
+    "en": "min read"
   }
 }
