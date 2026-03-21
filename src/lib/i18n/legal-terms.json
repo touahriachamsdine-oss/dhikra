@@ -1,0 +1,377 @@
+{
+  "heroTitle": {
+    "ar": "عدالتك عبر الإنترنت مبسطة",
+    "fr": "Votre Justice en ligne simplifiée",
+    "en": "Your Justice Online Simplified"
+  },
+  "heroSubtitle": {
+    "ar": "حل جميع نزاعاتك بفضل إجراءاتنا القانونية المبسطة. من الإعذار إلى المحكمة.",
+    "fr": "Réglez tous vos litiges grâce à nos recours juridiques simplifiés. De la mise en demeure au Tribunal.",
+    "en": "Resolve all your disputes with our simplified legal actions. From formal notice to Court."
+  },
+  "startProcess": {
+    "ar": "ابدأ الإجراء",
+    "fr": "Démarrer ma démarche",
+    "en": "Start My Process"
+  },
+  "categoriesTitle": {
+    "ar": "اختر الإجراء المناسب لنزاعك",
+    "fr": "Choisissez la démarche adaptée à votre litige",
+    "en": "Choose the right procedure for your dispute"
+  },
+  "catHousing": {
+    "ar": "السكن (إيجار، إخلاء...)",
+    "fr": "Logement (Loyer, Expulsion...)",
+    "en": "Housing (Rent, Eviction...)"
+  },
+  "catWork": {
+    "ar": "العمل (طرد، رواتب...)",
+    "fr": "Travail (Licenciement, Salaires...)",
+    "en": "Work (Dismissal, Wages...)"
+  },
+  "catAuto": {
+    "ar": "السيارات (عيوب، حوادث...)",
+    "fr": "Automobile (Vices, Accidents...)",
+    "en": "Automobile (Defects, Accidents...)"
+  },
+  "catConsumer": {
+    "ar": "الاستهلاك (فواتير، اتصالات...)",
+    "fr": "Consommation (Factures, Télécoms...)",
+    "en": "Consumer (Invoices, Telecoms...)"
+  },
+  "catServices": {
+    "ar": "الخدمات (مقاولون، حرفيون...)",
+    "fr": "Services (Artisans, Travaux...)",
+    "en": "Services (Contractors, Craftsmen...)"
+  },
+  "howItWorks": {
+    "ar": "كيف يعمل؟",
+    "fr": "Comment ça marche ?",
+    "en": "How it works?"
+  },
+  "step1": {
+    "ar": "1. الوصف 100٪ عبر الإنترنت",
+    "fr": "1. Dossier 100% en ligne",
+    "en": "1. 100% Online File"
+  },
+  "step2": {
+    "ar": "2. الإجراء معتمد من قبل خبراء",
+    "fr": "2. Procédure validée par des experts",
+    "en": "2. Procedure validated by experts"
+  },
+  "step3": {
+    "ar": "3. إرسال رسمي لخصمك",
+    "fr": "3. Envoi formel à votre adversaire",
+    "en": "3. Formal delivery to adversary"
+  },
+  "trustedBy": {
+    "ar": "موثوق به من قبل الآلاف في الجزائر",
+    "fr": "Fait confiance par des milliers de personnes en Algérie",
+    "en": "Trusted by thousands in Algeria"
+  },
+  "funnelQuestion1": {
+    "ar": "ما هو موضوع النزاع؟",
+    "fr": "Quel est le sujet de votre litige ?",
+    "en": "What is the subject of your dispute?"
+  },
+  "funnelQuestion2": {
+    "ar": "هل اعترف خصمك بالدين؟",
+    "fr": "Votre adversaire a-t-il reconnu sa dette ?",
+    "en": "Has your adversary acknowledged the debt?"
+  },
+  "yes": {
+    "ar": "نعم",
+    "fr": "Oui",
+    "en": "Yes"
+  },
+  "no": {
+    "ar": "لا",
+    "fr": "Non",
+    "en": "No"
+  },
+  "plaintiff": {
+    "ar": "المدعي",
+    "fr": "Demandeur",
+    "en": "Plaintiff"
+  },
+  "defendant": {
+    "ar": "المدعى عليه",
+    "fr": "Défendeur",
+    "en": "Defendant"
+  },
+  "formalNotice": {
+    "ar": "إعذار",
+    "fr": "Mise en Demeure",
+    "en": "Formal Notice"
+  },
+  "paymentInjunction": {
+    "ar": "أمر بالأداء",
+    "fr": "Injonction de Payer",
+    "en": "Payment Injunction"
+  },
+  "laborDispute": {
+    "ar": "نزاع عمل",
+    "fr": "Litige du Travail",
+    "en": "Labor Dispute"
+  },
+  "generateDocument": {
+    "ar": "توليد الوثيقة",
+    "fr": "Générer le Document",
+    "en": "Generate Document"
+  },
+  "deadline15Days": {
+    "ar": "مهلة الـ 15 يوماً",
+    "fr": "Délai de 15 Jours",
+    "en": "15-Day Notice Period"
+  },
+  "dashboard": {
+    "ar": "لوحة القيادة",
+    "fr": "Tableau de Bord",
+    "en": "Dashboard"
+  },
+  "createNewCase": {
+    "ar": "إنشاء قضية جديدة",
+    "fr": "Créer un Nouveau Dossier",
+    "en": "Create New Case"
+  },
+  "language": {
+    "ar": "لغة",
+    "fr": "Langue",
+    "en": "Language"
+  },
+  "step": {
+    "ar": "الخطوة",
+    "fr": "Étape",
+    "en": "Step"
+  },
+  "plaintiffInfo": {
+    "ar": "معلومات المدعي",
+    "fr": "Infos du Demandeur",
+    "en": "Plaintiff Info"
+  },
+  "defendantInfo": {
+    "ar": "معلومات المدعى عليه",
+    "fr": "Infos du Défendeur",
+    "en": "Defendant Info"
+  },
+  "disputeDetails": {
+    "ar": "تفاصيل النزاع",
+    "fr": "Détails du Litige",
+    "en": "Dispute Details"
+  },
+  "reviewSend": {
+    "ar": "دفع وإرسال (3900 دج)",
+    "fr": "Payer & Envoyer (3900 DZD)",
+    "en": "Pay & Send (3900 DZD)"
+  },
+  "back": {
+    "ar": "رجوع",
+    "fr": "Retour",
+    "en": "Back"
+  },
+  "next": {
+    "ar": "التالي",
+    "fr": "Suivant",
+    "en": "Next"
+  },
+  "submit": {
+    "ar": "تأكيد الدفع 🔒",
+    "fr": "Paiement Sécurisé 🔒",
+    "en": "Secure Payment 🔒"
+  },
+  "name": {
+    "ar": "الاسم الكامل",
+    "fr": "Nom complet",
+    "en": "Full Name"
+  },
+  "address": {
+    "ar": "العنوان",
+    "fr": "Adresse",
+    "en": "Address"
+  },
+  "amount": {
+    "ar": "المبلغ المتنازع عليه (دج)",
+    "fr": "Montant du litige (DZD)",
+    "en": "Dispute Amount (DZD)"
+  },
+  "description": {
+    "ar": "وصف المشكلة",
+    "fr": "Description du problème",
+    "en": "Problem Description"
+  },
+  "cancel": {
+    "ar": "إلغاء",
+    "fr": "Annuler",
+    "en": "Cancel"
+  },
+  "login": {
+    "ar": "تسجيل الدخول",
+    "fr": "Connexion",
+    "en": "Login"
+  },
+  "services": {
+    "ar": "خدماتنا",
+    "fr": "Nos Services",
+    "en": "Our Services"
+  },
+  "articles": {
+    "ar": "المقالات",
+    "fr": "Articles",
+    "en": "Articles"
+  },
+  "bailiffsArea": {
+    "ar": "بوابة المحضرين",
+    "fr": "Portail Huissiers",
+    "en": "Bailiff Portal"
+  },
+  "step1Desc": {
+    "ar": "قم بإنشاء ملف قانوني بسهولة. بدون رسوم محاماة.",
+    "fr": "Constituez un dossier solide facilement. Zéro frais d'avocat.",
+    "en": "Build a solid case easily. No lawyer fees."
+  },
+  "step2Desc": {
+    "ar": "يقوم خبراؤنا بالتحقق من صحة ملفك وفقًا للقانون الجزائري.",
+    "fr": "Dossier vérifié et validé en conformité avec la loi algérienne.",
+    "en": "File checked and validated according to Algerian law."
+  },
+  "step3Desc": {
+    "ar": "نرسل الإعذار عبر البريد المضمون مع الإشعار بالاستلام.",
+    "fr": "Nous envoyons la lettre en recommandé avec accusé de réception.",
+    "en": "We send the formal notice via registered mail."
+  },
+  "caseValidated": {
+    "ar": "تم التحقق من الملف",
+    "fr": "Dossier Validé",
+    "en": "Case Validated"
+  },
+  "pdfGeneratedDesc": {
+    "ar": "تم إنشاء الإعذار الخاص بك بنجاح.",
+    "fr": "Le document PDF a été généré avec succès.",
+    "en": "Your formal notice PDF was generated successfully."
+  },
+  "logisticsTimeline": {
+    "ar": "تتبع البريد - بريد الجزائر",
+    "fr": "Timeline Logistique - Algérie Poste",
+    "en": "Postal Tracking - Algérie Poste"
+  },
+  "paymentReceived": {
+    "ar": "تم استلام الدفع (3900 دج)",
+    "fr": "Paiement Reçu (3900 DZD)",
+    "en": "Payment Received (3900 DZD)"
+  },
+  "documentPrinted": {
+    "ar": "تم طباعة المستند",
+    "fr": "Document Imprimé",
+    "en": "Document Printed"
+  },
+  "depositedPostOffice": {
+    "ar": "تم الإيداع في بريد الجزائر",
+    "fr": "Dépot à Algérie Poste",
+    "en": "Deposited at Algérie Poste"
+  },
+  "pending": {
+    "ar": "في الانتظار",
+    "fr": "En attente",
+    "en": "Pending"
+  },
+  "scheduledTomorrow": {
+    "ar": "مقرر للغد",
+    "fr": "Prévu pour demain",
+    "en": "Scheduled for tomorrow"
+  },
+  "receptionByAdversary": {
+    "ar": "الاستلام من قبل الخصم",
+    "fr": "Réception par l'adversaire",
+    "en": "Reception by Adversary"
+  },
+  "estimatedTime": {
+    "ar": "الوقت المقدر: 3-5 أيام",
+    "fr": "Délai estimé: 3-5 jours",
+    "en": "Estimated time: 3-5 days"
+  },
+  "todayLabel": {
+    "ar": "اليوم",
+    "fr": "Aujourd'hui",
+    "en": "Today"
+  },
+  "situationalNote": {
+    "ar": "هذا يحدد المادة القانونية (قانون الإجراءات المدنية والإدارية).",
+    "fr": "Cela détermine l'article de loi applicable (CPCA).",
+    "en": "This determines the applicable legal article (CPCA)."
+  },
+  "plaintiffHint": {
+    "ar": "أدخل معلوماتك لإنشاء الملف.",
+    "fr": "Saisissez vos informations pour constituer le dossier.",
+    "en": "Enter your info to build the case."
+  },
+  "defendantHint": {
+    "ar": "إلى من سنرسل الإعذار؟",
+    "fr": "À qui envoyons-nous la mise en demeure ?",
+    "en": "Who are we sending the notice to?"
+  },
+  "fileIsReady": {
+    "ar": "ملفك جاهز",
+    "fr": "Votre dossier est prêt",
+    "en": "Your file is ready"
+  },
+  "verifyBeforePayment": {
+    "ar": "تأكد من المعلومات قبل الدفع.",
+    "fr": "Vérifiez les informations avant le paiement.",
+    "en": "Verify info before payment."
+  },
+  "legalWarning": {
+    "ar": "سيتم إنشاء الإعذار بصيغة قانونية وإرساله عبر البريد المضمون. تغطي الرسوم معالجة الملف.",
+    "fr": "La mise en demeure sera générée légalement et envoyée par Lettre Recommandée (LRAR). Ce service nécessite des frais de traitement.",
+    "en": "The notice will be legally generated and sent via Registered Mail. Fees cover processing."
+  },
+  "welcomeBack": {
+    "ar": "مرحباً بعودتك",
+    "fr": "Bon retour",
+    "en": "Welcome back"
+  },
+  "signInToSettleUp": {
+    "ar": "تسجيل الدخول إلى SettleUp",
+    "fr": "Connectez-vous à SettleUp",
+    "en": "Sign in to SettleUp"
+  },
+  "emailAddress": {
+    "ar": "البريد الإلكتروني",
+    "fr": "Adresse e-mail",
+    "en": "Email address"
+  },
+  "password": {
+    "ar": "كلمة المرور",
+    "fr": "Mot de passe",
+    "en": "Password"
+  },
+  "signInButton": {
+    "ar": "تسجيل الدخول",
+    "fr": "Se connecter",
+    "en": "Sign in"
+  },
+  "signingIn": {
+    "ar": "جارٍ تسجيل الدخول...",
+    "fr": "Connexion en cours...",
+    "en": "Signing in..."
+  },
+  "alreadyAccount": {
+    "fr": "Déjà un compte ?",
+    "ar": "لديك حساب بالفعل؟",
+    "en": "Already have an account?"
+  },
+  "noAccount": {
+    "ar": "ليس لديك حساب؟",
+    "fr": "Pas de compte ?",
+    "en": "Don't have an account?"
+  },
+  "signUp": {
+    "ar": "إنشاء حساب",
+    "fr": "S'inscrire",
+    "en": "Sign up"
+  },
+  "signingUp": {
+    "ar": "جارٍ إنشاء الحساب...",
+    "fr": "Inscription en cours...",
+    "en": "Signing up..."
+  }
+}
