@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import terms from "@/lib/i18n/legal-terms.json"
+import { ThemeToggle } from "@/components/theme-toggle"
 import {
   Scale,
   LogOut,
@@ -290,6 +291,7 @@ export default function AdminDashboard() {
             <p className="text-slate-400 text-sm">{t('centralManagement')}</p>
           </div>
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <select value={lang} onChange={(e) => setLang(e.target.value as any)} className="bg-slate-800 text-white rounded-lg px-2 py-1 text-sm border border-slate-700">
               <option value="ar">AR</option>
               <option value="fr">FR</option>
@@ -323,7 +325,7 @@ export default function AdminDashboard() {
                         <p className="text-slate-400 text-sm font-medium mb-1">{label}</p>
                         <p className="text-4xl font-black text-white">{isLoading ? '—' : value}</p>
                       </div>
-                      <div className={`p-3 rounded-xl bg-white/5 ${iconColor}`}>
+                      <div className={`p-3 rounded-xl bg-white dark:bg-slate-900/5 ${iconColor}`}>
                         <Icon className="w-6 h-6" />
                       </div>
                     </div>

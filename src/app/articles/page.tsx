@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, BookOpen, Clock, Globe, Scale } from "lucide-react";
 import Link from "next/link";
 import terms from "@/lib/i18n/legal-terms.json";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function ArticlesPage() {
   const [lang, setLang] = useState<"ar" | "fr" | "en">("fr");
@@ -14,12 +15,12 @@ export default function ArticlesPage() {
 
   return (
     <div
-      className={`min-h-screen bg-gray-50 flex flex-col font-sans ${isRtl ? 'rtl' : 'ltr'}`}
+      className={`min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col font-sans ${isRtl ? 'rtl' : 'ltr'}`}
       dir={isRtl ? 'rtl' : 'ltr'}
     >
-      <header className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between sticky top-0 z-10">
+      <header className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 py-4 px-6 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-4">
-          <Link href="/" className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600">
+          <Link href="/" className="p-2 hover:bg-gray-100 dark:bg-slate-800 rounded-full transition-colors text-gray-600 dark:text-gray-300">
             {isRtl ? <ArrowLeft className="w-5 h-5 rotate-180" /> : <ArrowLeft className="w-5 h-5" />}
           </Link>
           <div className="flex items-center gap-2">
@@ -29,17 +30,20 @@ export default function ArticlesPage() {
             </h1>
           </div>
         </div>
-        <div className="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1.5 shadow-sm border border-gray-200 text-gray-700">
-          <Globe className="w-4 h-4 opacity-70" />
-          <select
-            value={lang}
-            onChange={e => setLang(e.target.value as any)}
-            className="bg-transparent border-none outline-none font-semibold cursor-pointer text-sm"
-          >
-            <option value="ar">العربية</option>
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-          </select>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <div className="flex items-center gap-2 bg-gray-100 dark:bg-slate-800 rounded-full px-3 py-1.5 shadow-sm border border-gray-200 dark:border-slate-700 text-gray-700">
+            <Globe className="w-4 h-4 opacity-70" />
+            <select
+              value={lang}
+              onChange={e => setLang(e.target.value as any)}
+              className="bg-transparent border-none outline-none font-semibold cursor-pointer text-sm"
+            >
+              <option value="ar">العربية</option>
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+            </select>
+          </div>
         </div>
       </header>
 
@@ -49,26 +53,26 @@ export default function ArticlesPage() {
             <BookOpen className="w-8 h-8" />
           </div>
           <div>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-primary-900 tracking-tight">{t('articlesTitle')}</h1>
-            <p className="text-lg md:text-xl text-gray-600 mt-4 max-w-2xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-primary-900 dark:text-primary-100 tracking-tight">{t('articlesTitle')}</h1>
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
               {t('articlesDesc')}
             </p>
           </div>
         </div>
 
         {!articles.length ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+          <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm">
             <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{t('noArticles')}</h3>
-            <p className="text-gray-500">{t('noArticlesDesc')}</p>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('noArticles')}</h3>
+            <p className="text-gray-500 dark:text-gray-400">{t('noArticlesDesc')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map((article) => (
               <Link href={`/articles/${article.slug}`} key={article.id} className="block group">
-                <article className="h-full border border-gray-100 bg-white rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                <article className="h-full border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
                   {article.coverImage && (
-                    <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                    <div className="relative h-48 w-full overflow-hidden bg-gray-100 dark:bg-slate-800">
                       <img src={article.coverImage} alt={article.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   )}
@@ -76,9 +80,9 @@ export default function ArticlesPage() {
                     {article.category && (
                       <span className="px-3 py-1 bg-primary-50 text-primary-700 text-xs font-bold uppercase tracking-wider rounded-full mb-3 self-start">{article.category}</span>
                     )}
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">{article.title}</h3>
-                    <p className="text-gray-600 leading-relaxed mb-6 line-clamp-3 flex-1">{article.excerpt}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-500 font-medium pt-4 border-t border-gray-100 mt-auto">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">{article.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 line-clamp-3 flex-1">{article.excerpt}</p>
+                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 font-medium pt-4 border-t border-gray-100 dark:border-slate-800 mt-auto">
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4" />
                         <span>{article.readTimeMinutes || 5} {t('readTime')}</span>

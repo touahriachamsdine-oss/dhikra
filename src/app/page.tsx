@@ -6,6 +6,7 @@ import terms from "@/lib/i18n/legal-terms.json";
 import IntakeForm from "@/components/intake-form";
 import { Scale, Home, Briefcase, Car, ShoppingCart, Hammer, FileText, CheckCircle, Mail, Globe, Users, ShieldCheck, LogIn, ChevronDown, BookOpen } from "lucide-react";
 import Image from "next/image";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type Language = "ar" | "fr" | "en";
 type TermKey = keyof typeof terms;
@@ -122,7 +123,7 @@ function LandingPageContent() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 bg-white/70 backdrop-blur-xl px-8 py-3 rounded-full shadow-sm border border-gray-100 font-semibold text-gray-700">
+        <nav className="hidden md:flex items-center gap-8 bg-white dark:bg-slate-900/70 backdrop-blur-xl px-8 py-3 rounded-full shadow-sm border border-gray-100 dark:border-slate-800 font-semibold text-gray-700">
           <button onClick={() => router.push('/services')} className="flex items-center gap-1 hover:text-primary-600 transition-colors">
             {t('services')}
           </button>
@@ -135,8 +136,9 @@ function LandingPageContent() {
         </nav>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           {/* Language Toggle */}
-          <div className="flex items-center gap-2 bg-white/80 backdrop-blur-md rounded-full px-3 py-1 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 bg-white dark:bg-slate-900/80 backdrop-blur-md rounded-full px-3 py-1 shadow-sm border border-gray-100 dark:border-slate-800">
             <Globe className="w-4 h-4 text-gray-400" />
             <select
               value={lang}
@@ -152,7 +154,7 @@ function LandingPageContent() {
           {/* Auth Button */}
           {user ? (
             <div className="hidden sm:flex items-center gap-4">
-              <span className="text-sm font-bold text-gray-700 bg-gray-100 rounded-full px-3 py-1">{user.name || user.email}</span>
+              <span className="text-sm font-bold text-gray-700 bg-gray-100 dark:bg-slate-800 rounded-full px-3 py-1">{user.name || user.email}</span>
               <button
                 onClick={() => setView(view === 'dashboard' ? 'landing' : 'dashboard')}
                 className="flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full font-bold shadow-sm hover:bg-primary-200 transition-colors"
@@ -175,7 +177,7 @@ function LandingPageContent() {
       {view === 'landing' && (
         <main className="flex-1">
           {/* Hero Section */}
-          <section className="relative pt-32 pb-20 px-6 sm:px-12 border-b border-gray-100 overflow-hidden bg-primary-50">
+          <section className="relative pt-32 pb-20 px-6 sm:px-12 border-b border-gray-100 dark:border-slate-800 overflow-hidden bg-primary-50">
 
             {/* Split layout for Illustration and Text */}
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 relative z-10">
@@ -186,7 +188,7 @@ function LandingPageContent() {
                 <h1 className="text-5xl sm:text-6xl font-extrabold text-primary-500 mb-6 leading-tight tracking-tight">
                   {t('heroTitle')}
                 </h1>
-                <p className="text-xl sm:text-2xl text-gray-600 mb-10 max-w-2xl leading-relaxed">
+                <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl leading-relaxed">
                   {t('heroSubtitle')}
                 </p>
                 <div className="flex items-center gap-4">
@@ -211,19 +213,19 @@ function LandingPageContent() {
 
                   {/* Center main piece */}
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 
-                    bg-white/80 backdrop-blur-xl p-8 rounded-full border-4 border-white shadow-[0_0_40px_rgba(251,191,36,0.3)]
+                    bg-white dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-full border-4 border-white shadow-[0_0_40px_rgba(251,191,36,0.3)]
                     hover:scale-110 transition-transform duration-500 cursor-pointer">
                     <Scale className="w-24 h-24 text-primary-600" />
                   </div>
 
                   {/* Floating Document 1 */}
-                  <div className="absolute top-[10%] left-[5%] z-10 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 
+                  <div className="absolute top-[10%] left-[5%] z-10 bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 
                     animate-float-slow hover:-translate-y-2 hover:rotate-3 transition-all duration-300 cursor-pointer flex flex-col gap-3 w-40">
                     <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center">
                       <FileText className="w-5 h-5 text-blue-600" />
                     </div>
-                    <div className="h-2 w-full bg-gray-100 rounded-full"></div>
-                    <div className="h-2 w-2/3 bg-gray-100 rounded-full"></div>
+                    <div className="h-2 w-full bg-gray-100 dark:bg-slate-800 rounded-full"></div>
+                    <div className="h-2 w-2/3 bg-gray-100 dark:bg-slate-800 rounded-full"></div>
                     <div className="absolute -bottom-3 -right-3 bg-secondary-500 text-white rounded-full p-1.5 shadow-lg">
                       <CheckCircle className="w-4 h-4" />
                     </div>
@@ -240,9 +242,9 @@ function LandingPageContent() {
                   </div>
 
                   {/* Floating Expert/Bailiff 3 */}
-                  <div className="absolute top-[25%] right-[0%] z-10 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 
+                  <div className="absolute top-[25%] right-[0%] z-10 bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 
                     animate-float-slow hover:scale-105 transition-all duration-300 cursor-pointer flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border-2 border-secondary-500 overflow-hidden flex items-center justify-center bg-gray-50">
+                    <div className="w-12 h-12 rounded-full border-2 border-secondary-500 overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-slate-950">
                       <Briefcase className="w-6 h-6 text-gray-400" />
                     </div>
                     <div>
@@ -252,7 +254,7 @@ function LandingPageContent() {
                   </div>
 
                   {/* Floating Shield 4 */}
-                  <div className="absolute bottom-[25%] right-[5%] z-20 bg-white p-5 rounded-3xl shadow-xl border border-gray-100 
+                  <div className="absolute bottom-[25%] right-[5%] z-20 bg-white dark:bg-slate-900 p-5 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-800 
                     animate-float-fast hover:-rotate-6 hover:scale-110 transition-all duration-300 cursor-pointer">
                     <ShieldCheck className="w-10 h-10 text-green-500" />
                   </div>
@@ -262,7 +264,7 @@ function LandingPageContent() {
           </section>
 
           {/* Categories Section */}
-          <section className="py-20 px-6 sm:px-12 bg-white max-w-7xl mx-auto">
+          <section className="py-20 px-6 sm:px-12 bg-white dark:bg-slate-900 max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-extrabold text-primary-500 mb-4">{t('categoriesTitle')}</h2>
               <div className="w-24 h-1.5 bg-secondary-500 mx-auto rounded-full"></div>
@@ -273,7 +275,7 @@ function LandingPageContent() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className="group bg-white border-2 border-gray-100 p-8 rounded-3xl shadow-sm hover:border-primary-600 hover:shadow-xl transition-all hover:-translate-y-2 flex flex-col items-center text-center gap-4 relative overflow-hidden text-lg"
+                  className="group bg-white dark:bg-slate-900 border-2 border-gray-100 dark:border-slate-800 p-8 rounded-3xl shadow-sm hover:border-primary-600 hover:shadow-xl transition-all hover:-translate-y-2 flex flex-col items-center text-center gap-4 relative overflow-hidden text-lg"
                 >
                   <div className={`p-4 rounded-2xl ${cat.bg} ${cat.color} group-hover:scale-110 transition-transform`}>
                     {cat.icon}
@@ -325,7 +327,7 @@ function LandingPageContent() {
       )}
 
       {view === 'dashboard' && (
-        <main className="flex-1 bg-gray-50 pt-32 px-6 sm:px-12 pb-24">
+        <main className="flex-1 bg-gray-50 dark:bg-slate-950 pt-32 px-6 sm:px-12 pb-24">
           <div className="max-w-5xl mx-auto">
             <div className="flex justify-between items-end mb-8">
               <h2 className="text-3xl font-extrabold text-primary-500">{t('myCases')}</h2>
@@ -338,23 +340,23 @@ function LandingPageContent() {
             </div>
 
             {userCases.length === 0 ? (
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 text-center">
-                <div className="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 p-12 text-center">
+                <div className="w-16 h-16 bg-gray-100 dark:bg-slate-800 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FileText className="w-8 h-8" />
                 </div>
-                <p className="text-gray-500 text-lg font-medium">{t('noCases')}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">{t('noCases')}</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {userCases.map(c => (
-                  <div key={c.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row justify-between items-center gap-4 hover:shadow-md transition-shadow">
+                  <div key={c.id} className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 p-6 flex flex-col md:flex-row justify-between items-center gap-4 hover:shadow-md transition-shadow">
                     <div className="flex-1 w-full">
-                      <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                      <h3 className="font-bold text-gray-900 dark:text-gray-100 text-lg flex items-center gap-2">
                         <FileText className="w-5 h-5 text-secondary-500 flex-shrink-0" />
                         <span className="truncate">{c.title || t('legalCase')}</span>
                       </h3>
                       <div className="flex items-center gap-4 mt-2">
-                        <p className="text-sm text-gray-500 font-medium truncate">{t('against')} <span className="text-gray-700">{c.defendantName || t('notDefined')}</span></p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium truncate">{t('against')} <span className="text-gray-700">{c.defendantName || t('notDefined')}</span></p>
                         <p className="text-xs text-gray-400 flex-shrink-0">{t('submittedOn')} {new Date(c.createdAt).toLocaleDateString('fr-DZ')}</p>
                       </div>
                     </div>

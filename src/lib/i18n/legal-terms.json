@@ -315,9 +315,9 @@
     "en": "Your file is ready"
   },
   "verifyBeforePayment": {
-    "ar": "تأكد من المعلومات قبل الدفع.",
-    "fr": "Vérifiez les informations avant le paiement.",
-    "en": "Verify info before payment."
+    "ar": "يرجى مراجعة كافة التفاصيل بعناية قبل التقديم.",
+    "fr": "Veuillez vérifier attentivement tous les détails avant de soumettre.",
+    "en": "Verify info before submitting."
   },
   "legalWarning": {
     "ar": "سيتم إنشاء الإعذار بصيغة قانونية وإرساله عبر البريد المضمون. تغطي الرسوم معالجة الملف.",

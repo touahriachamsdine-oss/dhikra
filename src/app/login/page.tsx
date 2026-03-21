@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Scale, LogIn, KeyRound, Mail, ArrowLeft, Loader2, Globe, UserPlus } from "lucide-react";
 import terms from "@/lib/i18n/legal-terms.json";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type Language = "ar" | "fr" | "en";
 type TermKey = keyof typeof terms;
@@ -78,7 +79,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center bg-gray-50 font-sans ${isRtl ? 'rtl' : 'ltr'}`}
+      className={`min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950 font-sans ${isRtl ? 'rtl' : 'ltr'}`}
       dir={isRtl ? 'rtl' : 'ltr'}
     >
       {/* Background */}
@@ -95,7 +96,7 @@ export default function LoginPage() {
           {t('back')}
         </button>
 
-        <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border border-gray-100">
+        <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800">
           <div className="flex flex-col items-center mb-8">
             <div className="w-16 h-16 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-6 shadow-sm border border-primary-100">
               <Scale className="w-8 h-8" />
@@ -103,7 +104,7 @@ export default function LoginPage() {
             <h1 className="text-3xl font-extrabold text-primary-500 mb-2 text-center">
               {isSignUp ? t('signUp') : t('signInToSettleUp')}
             </h1>
-            <p className="text-gray-500 text-center">{t('welcomeBack')}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-center">{t('welcomeBack')}</p>
           </div>
 
           {/* Error message */}
@@ -121,7 +122,7 @@ export default function LoginPage() {
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className={`w-full border-2 border-gray-200 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
+                  className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
                 />
               </div>
             )}
@@ -134,7 +135,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className={`w-full border-2 border-gray-200 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'pl-4 pr-12' : 'pl-12 pr-4'}`}
+                  className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'pl-4 pr-12' : 'pl-12 pr-4'}`}
                   placeholder="name@email.com"
                 />
                 <Mail className={`absolute top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 ${isRtl ? 'right-4' : 'left-4'}`} />
@@ -149,7 +150,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className={`w-full border-2 border-gray-200 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'pl-4 pr-12' : 'pl-12 pr-4'}`}
+                  className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'pl-4 pr-12' : 'pl-12 pr-4'}`}
                   placeholder="••••••••"
                 />
                 <KeyRound className={`absolute top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 ${isRtl ? 'right-4' : 'left-4'}`} />
@@ -172,8 +173,8 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-            <p className="text-gray-500 text-sm">
+          <div className="mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               {isSignUp ? t('alreadyAccount') : t('noAccount')}{' '}
               <button
                 type="button"
@@ -187,17 +188,20 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-8 flex justify-center">
-          <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 shadow-sm border border-white/20 text-white">
-            <Globe className="w-4 h-4 opacity-70" />
-            <select
-              value={lang}
-              onChange={e => setLang(e.target.value as Language)}
-              className="bg-transparent border-none outline-none font-semibold cursor-pointer text-sm"
-            >
-              <option value="ar" className="text-gray-800">العربية</option>
-              <option value="fr" className="text-gray-800">Français</option>
-              <option value="en" className="text-gray-800">English</option>
-            </select>
+          <div className="absolute top-6 right-6 flex items-center gap-4">
+            <ThemeToggle />
+            <div className="flex items-center gap-2 bg-white dark:bg-slate-900 rounded-full px-3 py-1.5 shadow-sm border border-gray-100 dark:border-slate-800 text-gray-700">
+              <Globe className="w-4 h-4 opacity-70" />
+              <select
+                value={lang}
+                onChange={e => setLang(e.target.value as Language)}
+                className="bg-transparent border-none outline-none font-semibold cursor-pointer text-sm"
+              >
+                <option value="ar" className="text-gray-800 dark:text-gray-200">العربية</option>
+                <option value="fr" className="text-gray-800 dark:text-gray-200">Français</option>
+                <option value="en" className="text-gray-800 dark:text-gray-200">English</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
