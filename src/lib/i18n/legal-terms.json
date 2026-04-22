@@ -653,5 +653,20 @@
     "ar": "دقائق للقراءة",
     "fr": "min de lecture",
     "en": "min read"
+  },
+  "solvePercentage": {
+    "ar": "نسبة الحل",
+    "fr": "Taux de résolution",
+    "en": "Solve Percentage"
+  },
+  "phoneNumber": {
+    "ar": "رقم الهاتف",
+    "fr": "Numéro de téléphone",
+    "en": "Phone Number"
+  },
+  "senderInfo": {
+    "ar": "معلومات المرسل",
+    "fr": "Infos de l'expéditeur",
+    "en": "Sender Information"
   }
 }

@@ -18,6 +18,7 @@ model User {
   
   // New fields
   nationalId String?
+  phoneNumber String?
   image      String?
 
   createdAt DateTime @default(now())

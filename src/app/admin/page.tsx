@@ -30,6 +30,8 @@ type User = {
   email: string
   name: string
   role: string
+  phoneNumber?: string
+  nationalId?: string
   createdAt: string
 }
 
@@ -44,9 +46,13 @@ type Case = {
   amount?: number
   created_at: string
   updated_at: string
-  plaintiff?: {
+  user?: {
     id: string
     email: string
+    name: string
+    role: string
+    phoneNumber?: string
+    nationalId?: string
   }
 }
 
@@ -55,6 +61,7 @@ type Stats = {
   open: number
   inProgress: number
   resolved: number
+  solveRate: number
 }
 
 const STATUS_CONFIG: Record<string, any> = {
@@ -80,7 +87,7 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([])
   const [cases, setCases] = useState<Case[]>([])
   const [filteredCases, setFilteredCases] = useState<Case[]>([])
-  const [stats, setStats] = useState<Stats>({ total: 0, open: 0, inProgress: 0, resolved: 0 })
+  const [stats, setStats] = useState<Stats>({ total: 0, open: 0, inProgress: 0, resolved: 0, solveRate: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [adminEmail, setAdminEmail] = useState('')
@@ -146,6 +153,9 @@ export default function AdminDashboard() {
         open: casesData.filter(c => c.status === 'OPEN').length,
         inProgress: casesData.filter(c => c.status === 'IN_PROGRESS').length,
         resolved: casesData.filter(c => c.status === 'RESOLVED').length,
+        solveRate: casesData.length > 0
+          ? Math.round((casesData.filter(c => c.status === 'RESOLVED').length / casesData.length) * 100)
+          : 0,
       })
     } catch {
       showNotification('error', 'Erreur lors du chargement des dossiers.')
@@ -168,9 +178,9 @@ export default function AdminDashboard() {
       const q = searchQuery.toLowerCase()
       result = result.filter(c =>
         c.title?.toLowerCase().includes(q) ||
-        c.plaintiff?.email?.toLowerCase().includes(q) ||
-        c.plaintiff_name?.toLowerCase().includes(q) ||
-        c.defendant_name?.toLowerCase().includes(q) ||
+        c.user?.email?.toLowerCase().includes(q) ||
+        c.user?.name?.toLowerCase().includes(q) ||
+        c.user?.phoneNumber?.toLowerCase().includes(q) ||
         c.id.toLowerCase().includes(q)
       )
     }
@@ -315,9 +325,9 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-4 gap-5">
                 {[
                   { label: t('totalCases'), value: stats.total, icon: Briefcase, color: 'from-slate-700 to-slate-800', iconColor: 'text-slate-300' },
-                  { label: t('statusOpen'), value: stats.open, icon: Clock, color: 'from-blue-900/50 to-slate-900', iconColor: 'text-blue-400', badge: 'rgb(59,130,246)' },
-                  { label: t('statusInProgress'), value: stats.inProgress, icon: TrendingUp, color: 'from-amber-900/50 to-slate-900', iconColor: 'text-amber-400' },
+                  { label: t('statusOpen'), value: stats.open, icon: Clock, color: 'from-blue-900/50 to-slate-900', iconColor: 'text-blue-400' },
                   { label: t('statusResolved'), value: stats.resolved, icon: CheckCircle, color: 'from-emerald-900/50 to-slate-900', iconColor: 'text-emerald-400' },
+                  { label: t('solvePercentage'), value: `${stats.solveRate}%`, icon: Activity, color: 'from-purple-900/50 to-slate-900', iconColor: 'text-purple-400' },
                 ].map(({ label, value, icon: Icon, color, iconColor }) => (
                   <div key={label} className={`relative rounded-2xl bg-gradient-to-br ${color} border border-slate-800 p-5 overflow-hidden`}>
                     <div className="flex items-start justify-between">
@@ -334,11 +344,11 @@ export default function AdminDashboard() {
                         <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                           <div
                             className="h-full rounded-full bg-current opacity-50 transition-all duration-500"
-                            style={{ width: `${Math.round((value / stats.total) * 100)}%` }}
+                            style={{ width: `${Math.round(((value as number) / stats.total) * 100)}%` }}
                           />
                         </div>
                         <p className="text-xs text-slate-500 mt-1.5">
-                          {Math.round((value / stats.total) * 100)}% {t('ofTotal')}
+                          {Math.round(((value as number) / stats.total) * 100)}% {t('ofTotal')}
                         </p>
                       </div>
                     )}
@@ -425,10 +435,16 @@ export default function AdminDashboard() {
                             </div>
                             <div className="flex items-center gap-3 text-xs text-slate-500">
                               <span className="font-mono">{c.id.slice(0, 8)}...</span>
-                              {c.plaintiff?.email && (
+                              {c.user?.name && (
                                 <>
                                   <span>·</span>
-                                  <span>{c.plaintiff.email}</span>
+                                  <span>{c.user.name}</span>
+                                </>
+                              )}
+                              {c.user?.email && (
+                                <>
+                                  <span>·</span>
+                                  <span>{c.user.email}</span>
                                 </>
                               )}
                               {c.plaintiff_name && (
@@ -490,6 +506,10 @@ export default function AdminDashboard() {
                     <div>
                       <p className="font-semibold text-white">{u.name || t('notDefined')}</p>
                       <p className="text-sm text-slate-400">{u.email}</p>
+                      <div className="flex gap-4 mt-1">
+                        {u.phoneNumber && <p className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3 text-emerald-500" /> {u.phoneNumber}</p>}
+                        {u.nationalId && <p className="text-xs text-slate-500 flex items-center gap-1"><Activity className="w-3 h-3 text-amber-500" /> {u.nationalId}</p>}
+                      </div>
                     </div>
                     <div className="flex items-center gap-4">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
@@ -531,8 +551,9 @@ export default function AdminDashboard() {
                 { label: 'ID', value: selectedCase.id },
                 { label: t('documentType'), value: t(DOC_TYPE_LABELS[selectedCase.document_type || ''] || DOC_TYPE_LABELS.default) },
                 { label: t('title'), value: selectedCase.title || '—' },
-                { label: t('plaintiffEmail'), value: selectedCase.plaintiff?.email || '—' },
-                { label: t('plaintiff'), value: selectedCase.plaintiff_name || '—' },
+                { label: t('senderInfo'), value: `${selectedCase.user?.name || '—'} (${selectedCase.user?.email || '—'})` },
+                { label: t('phoneNumber'), value: selectedCase.user?.phoneNumber || '—' },
+                { label: t('nationalId'), value: selectedCase.user?.nationalId || '—' },
                 { label: t('defendant'), value: selectedCase.defendant_name || '—' },
                 { label: t('amount'), value: selectedCase.amount ? `${selectedCase.amount.toLocaleString('fr-DZ')} DZD` : '—' },
                 { label: t('description'), value: selectedCase.description || '—' },
