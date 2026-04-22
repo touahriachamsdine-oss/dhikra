@@ -46,6 +46,13 @@ function LandingPageContent() {
   const t = (key: TermKey | string) => (terms as any)[key]?.[lang] || key;
   const isRtl = lang === "ar";
 
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    setUser(null);
+    setView('landing');
+    router.refresh();
+  };
+
   const handleGeneratePDF = async (formData: any) => {
     if (!user) {
       alert(t('pleaseLoginToSubmit'));
@@ -154,12 +161,26 @@ function LandingPageContent() {
           {/* Auth Button */}
           {user ? (
             <div className="hidden sm:flex items-center gap-4">
-              <span className="text-sm font-bold text-gray-700 bg-gray-100 dark:bg-slate-800 rounded-full px-3 py-1">{user.name || user.email}</span>
+              <span className="text-sm font-bold text-gray-700 bg-gray-100 dark:bg-slate-800 rounded-full px-3 py-1 truncate max-w-[120px]">{user.name || user.email}</span>
               <button
                 onClick={() => setView(view === 'dashboard' ? 'landing' : 'dashboard')}
                 className="flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full font-bold shadow-sm hover:bg-primary-200 transition-colors"
               >
                 {view === 'dashboard' ? t('home') : t('dashboard')}
+              </button>
+              <button
+                onClick={() => router.push('/settings')}
+                className="p-2 text-gray-500 hover:text-primary-600 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                title="Settings"
+              >
+                <Hammer className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-full font-bold hover:bg-red-100 transition-colors"
+              >
+                <LogIn className="w-4 h-4 rotate-180" />
+                {t('logout')}
               </button>
             </div>
           ) : (

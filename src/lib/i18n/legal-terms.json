@@ -149,6 +149,11 @@
     "fr": "Infos du Demandeur",
     "en": "Plaintiff Info"
   },
+  "nationalId": {
+    "ar": "رقم بطاقة التعريف الوطنية",
+    "fr": "Numéro de Carte Nationale",
+    "en": "National ID Number"
+  },
   "defendantInfo": {
     "ar": "معلومات المدعى عليه",
     "fr": "Infos du Défendeur",

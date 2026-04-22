@@ -5,7 +5,7 @@ import { signToken, AUTH_COOKIE_OPTIONS } from '@/lib/auth'
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json()
+    const { email, password, name, nationalId } = await request.json()
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password required' }, { status: 400 })
@@ -24,6 +24,7 @@ export async function POST(request: Request) {
         email,
         password: hashedPassword,
         name: name || null,
+        nationalId: nationalId || null,
         role: 'CUSTOMER',
       },
     })

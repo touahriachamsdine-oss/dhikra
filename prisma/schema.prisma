@@ -15,6 +15,10 @@ model User {
   password  String
   name      String?
   role      String   @default("CUSTOMER") // "ADMIN" | "CUSTOMER"
+  
+  // New fields
+  nationalId String?
+  image      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -21,6 +21,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [nationalId, setNationalId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export default function LoginPage() {
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name }),
+          body: JSON.stringify({ email, password, name, nationalId }),
         });
         const data = await res.json();
         if (!res.ok) {
@@ -116,14 +117,27 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {isSignUp && (
-              <div>
-                <label className="block text-sm font-bold text-primary-500 mb-2">{t('name')}</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
-                />
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-bold text-primary-500 mb-2">{t('name')}</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-primary-500 mb-2">{t('nationalId')}</label>
+                  <input
+                    type="text"
+                    required={isSignUp}
+                    value={nationalId}
+                    onChange={e => setNationalId(e.target.value)}
+                    placeholder="1234567890123456"
+                    className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
+                  />
+                </div>
               </div>
             )}
 
