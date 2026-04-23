@@ -19,6 +19,7 @@ import {
   ChevronDown,
   Search,
   Filter,
+  Trash2,
   Download,
   Activity,
   Shield,
@@ -183,11 +184,29 @@ export default function AdminDashboard() {
         c.user?.email?.toLowerCase().includes(q) ||
         c.user?.name?.toLowerCase().includes(q) ||
         c.user?.phoneNumber?.toLowerCase().includes(q) ||
+        c.defendant_name?.toLowerCase().includes(q) ||
+        c.amount?.toString().includes(q) ||
         c.id.toLowerCase().includes(q)
       )
     }
     setFilteredCases(result)
   }, [searchQuery, statusFilter, cases])
+
+  const handleCaseDelete = async (id: string) => {
+    if (!confirm(t('confirmDelete'))) return
+    setIsUpdating(id)
+    try {
+      const res = await fetch(`/api/admin/cases/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error()
+      showNotification('success', 'Dossier supprimé avec succès.')
+      fetchCases()
+      setSelectedCase(null)
+    } catch {
+      showNotification('error', 'Échec de la suppression.')
+    } finally {
+      setIsUpdating(null)
+    }
+  }
 
   const updateCaseStatus = async (caseId: string, newStatus: string, notes?: string) => {
     setIsUpdating(caseId)
@@ -546,10 +565,10 @@ export default function AdminDashboard() {
           onClick={() => setSelectedCase(null)}
         >
           <div
-            className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-lg shadow-2xl"
+            className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
             onClick={e => e.stopPropagation()}
           >
-            <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between">
+            <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between flex-shrink-0">
               <h3 className="font-bold text-white flex items-center gap-2">
                 <FileText className="w-4 h-4 text-amber-400" />
                 {t('caseDetail')}
@@ -557,25 +576,33 @@ export default function AdminDashboard() {
               <button onClick={() => setSelectedCase(null)} className="text-slate-500 hover:text-white transition-colors">✕</button>
             </div>
 
-            <div className="p-6 space-y-4">
-              {[
-                { label: 'ID', value: selectedCase.id },
-                { label: t('documentType'), value: t(DOC_TYPE_LABELS[selectedCase.document_type || ''] || DOC_TYPE_LABELS.default) },
-                { label: t('title'), value: selectedCase.title || '—' },
-                { label: t('senderInfo'), value: `${selectedCase.user?.name || '—'} (${selectedCase.user?.email || '—'})` },
-                { label: t('phoneNumber'), value: selectedCase.user?.phoneNumber || '—' },
-                { label: t('nationalId'), value: selectedCase.user?.nationalId || '—' },
-                { label: t('defendant'), value: selectedCase.defendant_name || '—' },
-                { label: t('amount'), value: selectedCase.amount ? `${selectedCase.amount.toLocaleString('fr-DZ')} DZD` : '—' },
-                { label: t('description'), value: selectedCase.description || '—' },
-                { label: t('createdOn'), value: formatDate(selectedCase.created_at) },
-                { label: t('updatedOn'), value: formatDate(selectedCase.updated_at) },
-              ].map(({ label, value }) => (
-                <div key={label} className="flex">
-                  <span className="text-slate-500 text-sm w-36 flex-shrink-0">{label}</span>
-                  <span className="text-slate-200 text-sm font-medium flex-1 break-all">{value}</span>
+            <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                {[
+                  { label: 'ID', value: selectedCase.id },
+                  { label: t('documentType'), value: t(DOC_TYPE_LABELS[selectedCase.document_type || ''] || DOC_TYPE_LABELS.default) },
+                  { label: t('title'), value: selectedCase.title || '—' },
+                  { label: t('senderInfo'), value: `${selectedCase.user?.name || '—'} (${selectedCase.user?.email || '—'})` },
+                  { label: t('phoneNumber'), value: selectedCase.user?.phoneNumber || '—' },
+                  { label: t('nationalId'), value: selectedCase.user?.nationalId || '—' },
+                  { label: t('defendant'), value: selectedCase.defendant_name || '—' },
+                  { label: t('amount'), value: selectedCase.amount ? `${selectedCase.amount.toLocaleString('fr-DZ')} DZD` : '—' },
+                  { label: t('createdOn'), value: formatDate(selectedCase.created_at) },
+                  { label: t('updatedOn'), value: formatDate(selectedCase.updated_at) },
+                ].map(({ label, value }) => (
+                  <div key={label} className="space-y-1">
+                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">{label}</p>
+                    <p className="text-slate-200 text-sm font-medium break-all">{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-4 mt-2">
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-2">{t('description')}</p>
+                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-slate-300 text-sm leading-relaxed max-h-40 overflow-y-auto">
+                  {selectedCase.description || '—'}
                 </div>
-              ))}
+              </div>
 
               <div className="pt-6 border-t border-slate-800 space-y-6">
                 <div>
@@ -627,6 +654,17 @@ export default function AdminDashboard() {
                         {t('saveChanges')}
                       </>
                     )}
+                  </button>
+                </div>
+
+                <div className="pt-6 border-t border-slate-800">
+                  <button
+                    onClick={() => handleCaseDelete(selectedCase.id)}
+                    disabled={isUpdating === selectedCase.id}
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all border border-transparent hover:border-red-900/30 text-xs font-bold uppercase tracking-wider"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    {t('deleteCase')}
                   </button>
                 </div>
               </div>

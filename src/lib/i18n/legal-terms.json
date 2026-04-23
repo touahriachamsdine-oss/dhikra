@@ -683,5 +683,15 @@
     "ar": "حفظ التغييرات",
     "fr": "Enregistrer les modifications",
     "en": "Save Changes"
+  },
+  "deleteCase": {
+    "ar": "حذف القضية",
+    "fr": "Supprimer le dossier",
+    "en": "Delete Case"
+  },
+  "confirmDelete": {
+    "ar": "هل أنت متأكد من حذف هذه القضية؟",
+    "fr": "Êtes-vous sûr de vouloir supprimer ce dossier ?",
+    "en": "Are you sure you want to delete this case?"
   }
 }
