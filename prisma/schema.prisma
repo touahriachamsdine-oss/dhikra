@@ -36,6 +36,7 @@ model Case {
   plaintiffName  String?
   defendantName  String?
   amount         Float?
+  adminNotes     String?
 
   userId    String
   user      User     @relation(fields: [userId], references: [id])

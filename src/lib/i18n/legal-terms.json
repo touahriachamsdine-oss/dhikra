@@ -668,5 +668,20 @@
     "ar": "معلومات المرسل",
     "fr": "Infos de l'expéditeur",
     "en": "Sender Information"
+  },
+  "adminNotes": {
+    "ar": "ملاحظات المسؤول",
+    "fr": "Notes de l'administrateur",
+    "en": "Admin Notes"
+  },
+  "updateStatus": {
+    "ar": "تحديث الحالة",
+    "fr": "Mettre à jour le statut",
+    "en": "Update Status"
+  },
+  "saveChanges": {
+    "ar": "حفظ التغييرات",
+    "fr": "Enregistrer les modifications",
+    "en": "Save Changes"
   }
 }

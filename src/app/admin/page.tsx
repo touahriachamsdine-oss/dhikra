@@ -44,6 +44,7 @@ type Case = {
   plaintiff_name?: string
   defendant_name?: string
   amount?: number
+  adminNotes?: string
   created_at: string
   updated_at: string
   user?: {
@@ -95,6 +96,7 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState<string>('ALL')
   const [selectedCase, setSelectedCase] = useState<Case | null>(null)
   const [isUpdating, setIsUpdating] = useState<string | null>(null)
+  const [adminNotes, setAdminNotes] = useState('')
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   const showNotification = (type: 'success' | 'error', message: string) => {
@@ -187,20 +189,26 @@ export default function AdminDashboard() {
     setFilteredCases(result)
   }, [searchQuery, statusFilter, cases])
 
-  const updateCaseStatus = async (caseId: string, newStatus: string) => {
+  const updateCaseStatus = async (caseId: string, newStatus: string, notes?: string) => {
     setIsUpdating(caseId)
     try {
-      const res = await fetch('/api/admin/cases', {
+      const body: any = { status: newStatus }
+      // Only include notes if specifically provided (from modal)
+      if (notes !== undefined) {
+        body.adminNotes = notes
+      }
+
+      const res = await fetch(`/api/admin/cases/${caseId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ caseId, status: newStatus }),
+        body: JSON.stringify(body),
       })
       if (!res.ok) throw new Error()
-      showNotification('success', 'Statut mis à jour avec succès.')
+      showNotification('success', 'Dossier mis à jour avec succès.')
       fetchCases()
       setSelectedCase(null)
     } catch {
-      showNotification('error', 'Échec de la mise à jour du statut.')
+      showNotification('error', 'Échec de la mise à jour.')
     } finally {
       setIsUpdating(null)
     }
@@ -464,7 +472,10 @@ export default function AdminDashboard() {
                           {/* Actions */}
                           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
-                              onClick={() => setSelectedCase(c)}
+                              onClick={() => {
+                                setSelectedCase(c)
+                                setAdminNotes(c.adminNotes || '')
+                              }}
                               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs font-medium transition-all"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -566,25 +577,57 @@ export default function AdminDashboard() {
                 </div>
               ))}
 
-              <div className="pt-4 border-t border-slate-800">
-                <p className="text-slate-500 text-xs mb-2">{t('changeStatus')}</p>
-                <div className="flex gap-2 flex-wrap">
-                  {(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'REJECTED'] as const).map(s => {
-                    const cfg = STATUS_CONFIG[s]
-                    return (
-                      <button
-                        key={s}
-                        onClick={() => updateCaseStatus(selectedCase.id, s)}
-                        disabled={selectedCase.status === s || isUpdating === selectedCase.id}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all disabled:opacity-40 ${selectedCase.status === s
-                          ? cfg.color + ' opacity-100'
-                          : 'bg-transparent text-slate-400 border-slate-700 hover:border-slate-500'
-                          }`}
-                      >
-                        {t(cfg.labelKey)}
-                      </button>
-                    )
-                  })}
+              <div className="pt-6 border-t border-slate-800 space-y-6">
+                <div>
+                  <h4 className="text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Shield className="w-3.5 h-3.5 text-amber-500" />
+                    {t('changeStatus')}
+                  </h4>
+                  <div className="flex gap-2 flex-wrap">
+                    {(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'REJECTED'] as const).map(s => {
+                      const cfg = STATUS_CONFIG[s]
+                      return (
+                        <button
+                          key={s}
+                          onClick={() => updateCaseStatus(selectedCase.id, s)}
+                          disabled={isUpdating === selectedCase.id}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${selectedCase.status === s
+                            ? cfg.color + ' border-transparent'
+                            : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:border-slate-500'
+                            }`}
+                        >
+                          {t(cfg.labelKey)}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Activity className="w-3.5 h-3.5 text-purple-500" />
+                    {t('adminNotes')}
+                  </h4>
+                  <textarea
+                    value={adminNotes}
+                    onChange={(e) => setAdminNotes(e.target.value)}
+                    placeholder="Notes internes pour le suivi..."
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 mb-4 min-h-[120px] resize-none"
+                  />
+                  <button
+                    onClick={() => updateCaseStatus(selectedCase.id, selectedCase.status, adminNotes)}
+                    disabled={isUpdating === selectedCase.id}
+                    className="w-full h-11 bg-amber-600 hover:bg-amber-500 disabled:bg-amber-800 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-900/20"
+                  >
+                    {isUpdating === selectedCase.id ? (
+                      <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <CheckCircle className="w-4 h-4" />
+                        {t('saveChanges')}
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
