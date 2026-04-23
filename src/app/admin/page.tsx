@@ -248,10 +248,8 @@ export default function AdminDashboard() {
     })
   }
 
-  if (!isAuthorized && !isLoading) return null
-
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
       {/* Notification Toast */}
       {notification && (
         <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl border backdrop-blur-md transition-all ${notification.type === 'success'
@@ -264,16 +262,16 @@ export default function AdminDashboard() {
       )}
 
       {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-slate-900 border-r border-slate-800 flex flex-col z-40">
+      <div className="fixed left-0 top-0 h-full w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-40">
         {/* Logo */}
-        <div className="p-6 border-b border-slate-800">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
               <Scale className="w-5 h-5 text-slate-900" />
             </div>
             <div>
-              <h1 className="font-extrabold text-white text-lg leading-none">Dhikra</h1>
-              <p className="text-amber-500 text-xs font-semibold tracking-wider uppercase mt-0.5">Admin Central</p>
+              <h1 className="font-extrabold text-slate-900 dark:text-white text-lg leading-none">Dhikra</h1>
+              <p className="text-amber-600 dark:text-amber-500 text-xs font-semibold tracking-wider uppercase mt-0.5">Admin Central</p>
             </div>
           </div>
         </div>
@@ -288,8 +286,8 @@ export default function AdminDashboard() {
               key={id}
               onClick={() => setCurrentView(id as 'overview' | 'users')}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${currentView === id
-                ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
             >
               <Icon className="w-4 h-4" />
@@ -299,14 +297,14 @@ export default function AdminDashboard() {
         </nav>
 
         {/* Admin Info + Logout */}
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-3 px-2">
-            <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
-              <Shield className="w-4 h-4 text-slate-900" />
+            <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-amber-500/10">
+              <Shield className="w-4 h-4 text-white" />
             </div>
             <div className="overflow-hidden">
-              <p className="text-xs text-slate-400">{t('loggedInAs')}</p>
-              <p className="text-sm font-semibold text-white truncate">{adminEmail}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t('loggedInAs')}</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{adminEmail}</p>
             </div>
           </div>
           <button
@@ -322,10 +320,10 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <main className="ml-64 min-h-screen">
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-8 py-4 flex items-center justify-between">
+        <header className="sticky top-0 z-30 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 py-4 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-white">{t('adminDashboard')}</h2>
-            <p className="text-slate-400 text-sm">{t('centralManagement')}</p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{t('adminDashboard')}</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">{t('centralManagement')}</p>
           </div>
           <div className="flex items-center gap-4">
             <ThemeToggle />
@@ -337,7 +335,7 @@ export default function AdminDashboard() {
             <button
               onClick={fetchCases}
               disabled={isLoading}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-sm font-medium transition-all border border-slate-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm font-medium transition-all border border-slate-200 dark:border-slate-700 disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               {t('refresh')}
@@ -359,22 +357,22 @@ export default function AdminDashboard() {
                   <div key={label} className={`relative rounded-2xl bg-gradient-to-br ${color} border border-slate-800 p-5 overflow-hidden`}>
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-slate-400 text-sm font-medium mb-1">{label}</p>
-                        <p className="text-4xl font-black text-white">{isLoading ? '—' : value}</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">{label}</p>
+                        <p className="text-4xl font-black text-slate-900 dark:text-white">{isLoading ? '—' : value}</p>
                       </div>
-                      <div className={`p-3 rounded-xl bg-white dark:bg-slate-900/5 ${iconColor}`}>
+                      <div className={`p-3 rounded-xl bg-slate-200/50 dark:bg-slate-900/5 ${iconColor}`}>
                         <Icon className="w-6 h-6" />
                       </div>
                     </div>
                     {stats.total > 0 && !isLoading && (
                       <div className="mt-4">
-                        <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                           <div
                             className="h-full rounded-full bg-current opacity-50 transition-all duration-500"
                             style={{ width: `${Math.round(((value as number) / stats.total) * 100)}%` }}
                           />
                         </div>
-                        <p className="text-xs text-slate-500 mt-1.5">
+                        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1.5">
                           {Math.round(((value as number) / stats.total) * 100)}% {t('ofTotal')}
                         </p>
                       </div>
@@ -392,7 +390,7 @@ export default function AdminDashboard() {
                     placeholder={t('searchPlaceholder')}
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-sm"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -400,7 +398,7 @@ export default function AdminDashboard() {
                   <select
                     value={statusFilter}
                     onChange={e => setStatusFilter(e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all"
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-amber-500 transition-all shadow-sm"
                   >
                     <option value="ALL">{t('allStatuses')}</option>
                     <option value="OPEN">{t('statusOpen')}</option>
@@ -413,10 +411,10 @@ export default function AdminDashboard() {
               </div>
 
               {/* Cases Table */}
-              <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                  <h3 className="font-semibold text-white flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-amber-400" />
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                     {t('legalCase')}
                   </h3>
                   <button onClick={handleExport} className="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition-colors">
@@ -427,25 +425,25 @@ export default function AdminDashboard() {
 
                 {isLoading ? (
                   <div className="p-16 flex flex-col items-center gap-4">
-                    <RefreshCw className="w-8 h-8 text-amber-500 animate-spin" />
-                    <p className="text-slate-400 text-sm">{t('loadingCases')}</p>
+                    <RefreshCw className="w-8 h-8 text-amber-600 dark:text-amber-500 animate-spin" />
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">{t('loadingCases')}</p>
                   </div>
                 ) : filteredCases.length === 0 ? (
                   <div className="p-16 flex flex-col items-center gap-3">
-                    <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center">
-                      <FileText className="w-8 h-8 text-slate-600" />
+                    <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                      <FileText className="w-8 h-8 text-slate-400 dark:text-slate-600" />
                     </div>
-                    <p className="text-slate-400 font-medium">{t('noCasesFound')}</p>
-                    <p className="text-slate-600 text-sm text-center max-w-xs">{t('noCriteriaMatch')}</p>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">{t('noCasesFound')}</p>
+                    <p className="text-slate-400 dark:text-slate-600 text-sm text-center max-w-xs">{t('noCriteriaMatch')}</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-slate-800">
+                  <div className="divide-y divide-slate-100 dark:divide-slate-800">
                     {filteredCases.map(c => {
                       const statusCfg = STATUS_CONFIG[c.status] || STATUS_CONFIG.OPEN
                       return (
                         <div
                           key={c.id}
-                          className="flex items-center gap-4 px-6 py-4 hover:bg-slate-800/50 transition-colors group"
+                          className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
                         >
                           {/* Status Dot */}
                           <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${statusCfg.dot}`} />
@@ -453,7 +451,7 @@ export default function AdminDashboard() {
                           {/* Info */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <p className="font-semibold text-white text-sm truncate">
+                              <p className="font-semibold text-slate-900 dark:text-white text-sm truncate">
                                 {c.title || t(DOC_TYPE_LABELS[c.document_type || ''] || DOC_TYPE_LABELS.default)}
                               </p>
                               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${statusCfg.color}`}>
@@ -495,7 +493,7 @@ export default function AdminDashboard() {
                                 setSelectedCase(c)
                                 setAdminNotes(c.adminNotes || '')
                               }}
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs font-medium transition-all"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-medium transition-all border border-slate-200 dark:border-transparent"
                             >
                               <Eye className="w-3.5 h-3.5" />
                               {t('details')}
@@ -523,19 +521,19 @@ export default function AdminDashboard() {
               </div>
             </>
           ) : currentView === 'users' ? (
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-800">
-                <h3 className="font-semibold text-white flex items-center gap-2">
-                  <Users className="w-4 h-4 text-amber-400" />
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+                <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Users className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                   {t('userList')}
                 </h3>
               </div>
-              <div className="divide-y divide-slate-800">
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {users.map(u => (
-                  <div key={u.id} className="flex items-center justify-between px-6 py-4 hover:bg-slate-800/50">
+                  <div key={u.id} className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                     <div>
-                      <p className="font-semibold text-white">{u.name || t('notDefined')}</p>
-                      <p className="text-sm text-slate-400">{u.email}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{u.name || t('notDefined')}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">{u.email}</p>
                       <div className="flex gap-4 mt-1">
                         {u.phoneNumber && <p className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3 text-emerald-500" /> {u.phoneNumber}</p>}
                         {u.nationalId && <p className="text-xs text-slate-500 flex items-center gap-1"><Activity className="w-3 h-3 text-amber-500" /> {u.nationalId}</p>}
@@ -565,15 +563,15 @@ export default function AdminDashboard() {
           onClick={() => setSelectedCase(null)}
         >
           <div
-            className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
             onClick={e => e.stopPropagation()}
           >
-            <div className="px-6 py-5 border-b border-slate-800 flex items-center justify-between flex-shrink-0">
-              <h3 className="font-bold text-white flex items-center gap-2">
-                <FileText className="w-4 h-4 text-amber-400" />
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0">
+              <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <FileText className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                 {t('caseDetail')}
               </h3>
-              <button onClick={() => setSelectedCase(null)} className="text-slate-500 hover:text-white transition-colors">✕</button>
+              <button onClick={() => setSelectedCase(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">✕</button>
             </div>
 
             <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar">
@@ -591,23 +589,23 @@ export default function AdminDashboard() {
                   { label: t('updatedOn'), value: formatDate(selectedCase.updated_at) },
                 ].map(({ label, value }) => (
                   <div key={label} className="space-y-1">
-                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">{label}</p>
-                    <p className="text-slate-200 text-sm font-medium break-all">{value}</p>
+                    <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider">{label}</p>
+                    <p className="text-slate-700 dark:text-slate-200 text-sm font-medium break-all">{value}</p>
                   </div>
                 ))}
               </div>
 
               <div className="pt-4 mt-2">
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-2">{t('description')}</p>
-                <div className="bg-slate-950/50 border border-slate-800 rounded-xl p-4 text-slate-300 text-sm leading-relaxed max-h-40 overflow-y-auto">
+                <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-2">{t('description')}</p>
+                <div className="bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl p-4 text-slate-700 dark:text-slate-300 text-sm leading-relaxed max-h-40 overflow-y-auto">
                   {selectedCase.description || '—'}
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-slate-800 space-y-6">
+              <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-6">
                 <div>
-                  <h4 className="text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <Shield className="w-3.5 h-3.5 text-amber-500" />
+                  <h4 className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500" />
                     {t('changeStatus')}
                   </h4>
                   <div className="flex gap-2 flex-wrap">
@@ -620,7 +618,7 @@ export default function AdminDashboard() {
                           disabled={isUpdating === selectedCase.id}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${selectedCase.status === s
                             ? cfg.color + ' border-transparent'
-                            : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:border-slate-500'
+                            : 'bg-white dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
                             }`}
                         >
                           {t(cfg.labelKey)}
@@ -631,20 +629,20 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <h4 className="text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <Activity className="w-3.5 h-3.5 text-purple-500" />
+                  <h4 className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <Activity className="w-3.5 h-3.5 text-purple-600 dark:text-purple-500" />
                     {t('adminNotes')}
                   </h4>
                   <textarea
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
                     placeholder="Notes internes pour le suivi..."
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 mb-4 min-h-[120px] resize-none"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 mb-4 min-h-[120px] resize-none shadow-inner"
                   />
                   <button
                     onClick={() => updateCaseStatus(selectedCase.id, selectedCase.status, adminNotes)}
                     disabled={isUpdating === selectedCase.id}
-                    className="w-full h-11 bg-amber-600 hover:bg-amber-500 disabled:bg-amber-800 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-900/20"
+                    className="w-full h-11 bg-amber-500 hover:bg-amber-400 disabled:bg-slate-200 dark:disabled:bg-amber-800 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg"
                   >
                     {isUpdating === selectedCase.id ? (
                       <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
@@ -657,7 +655,7 @@ export default function AdminDashboard() {
                   </button>
                 </div>
 
-                <div className="pt-6 border-t border-slate-800">
+                <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
                   <button
                     onClick={() => handleCaseDelete(selectedCase.id)}
                     disabled={isUpdating === selectedCase.id}
