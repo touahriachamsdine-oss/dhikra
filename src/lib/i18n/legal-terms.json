@@ -5,9 +5,9 @@
     "en": "Your Justice Online Simplified"
   },
   "heroSubtitle": {
-    "ar": "حل جميع نزاعاتك بفضل إجراءاتنا القانونية المبسطة. من الإعذار إلى المحكمة.",
-    "fr": "Réglez tous vos litiges grâce à nos recours juridiques simplifiés. De la mise en demeure au Tribunal.",
-    "en": "Resolve all your disputes with our simplified legal actions. From formal notice to Court."
+    "ar": "حل جميع نزاعاتك مجاناً بفضل إجراءاتنا القانونية المبسطة. من الإعذار إلى المحكمة.",
+    "fr": "Réglez tous vos litiges gratuitement grâce à nos recours juridiques simplifiés. De la mise en demeure au Tribunal.",
+    "en": "Resolve all your disputes for free with our simplified legal actions. From formal notice to Court."
   },
   "startProcess": {
     "ar": "ابدأ الإجراء",
@@ -165,9 +165,9 @@
     "en": "Dispute Details"
   },
   "reviewSend": {
-    "ar": "دفع وإرسال (3900 دج)",
-    "fr": "Payer & Envoyer (3900 DZD)",
-    "en": "Pay & Send (3900 DZD)"
+    "ar": "مراجعة وإرسال",
+    "fr": "Vérifier & Envoyer",
+    "en": "Review & Send"
   },
   "back": {
     "ar": "رجوع",
@@ -180,9 +180,9 @@
     "en": "Next"
   },
   "submit": {
-    "ar": "تأكيد الدفع 🔒",
-    "fr": "Paiement Sécurisé 🔒",
-    "en": "Secure Payment 🔒"
+    "ar": "تقديم الملف 🚀",
+    "fr": "Soumettre le Dossier 🚀",
+    "en": "Submit Case 🚀"
   },
   "name": {
     "ar": "الاسم الكامل",
@@ -230,9 +230,9 @@
     "en": "Bailiff Portal"
   },
   "step1Desc": {
-    "ar": "قم بإنشاء ملف قانوني بسهولة. بدون رسوم محاماة.",
-    "fr": "Constituez un dossier solide facilement. Zéro frais d'avocat.",
-    "en": "Build a solid case easily. No lawyer fees."
+    "ar": "قم بإنشاء ملف قانوني بسهولة. خدمة مجانية بالكامل.",
+    "fr": "Constituez un dossier solide facilement. Service 100% gratuit.",
+    "en": "Build a solid case easily. 100% free service."
   },
   "step2Desc": {
     "ar": "يقوم خبراؤنا بالتحقق من صحة ملفك وفقًا للقانون الجزائري.",
@@ -260,9 +260,9 @@
     "en": "Postal Tracking - Algérie Poste"
   },
   "paymentReceived": {
-    "ar": "تم استلام الدفع (3900 دج)",
-    "fr": "Paiement Reçu (3900 DZD)",
-    "en": "Payment Received (3900 DZD)"
+    "ar": "تم استلام الطلب",
+    "fr": "Demande Reçue",
+    "en": "Request Received"
   },
   "documentPrinted": {
     "ar": "تم طباعة المستند",
@@ -325,9 +325,9 @@
     "en": "Verify info before submitting."
   },
   "legalWarning": {
-    "ar": "سيتم إنشاء الإعذار بصيغة قانونية وإرساله عبر البريد المضمون. تغطي الرسوم معالجة الملف.",
-    "fr": "La mise en demeure sera générée légalement et envoyée par Lettre Recommandée (LRAR). Ce service nécessite des frais de traitement.",
-    "en": "The notice will be legally generated and sent via Registered Mail. Fees cover processing."
+    "ar": "سيتم إنشاء الإعذار الخاص بك بصيغة قانونية وإرساله رسمياً. هذه العملية مؤرشفة بالكامل لتتبع تقدمك.",
+    "fr": "L'émetteur sera généré légalement et envoyé formellement. Ce processus est entièrement archivé pour votre suivi.",
+    "en": "Your notice will be legally generated and formally sent. This process is fully archived for your tracking."
   },
   "welcomeBack": {
     "ar": "مرحباً بعودتك",

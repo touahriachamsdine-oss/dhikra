@@ -210,9 +210,8 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                         ) : (
                             <button
                                 onClick={submitForm}
-                                className="flex items-center gap-2 px-8 py-4 bg-green-600 text-white rounded-2xl hover:bg-green-700 shadow-xl shadow-green-200 font-bold transition-all text-lg hover:scale-105"
+                                className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 shadow-xl shadow-blue-200 font-bold transition-all text-lg hover:scale-105"
                             >
-                                <div className="animate-pulse mr-2">🟢</div>
                                 {t('submit')}
                             </button>
                         )}
