@@ -107,8 +107,8 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 font-sans pb-20">
-            <div className="bg-primary-600 h-64 w-full absolute top-0 -z-10 rounded-b-[3rem]"></div>
+        <div className="min-h-screen bg-white dark:bg-slate-950 font-sans pb-20">
+            <div className="bg-primary-600 dark:bg-primary-900 h-64 w-full absolute top-0 -z-10 rounded-b-[3rem] shadow-xl"></div>
 
             <div className="max-w-4xl mx-auto px-4 pt-12">
                 <div className="flex justify-between items-center mb-8">
@@ -246,7 +246,7 @@ export default function SettingsPage() {
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    className="w-full bg-slate-900 text-white p-4 rounded-2xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-200 dark:shadow-none"
+                                    className="w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950 p-4 rounded-2xl font-bold hover:bg-slate-800 dark:hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-200 dark:shadow-none"
                                 >
                                     {updating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Lock className="w-5 h-5" />}
                                     Mettre à jour le mot de passe

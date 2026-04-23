@@ -198,7 +198,7 @@ function LandingPageContent() {
       {view === 'landing' && (
         <main className="flex-1">
           {/* Hero Section */}
-          <section className="relative pt-32 pb-20 px-6 sm:px-12 border-b border-gray-100 dark:border-slate-800 overflow-hidden bg-primary-50">
+          <section className="relative pt-32 pb-20 px-6 sm:px-12 border-b border-gray-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-950">
 
             {/* Split layout for Illustration and Text */}
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 relative z-10">
