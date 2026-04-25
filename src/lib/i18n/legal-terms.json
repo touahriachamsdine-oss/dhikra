@@ -693,5 +693,25 @@
     "ar": "هل أنت متأكد من حذف هذه القضية؟",
     "fr": "Êtes-vous sûr de vouloir supprimer ce dossier ?",
     "en": "Are you sure you want to delete this case?"
+  },
+  "documents": {
+    "ar": "الوثائق",
+    "fr": "Documents",
+    "en": "Documents"
+  },
+  "uploadFile": {
+    "ar": "رفع ملف",
+    "fr": "Charger un fichier",
+    "en": "Upload File"
+  },
+  "view": {
+    "ar": "عرض",
+    "fr": "Visualiser",
+    "en": "View"
+  },
+  "noFilesYet": {
+    "ar": "لا توجد ملفات مرفقة بعد.",
+    "fr": "Aucun fichier joint pour le moment.",
+    "en": "No files attached yet."
   }
 }

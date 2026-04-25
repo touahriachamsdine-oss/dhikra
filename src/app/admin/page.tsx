@@ -24,7 +24,10 @@ import {
   Activity,
   Shield,
   BarChart3,
+  Mail,
+  Globe,
 } from 'lucide-react'
+
 
 type User = {
   id: string
@@ -33,6 +36,24 @@ type User = {
   role: string
   phoneNumber?: string
   nationalId?: string
+  createdAt: string
+}
+
+type Bailiff = {
+  id: string
+  name: string
+  email?: string
+  phoneNumber?: string
+  address?: string
+  city?: string
+  createdAt: string
+}
+
+type CaseFile = {
+  id: string
+  fileName: string
+  fileUrl: string
+  fileType?: string
   createdAt: string
 }
 
@@ -57,6 +78,7 @@ type Case = {
     nationalId?: string
   }
 }
+
 
 type Stats = {
   total: number
@@ -85,8 +107,9 @@ export default function AdminDashboard() {
   const [lang, setLang] = useState<"ar" | "fr" | "en">("fr")
   const t = (key: string) => (terms as any)[key]?.[lang] || key;
 
-  const [currentView, setCurrentView] = useState<'overview' | 'users'>('overview')
+  const [currentView, setCurrentView] = useState<'overview' | 'users' | 'bailiffs' | 'notifications'>('overview')
   const [users, setUsers] = useState<User[]>([])
+  const [bailiffs, setBailiffs] = useState<Bailiff[]>([])
   const [cases, setCases] = useState<Case[]>([])
   const [filteredCases, setFilteredCases] = useState<Case[]>([])
   const [stats, setStats] = useState<Stats>({ total: 0, open: 0, inProgress: 0, resolved: 0, solveRate: 0 })
@@ -96,9 +119,15 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('ALL')
   const [selectedCase, setSelectedCase] = useState<Case | null>(null)
+  const [caseFiles, setCaseFiles] = useState<CaseFile[]>([])
   const [isUpdating, setIsUpdating] = useState<string | null>(null)
   const [adminNotes, setAdminNotes] = useState('')
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [showBailiffForm, setShowBailiffForm] = useState(false)
+  const [newBailiff, setNewBailiff] = useState({ name: '', email: '', phoneNumber: '', address: '', city: '' })
+  const [notifications, setNotifications] = useState<any[]>([])
+
+
 
   const showNotification = (type: 'success' | 'error', message: string) => {
     setNotification({ type, message })
@@ -114,7 +143,37 @@ export default function AdminDashboard() {
     setAdminEmail(user.email || '')
     fetchCases()
     fetchUsers()
+    fetchBailiffs()
+    fetchNotifications()
   }, [router])
+
+
+  const fetchBailiffs = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/bailiffs')
+      if (res.ok) {
+        const data = await res.json()
+        setBailiffs(data.bailiffs || [])
+      }
+    } catch {
+      showNotification('error', 'Erreur chargement huissiers.')
+    }
+  }, [])
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/notifications')
+      if (res.ok) {
+        const data = await res.json()
+        setNotifications(data.notifications || [])
+      }
+    } catch (error) {
+      console.error('Error fetching notifications', error)
+    }
+  }, [])
+
+
+
 
   const handleExport = () => {
     const csvContent = "data:text/csv;charset=utf-8,"
@@ -167,6 +226,27 @@ export default function AdminDashboard() {
     }
   }, [])
 
+  const fetchCaseFiles = async (caseId: string) => {
+    try {
+      const res = await fetch(`/api/cases/${caseId}/files`)
+      if (res.ok) {
+        const data = await res.json()
+        setCaseFiles(data.files || [])
+      }
+    } catch (error) {
+      console.error('Error fetching files', error)
+    }
+  }
+
+  useEffect(() => {
+    if (selectedCase) {
+      fetchCaseFiles(selectedCase.id)
+    } else {
+      setCaseFiles([])
+    }
+  }, [selectedCase])
+
+
   useEffect(() => {
     checkAuth()
   }, [checkAuth])
@@ -191,6 +271,43 @@ export default function AdminDashboard() {
     }
     setFilteredCases(result)
   }, [searchQuery, statusFilter, cases])
+
+  const handleBailiffCreate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsUpdating('bailiff_create')
+    try {
+      const res = await fetch('/api/admin/bailiffs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBailiff),
+      })
+      if (!res.ok) throw new Error()
+      showNotification('success', 'Huissier ajouté avec succès.')
+      setNewBailiff({ name: '', email: '', phoneNumber: '', address: '', city: '' })
+      setShowBailiffForm(false)
+      fetchBailiffs()
+    } catch {
+      showNotification('error', "Échec de l'ajout.")
+    } finally {
+      setIsUpdating(null)
+    }
+  }
+
+  const handleBailiffDelete = async (id: string) => {
+    if (!confirm('Supprimer cet huissier ?')) return
+    setIsUpdating(id)
+    try {
+      const res = await fetch(`/api/admin/bailiffs/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error()
+      showNotification('success', 'Huissier supprimé. Notification envoyée.')
+      fetchBailiffs()
+    } catch {
+      showNotification('error', 'Échec de la suppression.')
+    } finally {
+      setIsUpdating(null)
+    }
+  }
+
 
   const handleCaseDelete = async (id: string) => {
     if (!confirm(t('confirmDelete'))) return
@@ -281,10 +398,13 @@ export default function AdminDashboard() {
           {[
             { id: 'overview', icon: BarChart3, label: t('overview') },
             { id: 'users', icon: Users, label: t('users') },
+            { id: 'bailiffs', icon: Shield, label: t('bailiffsArea') },
+            { id: 'notifications', icon: AlertCircle, label: 'Notifications' },
           ].map(({ id, icon: Icon, label }) => (
+
             <button
               key={id}
-              onClick={() => setCurrentView(id as 'overview' | 'users')}
+              onClick={() => setCurrentView(id as 'overview' | 'users' | 'bailiffs')}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${currentView === id
                 ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -295,6 +415,7 @@ export default function AdminDashboard() {
             </button>
           ))}
         </nav>
+
 
         {/* Admin Info + Logout */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800">
@@ -552,7 +673,131 @@ export default function AdminDashboard() {
                 )}
               </div>
             </div>
+          ) : currentView === 'bailiffs' ? (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-amber-500" />
+                  {t('bailiffsArea')}
+                </h3>
+                <button
+                  onClick={() => setShowBailiffForm(!showBailiffForm)}
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-amber-500/20"
+                >
+                  {showBailiffForm ? t('cancel') : '+ Ajouter un huissier'}
+                </button>
+              </div>
+
+              {showBailiffForm && (
+                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
+                  <form onSubmit={handleBailiffCreate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input
+                      placeholder="Nom complet"
+                      value={newBailiff.name}
+                      onChange={e => setNewBailiff({ ...newBailiff, name: e.target.value })}
+                      required
+                      className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 transition-all"
+                    />
+                    <input
+                      placeholder="Email"
+                      type="email"
+                      value={newBailiff.email}
+                      onChange={e => setNewBailiff({ ...newBailiff, email: e.target.value })}
+                      className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 transition-all"
+                    />
+                    <input
+                      placeholder="Téléphone"
+                      value={newBailiff.phoneNumber}
+                      onChange={e => setNewBailiff({ ...newBailiff, phoneNumber: e.target.value })}
+                      className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 transition-all"
+                    />
+                    <input
+                      placeholder="Ville"
+                      value={newBailiff.city}
+                      onChange={e => setNewBailiff({ ...newBailiff, city: e.target.value })}
+                      className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 transition-all"
+                    />
+                    <div className="md:col-span-2">
+                      <input
+                        placeholder="Adresse professionnelle"
+                        value={newBailiff.address}
+                        onChange={e => setNewBailiff({ ...newBailiff, address: e.target.value })}
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-500 transition-all"
+                      />
+                    </div>
+                    <div className="md:col-span-2 flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={isUpdating === 'bailiff_create'}
+                        className="bg-amber-500 text-slate-950 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-400 disabled:opacity-50 transition-all"
+                      >
+                        {isUpdating === 'bailiff_create' ? 'Enregistrement...' : 'Enregistrer'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {bailiffs.map(b => (
+                    <div key={b.id} className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                      <div>
+                        <p className="font-semibold text-slate-900 dark:text-white uppercase tracking-tight">{b.name}</p>
+                        <div className="flex gap-4 mt-1">
+                          {b.email && <p className="text-xs text-slate-500 flex items-center gap-1"><Mail className="w-3 h-3" /> {b.email}</p>}
+                          {b.phoneNumber && <p className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3" /> {b.phoneNumber}</p>}
+                          {b.city && <p className="text-xs text-slate-500 flex items-center gap-1"><Globe className="w-3 h-3" /> {b.city}</p>}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => handleBailiffDelete(b.id)}
+                          disabled={!!isUpdating}
+                          className="p-2 text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                          title="Supprimer l'huissier"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {bailiffs.length === 0 && (
+                    <div className="p-12 text-center text-slate-500">Aucun huissier enregistré.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : currentView === 'notifications' as any ? (
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-amber-500" />
+                Journal des Notifications
+              </h3>
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {notifications.map(n => (
+                    <div key={n.id} className="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                      <div className="flex items-start gap-4">
+                        <div className={`p-2 rounded-lg ${n.type === 'WARNING' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'}`}>
+                          <AlertCircle className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-slate-900 dark:text-white">{n.message}</p>
+                          <p className="text-xs text-slate-500 mt-1">{new Date(n.createdAt).toLocaleString('fr-DZ')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {notifications.length === 0 && (
+                    <div className="p-12 text-center text-slate-500">Aucune notification système.</div>
+                  )}
+                </div>
+              </div>
+            </div>
           ) : null}
+
+
         </div>
       </main>
 
@@ -601,6 +846,36 @@ export default function AdminDashboard() {
                   {selectedCase.description || '—'}
                 </div>
               </div>
+
+              {/* Files Section */}
+              <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                <h4 className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Download className="w-3.5 h-3.5 text-blue-500" />
+                  Pièces Jointes
+                </h4>
+                <div className="space-y-2">
+                  {caseFiles.map(file => (
+                    <div key={file.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-4 h-4 text-slate-400" />
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate max-w-[240px]">{file.fileName}</span>
+                      </div>
+                      <a
+                        href={file.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors"
+                      >
+                        Visualiser
+                      </a>
+                    </div>
+                  ))}
+                  {caseFiles.length === 0 && (
+                    <p className="text-xs text-slate-500 italic">Aucun fichier joint à ce dossier.</p>
+                  )}
+                </div>
+              </div>
+
 
               <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-6">
                 <div>

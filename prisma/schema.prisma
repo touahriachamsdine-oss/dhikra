@@ -24,7 +24,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  cases Case[]
+  cases         Case[]
+  notifications Notification[]
 }
 
 model Case {
@@ -41,6 +42,40 @@ model Case {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 
+  files     CaseFile[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Bailiff {
+  id          String   @id @default(uuid())
+  name        String
+  email       String?
+  phoneNumber String?
+  address     String?
+  city        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String?  // If null, it's a system-wide or admin-targeted notification
+  user      User?    @relation(fields: [userId], references: [id])
+  message   String
+  type      String   @default("INFO") // "INFO" | "SUCCESS" | "WARNING" | "ERROR"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model CaseFile {
+  id        String   @id @default(uuid())
+  fileName  String
+  fileUrl   String
+  fileType  String?
+  caseId    String
+  case      Case     @relation(fields: [caseId], references: [id])
+  createdAt DateTime @default(now())
+}
+
