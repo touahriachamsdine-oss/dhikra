@@ -64,24 +64,32 @@ export async function POST(request: Request) {
       </html>
     `;
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
-    });
-    const page = await browser.newPage();
-
-    await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
-
-    let pdfBuffer;
     try {
-      pdfBuffer = await page.pdf({
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
+      });
+      const page = await browser.newPage();
+
+      await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
+
+      const pdfBuffer = await page.pdf({
         format: 'A4',
         margin: { top: '2cm', right: '2cm', bottom: '2cm', left: '2cm' },
         printBackground: true
       });
-    } catch (pdfError) {
-      console.error('Inner PDF Generation Error, falling back to HTML:', pdfError);
+
       await browser.close();
+
+      return new NextResponse(pdfBuffer as unknown as BodyInit, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'attachment; filename="document_legal.pdf"'
+        }
+      });
+    } catch (pdfError) {
+      console.error('PDF Generation failed, falling back to HTML:', pdfError);
       // Fallback: Return HTML content with a specific header so the client can handle it
       return new NextResponse(htmlContent, {
         status: 200,
@@ -92,19 +100,10 @@ export async function POST(request: Request) {
         }
       });
     }
-
-    await browser.close();
-
-    return new NextResponse(pdfBuffer as unknown as BodyInit, {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="document_legal.pdf"'
-      }
-    });
   } catch (error) {
-    console.error('PDF Generation Error:', error);
-    return NextResponse.json({ error: 'Failed to generate document' }, { status: 500 });
+    console.error('Core Logic Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
