@@ -173,8 +173,10 @@ function LandingPageContent() {
     { id: 'catWork', icon: <Briefcase className="w-8 h-8" />, color: 'text-primary-600', bg: 'bg-primary-50' },
     { id: 'catAuto', icon: <Car className="w-8 h-8" />, color: 'text-primary-600', bg: 'bg-primary-50' },
     { id: 'catConsumer', icon: <ShoppingCart className="w-8 h-8" />, color: 'text-primary-600', bg: 'bg-primary-50' },
-    { id: 'catServices', icon: <Hammer className="w-8 h-8" />, color: 'text-primary-600', bg: 'bg-primary-50' },
+    { id: 'catSERVICES', icon: <Hammer className="w-8 h-8" />, color: 'text-primary-600', bg: 'bg-primary-50' },
+    { id: 'catLegalNotice', icon: <Scale className="w-8 h-8" />, color: 'text-secondary-600', bg: 'bg-secondary-50' },
   ];
+
 
   return (
     <div className={`min-h-screen flex flex-col font-sans ${isRtl ? 'rtl' : 'ltr'}`} dir={isRtl ? 'rtl' : 'ltr'}>

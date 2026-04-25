@@ -5,6 +5,8 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
+    const isLegalNotice = data.documentType === 'catLegalNotice';
+
     // In a real application, we would use a proper HTML template with Algerian court formatting
     // For this MVP, we create a simple HTML string that tests Arabic rendering
     const htmlContent = `
@@ -16,6 +18,7 @@ export async function POST(request: Request) {
               font-family: 'Cairo', sans-serif;
               padding: 40px;
               line-height: 1.6;
+              color: #1a1a1b;
             }
             .header {
               text-align: center;
@@ -25,21 +28,52 @@ export async function POST(request: Request) {
             }
             .republic {
               font-weight: 700;
-              font-size: 20px;
+              font-size: 18px;
+              margin-bottom: 5px;
             }
             .ministry {
               font-weight: 400;
-              font-size: 16px;
+              font-size: 14px;
             }
             .title {
               text-align: center;
-              font-size: 24px;
-              font-weight: bold;
+              font-size: 26px;
+              font-weight: 900;
               margin: 40px 0;
               text-decoration: underline;
+              text-transform: uppercase;
+            }
+            .parties {
+              margin-bottom: 30px;
+              padding: 20px;
+              background: #f9fafb;
+              border-radius: 8px;
+            }
+            .party-row {
+              margin-bottom: 10px;
+              font-size: 16px;
+            }
+            .label {
+              font-weight: 700;
+              min-width: 100px;
+              display: inline-block;
             }
             .content {
               text-align: justify;
+              font-size: 16px;
+              margin-top: 20px;
+            }
+            .deadline {
+              font-weight: 700;
+              color: #dc2626;
+              margin: 20px 0;
+              text-align: center;
+              border: 1px solid #dc2626;
+              padding: 10px;
+            }
+            .signature {
+              margin-top: 60px;
+              text-align: left;
             }
           </style>
         </head>
@@ -50,19 +84,42 @@ export async function POST(request: Request) {
           </div>
           
           <div class="title">
-            ${data.documentType === 'mise_en_demeure' ? 'إعذار' : 'أمر بالأداء'}
+            ${isLegalNotice ? 'إعذار رسمي بلزوم الوفاء' : 'طلب أمر بالأداء'}
           </div>
           
+          <div class="parties">
+            <div class="party-row"><span class="label">لفائدة:</span> ${data.plaintiffName}</div>
+            <div class="party-row"><span class="label">ضد:</span> ${data.defendantName}</div>
+          </div>
+
           <div class="content">
-            <p>بناءً على أحكام قانون الإجراءات المدنية والإدارية (القانون رقم 08-09)...</p>
-            <p>المدعي: ${data.plaintiffName}</p>
-            <p>المدعى عليه: ${data.defendantName}</p>
-            <br/>
-            <p>الموضوع: ${data.subject}</p>
+            ${isLegalNotice ? `
+              <p>بناءً على أحكام قانون الإجراءات المدنية والإدارية، لاسيما المادة 18 وما يليها منها.</p>
+              <p>حيث يتبين من الوقائع أنكم مدينون للموكل بالمبلغ المذكور أدناه الناتج عن التزاماتكم التعاقدية.</p>
+              <p>الموضوع: <strong>${data.subject}</strong></p>
+              <p>المبلغ المطلوب: <strong>${data.amount || 'غير محدد'} دج</strong></p>
+              
+              <div class="deadline">
+                يمنح لكم أجل قدره 15 يوماً من تاريخ التبليغ لتسوية وضعيتكم ودفع المبالغ المستحقة.
+              </div>
+              
+              <p>وفي حالة انقضاء الأجل المذكور دون جدوى، سيضطر الموكل للجوء إلى الجهات القضائية المختصة للمطالبة بحقوقه، مع تحميلكم كافة المصاريف القضائية والتعويضات عن التأخير.</p>
+            ` : `
+              <p>بناءً على أحكام قانون الإجراءات المدنية والإدارية، نلتمس من السيد رئيس المحكمة إصدار أمر بالأداء ضد الخصم.</p>
+              <p>الموضوع: ${data.subject}</p>
+              <p>المبلغ المطلوب: ${data.amount} دج</p>
+            `}
+          </div>
+
+          <div class="signature">
+            حرر في: ${new Date().toLocaleDateString('ar-DZ')}
+            <br/><br/>
+            توقيع المعني
           </div>
         </body>
       </html>
     `;
+
 
     try {
       const browser = await puppeteer.launch({

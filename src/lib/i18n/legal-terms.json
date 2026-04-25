@@ -40,9 +40,14 @@
     "en": "Consumer (Invoices, Telecoms...)"
   },
   "catServices": {
-    "ar": "الخدمات (مقاولون، حرفيون...)",
-    "fr": "Services (Artisans, Travaux...)",
-    "en": "Services (Contractors, Craftsmen...)"
+    "ar": "خدمات (مقاولات، صيانة...)",
+    "fr": "Services (travaux, maintenance...)",
+    "en": "Services (works, maintenance...)"
+  },
+  "catLegalNotice": {
+    "ar": "الإعذار القانوني",
+    "fr": "Mise en demeure légale",
+    "en": "Legal Formal Notice"
   },
   "howItWorks": {
     "ar": "كيف يعمل؟",
