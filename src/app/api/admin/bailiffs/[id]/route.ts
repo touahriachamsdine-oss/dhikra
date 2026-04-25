@@ -4,15 +4,15 @@ import { getCurrentUser } from '@/lib/auth'
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id: bailiffId } = await params
         const user = await getCurrentUser()
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
         }
 
-        const bailiffId = params.id
 
         // Check if bailiff exists
         const bailiff = await prisma.bailiff.findUnique({

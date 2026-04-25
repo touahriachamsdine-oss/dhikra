@@ -6,15 +6,15 @@ import { getCurrentUser } from '@/lib/auth'
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id: caseId } = await params
         const user = await getCurrentUser()
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const caseId = params.id
 
         // Verify case belongs to user or user is admin
         const existingCase = await prisma.case.findUnique({
@@ -44,15 +44,15 @@ export async function GET(
 
 export async function POST(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id: caseId } = await params
         const user = await getCurrentUser()
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const caseId = params.id
         const body = await request.json()
         const { fileName, fileUrl, fileType } = body
 
