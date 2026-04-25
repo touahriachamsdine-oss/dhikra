@@ -22,6 +22,8 @@ function LandingPageContent() {
   const [expandedCase, setExpandedCase] = useState<string | null>(null);
   const [caseFiles, setCaseFiles] = useState<{ [key: string]: any[] }>({});
   const [isUploading, setIsUploading] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+
 
 
   useEffect(() => {
@@ -142,17 +144,24 @@ function LandingPageContent() {
 
       if (!response.ok) throw new Error('Failed to generate document');
 
+      const contentType = response.headers.get('Content-Type');
+      const isHtml = contentType?.includes('text/html');
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Mise_en_Demeure_${new Date().getTime()}.pdf`;
+      a.download = isHtml
+        ? `Document_Legal_${new Date().getTime()}.html`
+        : `Mise_en_Demeure_${new Date().getTime()}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
 
       setActiveCategory(null);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 5000);
       setView('dashboard');
+
     } catch (error) {
       console.error(error);
       alert('Error generating legal document');
@@ -169,7 +178,16 @@ function LandingPageContent() {
 
   return (
     <div className={`min-h-screen flex flex-col font-sans ${isRtl ? 'rtl' : 'ltr'}`} dir={isRtl ? 'rtl' : 'ltr'}>
+      {showSuccess && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold border border-emerald-400">
+            <CheckCircle className="w-5 h-5" />
+            {t('creationSuccess')}
+          </div>
+        </div>
+      )}
       {/* Header with Navigation and Auth */}
+
       <header className="flex justify-between items-center py-4 px-8 max-w-7xl mx-auto w-full absolute top-0 left-0 right-0 z-20">
         <div className="flex items-center gap-2">
           <Scale className="w-8 h-8 text-secondary-500" />
@@ -432,15 +450,6 @@ function LandingPageContent() {
                         </div>
                       </div>
                       <div className="w-full md:w-auto flex items-center gap-3 justify-end">
-                        <span className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide
-                           ${c.status === 'OPEN' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
-                            c.status === 'IN_PROGRESS' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
-                              c.status === 'RESOLVED' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
-                                'bg-red-100 text-red-700 border border-red-200'}`}>
-                          {c.status === 'OPEN' ? t('statusOpen') :
-                            c.status === 'IN_PROGRESS' ? t('statusInProgress') :
-                              c.status === 'RESOLVED' ? t('statusResolved') : t('statusRejected')}
-                        </span>
                         <button
                           onClick={() => {
                             if (expandedCase === c.id) setExpandedCase(null);
@@ -449,12 +458,27 @@ function LandingPageContent() {
                               fetchFiles(c.id);
                             }
                           }}
-                          className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all
+                            ${expandedCase === c.id
+                              ? 'bg-primary-600 text-white shadow-lg'
+                              : 'bg-white dark:bg-slate-800 text-primary-600 border border-primary-100 dark:border-slate-700 hover:border-primary-600 hover:shadow-md'}`}
                         >
-                          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${expandedCase === c.id ? 'rotate-180' : ''}`} />
+                          <ShieldCheck className="w-4 h-4" />
+                          {expandedCase === c.id ? t('close') : t('manageFiles')}
                         </button>
+                        <span className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide
+                           ${c.status === 'OPEN' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
+
+                            c.status === 'IN_PROGRESS' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                              c.status === 'RESOLVED' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+                                'bg-red-50 text-red-700 border border-red-100'}`}>
+                          {c.status === 'OPEN' ? t('statusOpen') :
+                            c.status === 'IN_PROGRESS' ? t('statusInProgress') :
+                              c.status === 'RESOLVED' ? t('statusResolved') : t('statusRejected')}
+                        </span>
                       </div>
                     </div>
+
 
                     {expandedCase === c.id && (
                       <div className="mx-6 bg-gray-50/50 dark:bg-slate-900/50 border-x border-b border-gray-100 dark:border-slate-800 rounded-b-2xl p-6 animate-in slide-in-from-top-2 duration-300">

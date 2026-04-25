@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 
 export async function POST(request: Request) {
-    try {
-        const data = await request.json();
+  try {
+    const data = await request.json();
 
-        // In a real application, we would use a proper HTML template with Algerian court formatting
-        // For this MVP, we create a simple HTML string that tests Arabic rendering
-        const htmlContent = `
+    // In a real application, we would use a proper HTML template with Algerian court formatting
+    // For this MVP, we create a simple HTML string that tests Arabic rendering
+    const htmlContent = `
       <html dir="rtl" lang="ar">
         <head>
           <style>
@@ -64,28 +64,47 @@ export async function POST(request: Request) {
       </html>
     `;
 
-        const browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
+    });
+    const page = await browser.newPage();
 
-        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
 
-        const pdfBuffer = await page.pdf({
-            format: 'A4',
-            margin: { top: '2cm', right: '2cm', bottom: '2cm', left: '2cm' },
-            printBackground: true
-        });
-
-        await browser.close();
-
-        return new NextResponse(pdfBuffer as unknown as BodyInit, {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': 'attachment; filename="document_legal.pdf"'
-            }
-        });
-    } catch (error) {
-        console.error('PDF Generation Error:', error);
-        return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
+    let pdfBuffer;
+    try {
+      pdfBuffer = await page.pdf({
+        format: 'A4',
+        margin: { top: '2cm', right: '2cm', bottom: '2cm', left: '2cm' },
+        printBackground: true
+      });
+    } catch (pdfError) {
+      console.error('Inner PDF Generation Error, falling back to HTML:', pdfError);
+      await browser.close();
+      // Fallback: Return HTML content with a specific header so the client can handle it
+      return new NextResponse(htmlContent, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html',
+          'X-Fallback-Type': 'html-document',
+          'Content-Disposition': 'attachment; filename="document_legal.html"'
+        }
+      });
     }
+
+    await browser.close();
+
+    return new NextResponse(pdfBuffer as unknown as BodyInit, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="document_legal.pdf"'
+      }
+    });
+  } catch (error) {
+    console.error('PDF Generation Error:', error);
+    return NextResponse.json({ error: 'Failed to generate document' }, { status: 500 });
+  }
 }
+

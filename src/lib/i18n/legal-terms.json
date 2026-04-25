@@ -713,5 +713,20 @@
     "ar": "لا توجد ملفات مرفقة بعد.",
     "fr": "Aucun fichier joint pour le moment.",
     "en": "No files attached yet."
+  },
+  "manageFiles": {
+    "ar": "إدارة الملفات",
+    "fr": "Gérer les fichiers",
+    "en": "Manage Files"
+  },
+  "close": {
+    "ar": "إغلاق",
+    "fr": "Fermer",
+    "en": "Close"
+  },
+  "creationSuccess": {
+    "ar": "تم إنشاء قضيتك بنجاح! يمكنك الآن إضافة وثائق.",
+    "fr": "Votre dossier a été créé avec succès ! Vous pouvez maintenant ajouter des documents.",
+    "en": "Your case has been created successfully! You can now add documents."
   }
 }
