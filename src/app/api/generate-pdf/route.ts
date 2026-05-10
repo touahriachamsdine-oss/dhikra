@@ -83,33 +83,62 @@ export async function POST(request: Request) {
             <div class="ministry">وزارة العدل</div>
           </div>
           
-          <div class="title">
-            ${isLegalNotice ? 'إعذار رسمي بلزوم الوفاء' : 'طلب أمر بالأداء'}
+          <div class="official-meta" style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 14px;">
+            <div>رقم المرجع: ${data.referenceNumber || 'DHK-' + Date.now().toString().slice(-6)}</div>
+            <div>تاريخ الصدور: ${new Date().toLocaleDateString('ar-DZ')}</div>
+          </div>
+
+          <div class="title" style="margin-top: 20px;">
+            ${isLegalNotice ? (
+        data.noticeType === 'RENT' ? 'إعذار رسمي بدفع مؤخرات الإيجار' :
+          data.noticeType === 'DEBT' ? 'إعذار رسمي بلزوم الوفاء بدين' :
+            data.noticeType === 'CONTRACT' ? 'إعذار رسمي بتنفيذ التزامات تعاقدية' :
+              'إعذار رسمي بلزوم الوفاء'
+      ) : 'طلب أمر بالأداء'}
           </div>
           
           <div class="parties">
-            <div class="party-row"><span class="label">لفائدة:</span> ${data.plaintiffName}</div>
-            <div class="party-row"><span class="label">ضد:</span> ${data.defendantName}</div>
+            <div class="party-row">
+              <span class="label">لفائدة:</span> ${data.plaintiffName}
+              ${data.plaintiffAddress ? `<br/><span class="label" style="font-size: 14px; margin-right: 20px;">العنوان:</span> ${data.plaintiffAddress}` : ''}
+              ${data.plaintiffPhone ? `<br/><span class="label" style="font-size: 14px; margin-right: 20px;">الهاتف:</span> ${data.plaintiffPhone}` : ''}
+            </div>
+            <div class="party-row">
+              <span class="label">ضد:</span> ${data.defendantName} (${data.defendantType === 'CORPORATE' ? 'شخص معنوي' : 'شخص طبيعي'})
+              ${data.defendantAddress ? `<br/><span class="label" style="font-size: 14px; margin-right: 20px;">العنوان:</span> ${data.defendantAddress}` : ''}
+              ${data.defendantPhone ? `<br/><span class="label" style="font-size: 14px; margin-right: 20px;">الهاتف:</span> ${data.defendantPhone}` : ''}
+            </div>
           </div>
 
           <div class="content">
             ${isLegalNotice ? `
               <p>بناءً على أحكام قانون الإجراءات المدنية والإدارية، لاسيما المادة 18 وما يليها منها.</p>
-              <p>حيث يتبين من الوقائع أنكم مدينون للموكل بالمبلغ المذكور أدناه الناتج عن التزاماتكم التعاقدية.</p>
+              
+              ${data.noticeType === 'RENT' ? `
+                <p>حيث أنكم تشغلون الأمكنة المملوكة للموكل بموجب عقد إيجار، وحيث تخلفتم عن دفع المستحقات للفترة المحددة.</p>
+              ` : data.noticeType === 'DEBT' ? `
+                <p>حيث يتبين من الوقائع والوثائق المرفقة أنكم مدينون للموكل بالمبلغ المذكور أدناه، والذي لم يتم تسويته رغم المحاولات الودية.</p>
+              ` : `
+                <p>حيث يتبين من الوقائع أنكم مدينون للموكل بالمبلغ المذكور أدناه الناتج عن التزاماتكم التعاقدية.</p>
+              `}
+
               <p>الموضوع: <strong>${data.subject}</strong></p>
               <p>المبلغ المطلوب: <strong>${data.amount || 'غير محدد'} دج</strong></p>
               
               <div class="deadline">
-                يمنح لكم أجل قدره 15 يوماً من تاريخ التبليغ لتسوية وضعيتكم ودفع المبالغ المستحقة.
+                يمنح لكم أجل قدره ${data.deadlineDays || 15} يوماً من تاريخ التبليغ لتسوية وضعيتكم ودفع المبالغ المستحقة.
               </div>
               
               <p>وفي حالة انقضاء الأجل المذكور دون جدوى، سيضطر الموكل للجوء إلى الجهات القضائية المختصة للمطالبة بحقوقه، مع تحميلكم كافة المصاريف القضائية والتعويضات عن التأخير.</p>
+              
+
             ` : `
               <p>بناءً على أحكام قانون الإجراءات المدنية والإدارية، نلتمس من السيد رئيس المحكمة إصدار أمر بالأداء ضد الخصم.</p>
               <p>الموضوع: ${data.subject}</p>
               <p>المبلغ المطلوب: ${data.amount} دج</p>
             `}
           </div>
+
 
           <div class="signature">
             حرر في: ${new Date().toLocaleDateString('ar-DZ')}

@@ -35,9 +35,20 @@ model Case {
   status         String   @default("OPEN") // "OPEN" | "IN_PROGRESS" | "RESOLVED" | "REJECTED"
   documentType   String?
   plaintiffName  String?
+  plaintiffPhone String?
+  plaintiffAddress String?
   defendantName  String?
+  defendantPhone String?
+  defendantAddress String?
   amount         Float?
+  defendantType  String?  // "INDIVIDUAL" | "CORPORATE"
   adminNotes     String?
+
+  // New advanced fields
+  noticeType     String?  // "RENT", "DEBT", "CONTRACT", "GENERAL"
+  deadlineDays   Int      @default(15)
+  trackingNumber String?
+  referenceNumber String?
 
   userId    String
   user      User     @relation(fields: [userId], references: [id])
@@ -48,16 +59,6 @@ model Case {
   updatedAt DateTime @updatedAt
 }
 
-model Bailiff {
-  id          String   @id @default(uuid())
-  name        String
-  email       String?
-  phoneNumber String?
-  address     String?
-  city        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
 
 model Notification {
   id        String   @id @default(uuid())

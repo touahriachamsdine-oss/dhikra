@@ -20,7 +20,7 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "SettleUp.dz | Legal Automation for Algeria",
-  description: "Simplifying legal procedures in Algeria with automated formal notices and bailiff intermediation.",
+  description: "Simplifying legal procedures in Algeria with automated formal notices.",
 };
 
 export default function RootLayout({

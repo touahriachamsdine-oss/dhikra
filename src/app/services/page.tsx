@@ -18,11 +18,7 @@ export default function ServicesPage() {
             description: t('automatedFormalNoticesDesc'),
             icon: <FileText className="w-8 h-8 text-primary-600" />
         },
-        {
-            title: t('bailiffIntermediation'),
-            description: t('bailiffIntermediationDesc'),
-            icon: <Scale className="w-8 h-8 text-primary-600" />
-        },
+
         {
             title: t('claimsManagement'),
             description: t('claimsManagementDesc'),

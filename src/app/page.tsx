@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import terms from "@/lib/i18n/legal-terms.json";
 import IntakeForm from "@/components/intake-form";
 import { Scale, Home, Briefcase, Car, ShoppingCart, Hammer, FileText, CheckCircle, Mail, Globe, Users, ShieldCheck, LogIn, ChevronDown, BookOpen, Download } from "lucide-react";
@@ -60,16 +61,33 @@ function LandingPageContent() {
 
     setIsUploading(caseId);
     try {
-      // In a real app, we'd upload to Supabase/S3 first.
-      // Simulating upload and saving metadata.
-      const simulatedUrl = `https://example.com/files/${Date.now()}_${file.name}`;
+      let finalUrl = `https://example.com/files/${Date.now()}_${file.name}`;
+
+      // Attempt real upload if Supabase is configured
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${caseId}/${Date.now()}.${fileExt}`;
+
+        const { data, error: uploadError } = await supabase.storage
+          .from('legal-documents')
+          .upload(fileName, file);
+
+        if (uploadError) {
+          console.error('Supabase upload error:', uploadError);
+        } else if (data) {
+          const { data: { publicUrl } } = supabase.storage
+            .from('legal-documents')
+            .getPublicUrl(fileName);
+          finalUrl = publicUrl;
+        }
+      }
 
       const res = await fetch(`/api/cases/${caseId}/files`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fileName: file.name,
-          fileUrl: simulatedUrl,
+          fileUrl: finalUrl,
           fileType: file.type
         })
       });
@@ -85,6 +103,7 @@ function LandingPageContent() {
       setIsUploading(null);
     }
   };
+
 
 
   // Trigger dashboard view if passed via URL after login
@@ -104,30 +123,41 @@ function LandingPageContent() {
     router.refresh();
   };
 
-  const handleGeneratePDF = async (formData: any) => {
+  const handleGeneratePDF = async (formData: any, isReDownload?: boolean) => {
     if (!user) {
       alert(t('pleaseLoginToSubmit'));
       router.push('/login');
       return;
     }
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     try {
-      // 1. Post to API cases
-      const caseRes = await fetch('/api/cases', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          documentType: activeCategory,
-          title: t('casePrefix') + String(t(activeCategory || 'document')),
-          plaintiffName: formData.plaintiffName,
-          defendantName: formData.defendantName,
-          description: formData.description || t('submittedViaForm'),
-          amount: formData.amount,
-        })
-      });
-      if (!caseRes.ok) throw new Error('Failed to create case');
+      if (!isReDownload) {
+        // 1. Post to API cases
+        const caseRes = await fetch('/api/cases', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            documentType: activeCategory,
+            title: t('casePrefix') + String(t(activeCategory || 'document')),
+            plaintiffName: formData.plaintiffName,
+            plaintiffPhone: formData.plaintiffPhone,
+            plaintiffAddress: formData.plaintiffAddress,
+            defendantName: formData.defendantName,
+            defendantPhone: formData.defendantPhone,
+            defendantAddress: formData.defendantAddress,
+            defendantType: formData.defendantType,
+            description: formData.description || t('submittedViaForm'),
+            amount: formData.amount,
+            noticeType: formData.noticeType,
+            deadlineDays: parseInt(formData.deadlineDays),
+          })
+        });
 
-      await new Promise(r => setTimeout(r, 1500));
+        if (!caseRes.ok) throw new Error('Failed to create case');
+        await new Promise(r => setTimeout(r, 1000));
+      }
 
       // 2. Download the generated PDF
       const response = await fetch('/api/generate-pdf', {
@@ -136,11 +166,19 @@ function LandingPageContent() {
         body: JSON.stringify({
           documentType: activeCategory,
           plaintiffName: formData.plaintiffName,
+          plaintiffPhone: formData.plaintiffPhone,
+          plaintiffAddress: formData.plaintiffAddress,
           defendantName: formData.defendantName,
+          defendantPhone: formData.defendantPhone,
+          defendantAddress: formData.defendantAddress,
+          defendantType: formData.defendantType,
           subject: formData.description,
-          amount: formData.amount
+          amount: formData.amount,
+          noticeType: formData.noticeType,
+          deadlineDays: formData.deadlineDays,
         }),
       });
+
 
       if (!response.ok) throw new Error('Failed to generate document');
 
@@ -157,10 +195,8 @@ function LandingPageContent() {
       a.click();
       a.remove();
 
-      setActiveCategory(null);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 5000);
-      setView('dashboard');
 
     } catch (error) {
       console.error(error);
@@ -206,10 +242,8 @@ function LandingPageContent() {
           <button onClick={() => router.push('/articles')} className="flex items-center gap-1 hover:text-primary-600 transition-colors">
             <BookOpen className="w-4 h-4 text-gray-400" /> {t('articles')}
           </button>
-          <button onClick={() => router.push('/huissier')} className="flex items-center gap-1 hover:text-primary-600 transition-colors">
-            <ShieldCheck className="w-4 h-4 text-gray-400" /> {t('bailiffsArea')}
-          </button>
         </nav>
+
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
@@ -331,17 +365,7 @@ function LandingPageContent() {
                     </div>
                   </div>
 
-                  {/* Floating Expert/Bailiff 3 */}
-                  <div className="absolute top-[25%] right-[0%] z-10 bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 
-                    animate-float-slow hover:scale-105 transition-all duration-300 cursor-pointer flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border-2 border-secondary-500 overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-slate-950">
-                      <Briefcase className="w-6 h-6 text-gray-400" />
-                    </div>
-                    <div>
-                      <div className="h-2 w-16 bg-gray-200 rounded-full mb-2"></div>
-                      <div className="h-2 w-10 bg-secondary-200 rounded-full mb-1"></div>
-                    </div>
-                  </div>
+
 
                   {/* Floating Shield 4 */}
                   <div className="absolute bottom-[25%] right-[5%] z-20 bg-white dark:bg-slate-900 p-5 rounded-3xl shadow-xl border border-gray-100 dark:border-slate-800 
@@ -446,10 +470,21 @@ function LandingPageContent() {
                           <FileText className="w-5 h-5 text-secondary-500 flex-shrink-0" />
                           <span className="truncate">{c.title || t('legalCase')}</span>
                         </h3>
-                        <div className="flex items-center gap-4 mt-2">
+                        <div className="flex flex-wrap items-center gap-4 mt-2">
                           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium truncate">{t('against')} <span className="text-gray-700 dark:text-gray-200">{c.defendantName || t('notDefined')}</span></p>
                           <p className="text-xs text-gray-400 flex-shrink-0">{t('submittedOn')} {new Date(c.createdAt).toLocaleDateString('fr-DZ')}</p>
+                          {c.trackingNumber && (
+                            <span className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded text-[10px] font-mono font-bold border border-blue-100 dark:border-blue-800">
+                              #{c.trackingNumber}
+                            </span>
+                          )}
+                          {c.deadlineDays && (
+                            <span className="bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded text-[10px] font-bold border border-amber-100 dark:border-amber-800">
+                              {c.deadlineDays} {t('days')}
+                            </span>
+                          )}
                         </div>
+
                       </div>
                       <div className="w-full md:w-auto flex items-center gap-3 justify-end">
                         <button

@@ -144,6 +144,21 @@
     "fr": "Langue",
     "en": "Language"
   },
+  "defendantTypeQuestion": {
+    "ar": "هل هذا الشخص مادي ام معنوي؟",
+    "fr": "S'agit-il d'une personne physique ou morale ?",
+    "en": "Is this a natural person or a legal entity?"
+  },
+  "naturalPerson": {
+    "ar": "شخص طبيعي",
+    "fr": "Personne physique",
+    "en": "Natural person"
+  },
+  "legalEntity": {
+    "ar": "شخص معنوي (شركة/مؤسسة)",
+    "fr": "Personne morale (Société/Entreprise)",
+    "en": "Legal entity (Company/Institution)"
+  },
   "step": {
     "ar": "الخطوة",
     "fr": "Étape",
@@ -194,6 +209,11 @@
     "fr": "Nom complet",
     "en": "Full Name"
   },
+  "phoneNumber": {
+    "ar": "رقم الهاتف",
+    "fr": "Numéro de Téléphone",
+    "en": "Phone Number"
+  },
   "address": {
     "ar": "العنوان",
     "fr": "Adresse",
@@ -229,11 +249,7 @@
     "fr": "Articles",
     "en": "Articles"
   },
-  "bailiffsArea": {
-    "ar": "بوابة المحضرين",
-    "fr": "Portail Huissiers",
-    "en": "Bailiff Portal"
-  },
+
   "step1Desc": {
     "ar": "قم بإنشاء ملف قانوني بسهولة. خدمة مجانية بالكامل.",
     "fr": "Constituez un dossier solide facilement. Service 100% gratuit.",
@@ -253,6 +269,41 @@
     "ar": "تم التحقق من الملف",
     "fr": "Dossier Validé",
     "en": "Case Validated"
+  },
+  "creationSuccess": {
+    "ar": "تم إنشاء الملف بنجاح وتوليد الوثيقة!",
+    "fr": "Dossier créé et document généré avec succès !",
+    "en": "Case created and document generated successfully!"
+  },
+  "noticeType": {
+    "ar": "نوع الإعذار",
+    "fr": "Type de mise en demeure",
+    "en": "Notice Type"
+  },
+  "noticeGeneral": {
+    "ar": "إعذار عام",
+    "fr": "Mise en demeure générale",
+    "en": "General Notice"
+  },
+  "noticeDebt": {
+    "ar": "استرداد ديون",
+    "fr": "Recouvrement de créance",
+    "en": "Debt Recovery"
+  },
+  "noticeRent": {
+    "ar": "مستحقات إيجار",
+    "fr": "Loyers impayés",
+    "en": "Unpaid Rent"
+  },
+  "noticeContract": {
+    "ar": "تنفيذ عقد",
+    "fr": "Exécution de contrat",
+    "en": "Contract Execution"
+  },
+  "deadlineDays": {
+    "ar": "مهلة الوفاء (بالأيام)",
+    "fr": "Délai de grâce (jours)",
+    "en": "Grace period (days)"
   },
   "pdfGeneratedDesc": {
     "ar": "تم إنشاء الإعذار الخاص بك بنجاح.",
@@ -599,16 +650,7 @@
     "fr": "Générez des mises en demeure conformes en quelques minutes.",
     "en": "Generate legally compliant formal notices in minutes."
   },
-  "bailiffIntermediation": {
-    "ar": "وساطة المحضرين",
-    "fr": "Intermédiation d'Huissiers",
-    "en": "Bailiff Intermediation"
-  },
-  "bailiffIntermediationDesc": {
-    "ar": "تواصل مباشرة مع محضرين معتمدين لإرسال المستندات الرسمية.",
-    "fr": "Connectez-vous directement avec des huissiers pour l'envoi de documents.",
-    "en": "Connect directly with certified bailiffs for official document serving."
-  },
+
   "claimsManagement": {
     "ar": "إدارة المطالبات",
     "fr": "Gestion des réclamations",
@@ -729,9 +771,59 @@
     "fr": "Fermer",
     "en": "Close"
   },
-  "creationSuccess": {
-    "ar": "تم إنشاء قضيتك بنجاح! يمكنك الآن إضافة وثائق.",
-    "fr": "Votre dossier a été créé avec succès ! Vous pouvez maintenant ajouter des documents.",
-    "en": "Your case has been created successfully! You can now add documents."
+  "downloadPDF": {
+    "ar": "تحميل كملف PDF",
+    "fr": "Télécharger en PDF",
+    "en": "Download as PDF"
+  },
+  "thankYou": {
+    "ar": "شكراً لك!",
+    "fr": "Merci !",
+    "en": "Thank You!"
+  },
+  "caseSubmitted": {
+    "ar": "تم تقديم طلبك بنجاح. يمكنك الآن تحميل الوثيقة الخاصة بك.",
+    "fr": "Votre demande a été soumise avec succès. Vous pouvez maintenant télécharger votre document.",
+    "en": "Your request has been submitted successfully. You can now download your document."
+  },
+  "processing": {
+    "ar": "جاري المعالجة...",
+    "fr": "Traitement en cours...",
+    "en": "Processing..."
+  },
+  "trackingNumber": {
+    "ar": "رقم التتبع",
+    "fr": "N° de suivi",
+    "en": "Tracking Number"
+  },
+  "referenceNumber": {
+    "ar": "رقم المرجع",
+    "fr": "N° de référence",
+    "en": "Reference Number"
+  },
+  "plaintiffPhone": {
+    "ar": "هاتف المدعي",
+    "fr": "Téléphone demandeur",
+    "en": "Plaintiff Phone"
+  },
+  "plaintiffAddress": {
+    "ar": "عنوان المدعي",
+    "fr": "Adresse demandeur",
+    "en": "Plaintiff Address"
+  },
+  "defendantPhone": {
+    "ar": "هاتف المدعى عليه",
+    "fr": "Téléphone défendeur",
+    "en": "Defendant Phone"
+  },
+  "defendantAddress": {
+    "ar": "عنوان المدعى عليه",
+    "fr": "Adresse défendeur",
+    "en": "Defendant Address"
+  },
+  "defendantType": {
+    "ar": "نوع المدعى عليه",
+    "fr": "Type de défendeur",
+    "en": "Defendant Type"
   }
 }

@@ -11,7 +11,21 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json()
-        const { title, description, documentType, plaintiffName, defendantName, amount } = body
+        const { 
+            title, 
+            description, 
+            documentType, 
+            plaintiffName, 
+            plaintiffPhone,
+            plaintiffAddress,
+            defendantName, 
+            defendantPhone,
+            defendantAddress,
+            amount,
+            defendantType,
+            noticeType,
+            deadlineDays 
+        } = body
 
         if (!title || !description) {
             return NextResponse.json({ error: 'Title and description are required' }, { status: 400 })
@@ -23,8 +37,15 @@ export async function POST(request: Request) {
                 description,
                 documentType,
                 plaintiffName,
+                plaintiffPhone,
+                plaintiffAddress,
                 defendantName,
+                defendantPhone,
+                defendantAddress,
                 amount: amount ? parseFloat(amount) : null,
+                defendantType,
+                noticeType,
+                deadlineDays: deadlineDays ? parseInt(deadlineDays) : 15,
                 userId: user.id
             }
         })
