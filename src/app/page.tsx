@@ -24,6 +24,7 @@ function LandingPageContent() {
   const [caseFiles, setCaseFiles] = useState<{ [key: string]: any[] }>({});
   const [isUploading, setIsUploading] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
 
