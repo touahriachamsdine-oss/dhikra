@@ -99,11 +99,17 @@ export default function LoginPage() {
 
         <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-6 shadow-sm border border-primary-100">
-              <Scale className="w-8 h-8" />
+            <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-100 dark:border-slate-800">
+              <Image 
+                src="/logo.png" 
+                alt="Taswiya Logo" 
+                width={40} 
+                height={40} 
+                className="w-10 h-10 object-contain"
+              />
             </div>
             <h1 className="text-3xl font-extrabold text-primary-500 mb-2 text-center">
-              {isSignUp ? t('signUp') : t('signInToSettleUp')}
+              {isSignUp ? t('signUp') : t('signInToTaswiya')}
             </h1>
             <p className="text-gray-500 dark:text-gray-400 text-center">{t('welcomeBack')}</p>
           </div>

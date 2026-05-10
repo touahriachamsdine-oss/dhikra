@@ -19,8 +19,11 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "SettleUp.dz | Legal Automation for Algeria",
+  title: "Taswiya | Legal Automation for Algeria",
   description: "Simplifying legal procedures in Algeria with automated formal notices.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

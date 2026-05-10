@@ -390,10 +390,10 @@
     "fr": "Bon retour",
     "en": "Welcome back"
   },
-  "signInToSettleUp": {
-    "ar": "تسجيل الدخول إلى SettleUp",
-    "fr": "Connectez-vous à SettleUp",
-    "en": "Sign in to SettleUp"
+  "signInToTaswiya": {
+    "ar": "تسجيل الدخول إلى Taswiya",
+    "fr": "Connectez-vous à Taswiya",
+    "en": "Sign in to Taswiya"
   },
   "emailAddress": {
     "ar": "البريد الإلكتروني",

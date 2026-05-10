@@ -227,10 +227,16 @@ function LandingPageContent() {
       {/* Header with Navigation and Auth */}
 
       <header className="flex justify-between items-center py-4 px-8 max-w-7xl mx-auto w-full absolute top-0 left-0 right-0 z-20">
-        <div className="flex items-center gap-2">
-          <Scale className="w-8 h-8 text-secondary-500" />
+        <div className="flex items-center gap-3">
+          <Image 
+            src="/logo.png" 
+            alt="Taswiya Logo" 
+            width={48} 
+            height={48} 
+            className="w-12 h-12 object-contain"
+          />
           <h1 className="text-2xl font-black tracking-tight text-primary-500">
-            Settle<span className="text-secondary-500">Up</span>.dz
+            Taswiya
           </h1>
         </div>
 
@@ -339,7 +345,13 @@ function LandingPageContent() {
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 
                     bg-white dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-full border-4 border-white shadow-[0_0_40px_rgba(251,191,36,0.3)]
                     hover:scale-110 transition-transform duration-500 cursor-pointer">
-                    <Scale className="w-24 h-24 text-primary-600" />
+                    <Image 
+                      src="/logo.png" 
+                      alt="Taswiya Center Logo" 
+                      width={120} 
+                      height={120} 
+                      className="w-24 h-24 object-contain"
+                    />
                   </div>
 
                   {/* Floating Document 1 */}
