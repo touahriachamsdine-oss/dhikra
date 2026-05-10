@@ -171,7 +171,7 @@ export default function AdminDashboard() {
     const csvContent = "data:text/csv;charset=utf-8,"
       + "ID,Titre,Statut,Type,Plaignant,Défendeur,Montant,Date\n"
       + filteredCases.map(c =>
-        `${c.id},"${(c.title || '').replace(/"/g, '""')}","${c.status}","${t(DOC_TYPE_LABELS[c.document_type || ''] || DOC_TYPE_LABELS.default).replace(/"/g, '""')}","${(c.plaintiff_name || '').replace(/"/g, '""')}","${(c.defendant_name || '').replace(/"/g, '""')}",${c.amount || ''},"${new Date(c.created_at).toLocaleDateString('fr-DZ')}"`
+        `${c.id},"${(c.title || '').replace(/"/g, '""')}","${c.status}","${t(DOC_TYPE_LABELS[c.documentType || ''] || DOC_TYPE_LABELS.default).replace(/"/g, '""')}","${(c.plaintiffName || '').replace(/"/g, '""')}","${(c.defendantName || '').replace(/"/g, '""')}",${c.amount || ''},"${new Date(c.createdAt).toLocaleDateString('fr-DZ')}"`
       ).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -256,7 +256,7 @@ export default function AdminDashboard() {
         c.user?.email?.toLowerCase().includes(q) ||
         c.user?.name?.toLowerCase().includes(q) ||
         c.user?.phoneNumber?.toLowerCase().includes(q) ||
-        c.defendant_name?.toLowerCase().includes(q) ||
+        c.defendantName?.toLowerCase().includes(q) ||
         c.amount?.toString().includes(q) ||
         c.id.toLowerCase().includes(q)
       )
@@ -532,7 +532,7 @@ export default function AdminDashboard() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <p className="font-semibold text-slate-900 dark:text-white text-sm truncate">
-                                {c.title || t(DOC_TYPE_LABELS[c.document_type || ''] || DOC_TYPE_LABELS.default)}
+                                {c.title || t(DOC_TYPE_LABELS[c.documentType || ''] || DOC_TYPE_LABELS.default)}
                               </p>
                               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${statusCfg.color}`}>
                                 {t(statusCfg.labelKey)}
