@@ -33,6 +33,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDone, setIsDone] = useState(false);
+    const [validationError, setValidationError] = useState<string | null>(null);
 
     const t = (key: TermKey | string) => {
         return (terms as any)[key]?.[localLang] || key;
@@ -45,8 +46,31 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
     };
 
 
-    const nextStep = () => setStep((s) => Math.min(s + 1, 5));
-    const prevStep = () => setStep((s) => Math.max(s - 1, 0));
+    const validateStep = () => {
+        if (step === 2) {
+            if (!formData.plaintiffName || !formData.plaintiffAddress || !formData.plaintiffPhone) return false;
+        }
+        if (step === 3) {
+            if (!formData.defendantName || !formData.defendantAddress || !formData.defendantPhone) return false;
+        }
+        if (step === 4) {
+            if (!formData.amount || !formData.description || !formData.deadlineDays) return false;
+        }
+        return true;
+    };
+
+    const nextStep = () => {
+        if (validateStep()) {
+            setValidationError(null);
+            setStep((s) => Math.min(s + 1, 5));
+        } else {
+            setValidationError(t('fieldsRequired'));
+        }
+    };
+    const prevStep = () => {
+        setValidationError(null);
+        setStep((s) => Math.max(s - 1, 0));
+    };
 
     const handleSituational = (answer: string) => {
         setFormData({ ...formData, situationalAnswer: answer });
@@ -164,16 +188,16 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('plaintiffInfo')}</h2>
                             <p className="text-gray-500 dark:text-gray-400 mb-8">{t('plaintiffHint')}</p>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('name')}</label>
-                                <input type="text" name="plaintiffName" value={formData.plaintiffName} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" autoFocus />
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('name')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="plaintiffName" value={formData.plaintiffName} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.plaintiffName ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} autoFocus />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('address')}</label>
-                                <input type="text" name="plaintiffAddress" value={formData.plaintiffAddress} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" />
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('address')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="plaintiffAddress" value={formData.plaintiffAddress} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.plaintiffAddress ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('phoneNumber')}</label>
-                                <input type="tel" name="plaintiffPhone" value={formData.plaintiffPhone} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" placeholder="05/06/07..." />
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('phoneNumber')} <span className="text-red-500">*</span></label>
+                                <input type="tel" name="plaintiffPhone" value={formData.plaintiffPhone} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.plaintiffPhone ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} placeholder="05/06/07..." />
                             </div>
                         </div>
                     )}
@@ -183,16 +207,16 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('defendantInfo')}</h2>
                             <p className="text-gray-500 dark:text-gray-400 mb-8">{t('defendantHint')}</p>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('name')}</label>
-                                <input type="text" name="defendantName" value={formData.defendantName} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" autoFocus />
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('name')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="defendantName" value={formData.defendantName} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.defendantName ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} autoFocus />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('address')}</label>
-                                <input type="text" name="defendantAddress" value={formData.defendantAddress} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" />
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('address')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="defendantAddress" value={formData.defendantAddress} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.defendantAddress ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('phoneNumber')}</label>
-                                <input type="tel" name="defendantPhone" value={formData.defendantPhone} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" placeholder="05/06/07..." />
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('phoneNumber')} <span className="text-red-500">*</span></label>
+                                <input type="tel" name="defendantPhone" value={formData.defendantPhone} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.defendantPhone ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} placeholder="05/06/07..." />
                             </div>
                         </div>
                     )}
@@ -201,16 +225,16 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                         <div className="space-y-6 animate-in slide-in-from-right duration-300">
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">{t('disputeDetails')}</h2>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('amount')}</label>
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('amount')} <span className="text-red-500">*</span></label>
                                 <div className="relative">
-                                    <input type="number" name="amount" value={formData.amount} onChange={handleChange} className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all ${isRtl ? 'pl-16' : 'pr-16'}`} autoFocus />
+                                    <input type="number" name="amount" value={formData.amount} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${isRtl ? 'pl-16' : 'pr-16'} ${validationError && !formData.amount ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} autoFocus />
                                     <span className={`absolute top-1/2 -translate-y-1/2 text-gray-400 font-semibold ${isRtl ? 'left-4' : 'right-4'}`}>DZD</span>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-400 uppercase mb-2">{t('noticeType')}</label>
+                                    <label className="block text-sm font-bold text-gray-400 uppercase mb-2">{t('noticeType')} <span className="text-red-500">*</span></label>
                                     <select name="noticeType" value={formData.noticeType} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-500 outline-none bg-white dark:bg-slate-900">
                                         <option value="GENERAL">{t('noticeGeneral')}</option>
                                         <option value="DEBT">{t('noticeDebt')}</option>
@@ -219,14 +243,14 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-400 uppercase mb-2">{t('deadlineDays')}</label>
-                                    <input type="number" name="deadlineDays" value={formData.deadlineDays} onChange={handleChange} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-500 outline-none" />
+                                    <label className="block text-sm font-bold text-gray-400 uppercase mb-2">{t('deadlineDays')} <span className="text-red-500">*</span></label>
+                                    <input type="number" name="deadlineDays" value={formData.deadlineDays} onChange={handleChange} className={`w-full border-2 rounded-xl p-3 focus:ring-4 focus:ring-blue-100 outline-none ${validationError && !formData.deadlineDays ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('description')}</label>
-                                <textarea name="description" value={formData.description} onChange={handleChange} rows={5} className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-4 text-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" />
+                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('description')} <span className="text-red-500">*</span></label>
+                                <textarea name="description" value={formData.description} onChange={handleChange} rows={5} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.description ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} />
                             </div>
 
                         </div>
@@ -279,6 +303,14 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                     )}
                 </div>
             </div>
+
+            {validationError && (
+                <div className="fixed bottom-24 left-0 right-0 px-6 animate-in slide-in-from-bottom-2 duration-300">
+                    <div className="max-w-2xl mx-auto bg-red-100 border border-red-200 text-red-700 px-4 py-2 rounded-xl text-center text-sm font-bold shadow-lg">
+                        {validationError}
+                    </div>
+                </div>
+            )}
 
             {/* Footer Controls Fixed */}
             {step > 0 && (

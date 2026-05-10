@@ -18,7 +18,7 @@ const ERRORS: Record<string, string> = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [lang, setLang] = useState<Language>("fr");
+  const [lang, setLang] = useState<Language>("ar");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");

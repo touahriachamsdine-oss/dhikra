@@ -825,5 +825,10 @@
     "ar": "نوع المدعى عليه",
     "fr": "Type de défendeur",
     "en": "Defendant Type"
+  },
+  "fieldsRequired": {
+    "ar": "جميع الحقول مطلوبة",
+    "fr": "Tous les champs sont obligatoires",
+    "en": "All fields are required"
   }
 }

@@ -15,7 +15,7 @@ type TermKey = keyof typeof terms;
 function LandingPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [lang, setLang] = useState<Language>("fr");
+  const [lang, setLang] = useState<Language>("ar");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [view, setView] = useState<'landing' | 'dashboard'>('landing');
   const [user, setUser] = useState<any>(null);
