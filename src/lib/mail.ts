@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Use a fallback domain if dhikra.dz is not yet verified in Resend
 const FROM_EMAIL = "Taswiya <onboarding@resend.dev>";
@@ -20,6 +20,11 @@ export const sendVerificationEmail = async (email: string, token: string, lang: 
         fr: `<h1>Bienvenue sur Taswiya</h1><p>Veuillez cliquer sur le lien ci-dessous pour activer votre compte :</p><a href="${confirmLink}">Activer le compte</a>`,
         en: `<h1>Welcome to Taswiya</h1><p>Please click the link below to activate your account:</p><a href="${confirmLink}">Activate Account</a>`
     };
+
+    if (!resend) {
+        console.warn("Resend is not initialized. Skipping email send.");
+        return;
+    }
 
     await resend.emails.send({
         from: FROM_EMAIL,
