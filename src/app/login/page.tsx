@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Scale, LogIn, KeyRound, Mail, ArrowLeft, Loader2, Globe, UserPlus } from "lucide-react";
+import Image from "next/image";
 import terms from "@/lib/i18n/legal-terms.json";
 import { ThemeToggle } from "@/components/theme-toggle";
 
