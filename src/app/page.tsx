@@ -242,7 +242,7 @@ function LandingPageContent() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 bg-white dark:bg-slate-900/70 backdrop-blur-xl px-8 py-3 rounded-full shadow-sm border border-gray-100 dark:border-slate-800 font-semibold text-gray-700">
+        <nav className="hidden lg:flex items-center gap-8 bg-white dark:bg-slate-900/70 backdrop-blur-xl px-8 py-3 rounded-full shadow-sm border border-gray-100 dark:border-slate-800 font-semibold text-gray-700">
           <button onClick={() => router.push('/services')} className="flex items-center gap-1 hover:text-primary-600 transition-colors">
             {t('services')}
           </button>
@@ -252,54 +252,48 @@ function LandingPageContent() {
         </nav>
 
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <ThemeToggle />
           {/* Language Toggle */}
-          <div className="flex items-center gap-2 bg-white dark:bg-slate-900/80 backdrop-blur-md rounded-full px-3 py-1 shadow-sm border border-gray-100 dark:border-slate-800">
-            <Globe className="w-4 h-4 text-gray-400" />
+          <div className="flex items-center gap-1 sm:gap-2 bg-white dark:bg-slate-900/80 backdrop-blur-md rounded-full px-2 sm:px-3 py-1 shadow-sm border border-gray-100 dark:border-slate-800">
+            <Globe className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
             <select
               value={lang}
               onChange={(e) => setLang(e.target.value as Language)}
-              className="bg-transparent border-none outline-none font-semibold text-gray-700 cursor-pointer text-sm"
+              className="bg-transparent border-none outline-none font-bold text-gray-700 cursor-pointer text-xs sm:text-sm"
             >
               <option value="ar">AR</option>
               <option value="fr">FR</option>
               <option value="en">EN</option>
             </select>
           </div>
-
+          
           {/* Auth Button */}
           {user ? (
-            <div className="hidden sm:flex items-center gap-4">
-              <span className="text-sm font-bold text-gray-700 bg-gray-100 dark:bg-slate-800 rounded-full px-3 py-1 truncate max-w-[120px]">{user.name || user.email}</span>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <span className="hidden lg:inline text-sm font-bold text-gray-700 bg-gray-100 dark:bg-slate-800 rounded-full px-3 py-1 truncate max-w-[120px]">{user.name || user.email}</span>
               <button
                 onClick={() => setView(view === 'dashboard' ? 'landing' : 'dashboard')}
-                className="flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full font-bold shadow-sm hover:bg-primary-200 transition-colors"
+                className="flex items-center gap-2 bg-primary-100 text-primary-700 p-2 sm:px-4 sm:py-2 rounded-full font-bold shadow-sm hover:bg-primary-200 transition-colors"
               >
-                {view === 'dashboard' ? t('home') : t('dashboard')}
-              </button>
-              <button
-                onClick={() => router.push('/settings')}
-                className="p-2 text-gray-500 hover:text-primary-600 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-                title="Settings"
-              >
-                <Hammer className="w-5 h-5" />
+                <Users className="w-4 h-4 sm:hidden" />
+                <span className="hidden sm:inline">{view === 'dashboard' ? t('home') : t('dashboard')}</span>
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-full font-bold hover:bg-red-100 transition-colors"
+                className="flex items-center gap-2 bg-red-50 text-red-600 p-2 sm:px-4 sm:py-2 rounded-full font-bold hover:bg-red-100 transition-colors"
               >
                 <LogIn className="w-4 h-4 rotate-180" />
-                {t('logout')}
+                <span className="hidden sm:inline">{t('logout')}</span>
               </button>
             </div>
           ) : (
             <button
               onClick={() => router.push('/login')}
-              className="hidden sm:flex items-center gap-2 bg-primary-600 text-white px-5 py-2 rounded-full font-bold shadow-md hover:bg-primary-700 transition-colors"
+              className="flex items-center gap-2 bg-primary-600 text-white px-3 sm:px-5 py-2 rounded-full font-bold shadow-md hover:bg-primary-700 transition-colors"
             >
               <LogIn className="w-4 h-4" />
-              {t('login')}
+              <span className="hidden sm:inline">{t('login')}</span>
             </button>
           )}
         </div>
@@ -316,26 +310,26 @@ function LandingPageContent() {
                 <span className="bg-secondary-500 text-primary-500 text-sm font-black px-4 py-1.5 rounded-full mb-6 inline-block uppercase tracking-wider shadow-sm">
                   #1 {t('trustedBy')}
                 </span>
-                <h1 className="text-5xl sm:text-6xl font-extrabold text-primary-500 mb-6 leading-tight tracking-tight">
+                <h1 className="text-4xl sm:text-6xl font-extrabold text-primary-500 mb-6 leading-tight tracking-tight">
                   {t('heroTitle')}
                 </h1>
-                <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl leading-relaxed">
+                <p className="text-lg sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl leading-relaxed">
                   {t('heroSubtitle')}
                 </p>
-                <div className="flex items-center gap-4">
-                  <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="bg-primary-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-700 transition-transform hover:-translate-y-1 shadow-lg text-lg">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                  <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto bg-primary-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-700 transition-transform hover:-translate-y-1 shadow-lg text-lg">
                     {t('startProcess')}
                   </button>
                   <div className="flex -space-x-4 rtl:space-x-reverse">
-                    <img className="w-12 h-12 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=33" alt="User" />
-                    <img className="w-12 h-12 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=47" alt="User" />
-                    <img className="w-12 h-12 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=12" alt="User" />
-                    <div className="w-12 h-12 rounded-full border-2 border-white bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-xs">+10k</div>
+                    <img className="w-10 h-10 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=33" alt="User" />
+                    <img className="w-10 h-10 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=47" alt="User" />
+                    <img className="w-10 h-10 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=12" alt="User" />
+                    <div className="w-10 h-10 rounded-full border-2 border-white bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-[10px]">+10k</div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex-1 flex justify-center lg:justify-end relative h-[500px]">
+              <div className="hidden lg:flex flex-1 justify-center lg:justify-end relative h-[500px]">
                 {/* Abstract Interactive Legal Composition */}
                 <div className="relative w-full max-w-md aspect-square group">
                   {/* Glowing background orbs */}
