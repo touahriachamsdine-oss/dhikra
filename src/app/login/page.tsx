@@ -14,6 +14,7 @@ const ERRORS: Record<string, string> = {
   'Invalid credentials': 'Email ou mot de passe incorrect.',
   'Email and password required': 'Veuillez remplir tous les champs.',
   'Server error': 'Erreur serveur. Réessayez.',
+  'Email not verified': 'Veuillez vérifier votre email avant de vous connecter.',
 };
 
 export default function LoginPage() {
@@ -26,6 +27,22 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  useState(() => {
+      if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('verified') === 'true') {
+              setSuccessMsg(lang === 'ar' ? 'تم تفعيل حسابك بنجاح! يمكنك الآن تسجيل الدخول.' : 'Compte activé avec succès ! Vous pouvez maintenant vous connecter.');
+          }
+          const error = params.get('error');
+          if (error === 'invalid_token') {
+              setErrorMsg(lang === 'ar' ? 'رابط التفعيل غير صالح أو منتهي الصلاحية.' : 'Lien d\'activation invalide ou expiré.');
+          } else if (error === 'server_error') {
+              setErrorMsg(lang === 'ar' ? 'حدث خطأ في الخادم أثناء التفعيل.' : 'Erreur serveur lors de l\'activation.');
+          }
+      }
+  });
 
   const t = (key: TermKey | string) => (terms as Record<string, Record<Language, string>>)[key]?.[lang] || key;
   const isRtl = lang === "ar";
@@ -48,7 +65,12 @@ export default function LoginPage() {
           setErrorMsg(ERRORS[data.error] || data.error);
           return;
         }
-        // Auto-login after register
+        
+        if (data.needsVerification) {
+            setSuccessMsg(lang === 'ar' ? 'تم إرسال بريد التفعيل. يرجى مراجعة بريدك الإلكتروني.' : 'Email de vérification envoyé. Veuillez consulter votre boîte mail.');
+            setIsSignUp(false);
+            return;
+        }
       }
 
       // Login
@@ -61,7 +83,11 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setErrorMsg(ERRORS[data.error] || data.error || 'Erreur de connexion');
+        if (data.needsVerification) {
+            setErrorMsg(lang === 'ar' ? 'يرجى تفعيل حسابك أولاً. تحقق من بريدك الإلكتروني.' : 'Veuillez activer votre compte. Vérifiez vos emails.');
+        } else {
+            setErrorMsg(ERRORS[data.error] || data.error || 'Erreur de connexion');
+        }
         return;
       }
 
@@ -114,6 +140,13 @@ export default function LoginPage() {
             </h1>
             <p className="text-gray-500 dark:text-gray-400 text-center">{t('welcomeBack')}</p>
           </div>
+
+          {/* Success message */}
+          {successMsg && (
+            <div className="mb-5 px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-medium text-center">
+              {successMsg}
+            </div>
+          )}
 
           {/* Error message */}
           {errorMsg && (

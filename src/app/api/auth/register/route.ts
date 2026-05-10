@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { signToken, AUTH_COOKIE_OPTIONS } from '@/lib/auth'
+import { v4 as uuid } from 'uuid'
+import { sendVerificationEmail } from '@/lib/mail'
 
 export async function POST(request: Request) {
   try {
@@ -18,6 +20,7 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await hash(password, 12)
+    const verificationToken = uuid()
 
     const user = await prisma.user.create({
       data: {
@@ -26,19 +29,24 @@ export async function POST(request: Request) {
         name: name || null,
         nationalId: nationalId || null,
         role: 'CUSTOMER',
+        verificationToken,
       },
     })
 
-    // Auto-login after registration
-    const token = await signToken({ id: user.id, email: user.email, role: user.role })
+    // Send verification email
+    try {
+        const lang = request.headers.get('accept-language')?.includes('fr') ? 'fr' : 'ar';
+        await sendVerificationEmail(email, verificationToken, lang);
+    } catch (err) {
+        console.error('Failed to send verification email', err);
+        // We continue even if email fails, user can try to resend later (though we haven't implemented that yet)
+    }
 
-    const response = NextResponse.json({
+    return NextResponse.json({
       ok: true,
-      user: { id: user.id, email: user.email, role: user.role, name: user.name },
+      message: 'Verification email sent',
+      needsVerification: true
     })
-
-    response.cookies.set(AUTH_COOKIE_OPTIONS.name, token, AUTH_COOKIE_OPTIONS)
-    return response
 
   } catch (error) {
     console.error('[REGISTER]', error)
