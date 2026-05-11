@@ -2,7 +2,6 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import terms from "@/lib/i18n/legal-terms.json";
 import IntakeForm from "@/components/intake-form";
 import { Scale, Home, Briefcase, Car, ShoppingCart, Hammer, FileText, CheckCircle, Mail, Globe, Users, ShieldCheck, LogIn, ChevronDown, BookOpen, Download } from "lucide-react";
@@ -25,8 +24,6 @@ function LandingPageContent() {
   const [isUploading, setIsUploading] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -62,26 +59,9 @@ function LandingPageContent() {
 
     setIsUploading(caseId);
     try {
-      let finalUrl = `https://example.com/files/${Date.now()}_${file.name}`;
-
-      // Attempt real upload if Supabase is configured
-      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${caseId}/${Date.now()}.${fileExt}`;
-
-        const { data, error: uploadError } = await supabase.storage
-          .from('legal-documents')
-          .upload(fileName, file);
-
-        if (uploadError) {
-          console.error('Supabase upload error:', uploadError);
-        } else if (data) {
-          const { data: { publicUrl } } = supabase.storage
-            .from('legal-documents')
-            .getPublicUrl(fileName);
-          finalUrl = publicUrl;
-        }
-      }
+      // Since we are moving away from Supabase/Firebase, we'll use a simulated URL
+      // In a real production app, you would use S3, Uploadthing, or another provider.
+      const finalUrl = `https://storage.taswiya.dz/uploads/${caseId}/${Date.now()}_${file.name}`;
 
       const res = await fetch(`/api/cases/${caseId}/files`, {
         method: 'POST',
