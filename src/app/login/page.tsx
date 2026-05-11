@@ -28,6 +28,8 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [isResending, setIsResending] = useState(false);
+  const [showResendBtn, setShowResendBtn] = useState(false);
 
   useState(() => {
       if (typeof window !== 'undefined') {
@@ -51,6 +53,7 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg(null);
+    setShowResendBtn(false);
 
     try {
       if (isSignUp) {
@@ -85,6 +88,7 @@ export default function LoginPage() {
       if (!res.ok) {
         if (data.needsVerification) {
             setErrorMsg(lang === 'ar' ? 'يرجى تفعيل حسابك أولاً. تحقق من بريدك الإلكتروني.' : 'Veuillez activer votre compte. Vérifiez vos emails.');
+            setShowResendBtn(true);
         } else {
             setErrorMsg(ERRORS[data.error] || data.error || 'Erreur de connexion');
         }
@@ -102,6 +106,30 @@ export default function LoginPage() {
       setErrorMsg('Erreur réseau. Vérifiez votre connexion.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!email) return;
+    setIsResending(true);
+    try {
+      const res = await fetch('/api/auth/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setSuccessMsg(lang === 'ar' ? 'تم إرسال رابط تفعيل جديد.' : 'Un nouveau lien d\'activation a été envoyé.');
+        setErrorMsg(null);
+        setShowResendBtn(false);
+      } else {
+        const data = await res.json();
+        setErrorMsg(data.error || 'Failed to resend');
+      }
+    } catch {
+      setErrorMsg('Network error');
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -152,6 +180,15 @@ export default function LoginPage() {
           {errorMsg && (
             <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium text-center">
               {errorMsg}
+              {showResendBtn && (
+                <button
+                  onClick={handleResend}
+                  disabled={isResending}
+                  className="block w-full mt-2 text-xs font-bold underline hover:text-red-800 disabled:opacity-50"
+                >
+                  {isResending ? (lang === 'ar' ? 'جاري الإرسال...' : 'Envoi...') : (lang === 'ar' ? 'إعادة إرسال بريد التفعيل' : 'Renvoyer l\'email de vérification')}
+                </button>
+              )}
             </div>
           )}
 

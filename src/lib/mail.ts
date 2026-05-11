@@ -1,9 +1,12 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-
-// Use a fallback domain if dhikra.dz is not yet verified in Resend
-const FROM_EMAIL = "Taswiya <onboarding@resend.dev>";
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+    },
+});
 
 export const sendVerificationEmail = async (email: string, token: string, lang: string = "ar") => {
     const domain = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -21,15 +24,17 @@ export const sendVerificationEmail = async (email: string, token: string, lang: 
         en: `<h1>Welcome to Taswiya</h1><p>Please click the link below to activate your account:</p><a href="${confirmLink}">Activate Account</a>`
     };
 
-    if (!resend) {
-        console.warn("Resend is not initialized. Skipping email send.");
-        return;
-    }
-
-    await resend.emails.send({
-        from: FROM_EMAIL,
+    const mailOptions = {
+        from: `"Taswiya" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: subjects[lang] || subjects.ar,
-        html: messages[lang] || messages.ar
-    });
+        html: messages[lang] || messages.ar,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Error sending email via Nodemailer:", error);
+        throw error;
+    }
 };
