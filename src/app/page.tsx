@@ -363,7 +363,7 @@ function LandingPageContent() {
                   <div className="absolute top-[10%] left-[5%] z-10 bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 
                     animate-float-slow hover:-translate-y-2 hover:rotate-3 transition-all duration-300 cursor-pointer flex flex-col gap-3 w-40">
                     <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center">
-                      <FileText className="w-5 h-5 text-blue-600" />
+                      <FileText className="w-5 h-5 text-blue-800" />
                     </div>
                     <div className="h-2 w-full bg-gray-100 dark:bg-slate-800 rounded-full"></div>
                     <div className="h-2 w-2/3 bg-gray-100 dark:bg-slate-800 rounded-full"></div>
@@ -377,7 +377,7 @@ function LandingPageContent() {
                     animate-float-medium hover:scale-105 transition-transform duration-300 cursor-pointer flex items-center gap-4 w-48">
                     <Mail className="w-8 h-8 text-secondary-500" />
                     <div>
-                      <div className="text-xs text-blue-200 font-bold mb-1">Mise en Demeure</div>
+                      <div className="text-xs text-blue-300 font-bold mb-1">Mise en Demeure</div>
                       <div className="text-sm font-black">Envoyé LRAR</div>
                     </div>
                   </div>
@@ -430,7 +430,7 @@ function LandingPageContent() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center relative z-10">
                 <div className="flex flex-col items-center gap-6">
                   <div className="w-24 h-24 bg-primary-600/50 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-primary-400">
-                    <FileText className="w-12 h-12 text-blue-200" />
+                    <FileText className="w-12 h-12 text-blue-300" />
                   </div>
                   <h3 className="text-xl font-bold">{t('step1')}</h3>
                   <p className="text-blue-100 text-lg leading-relaxed">{t('step1Desc')}</p>
@@ -438,7 +438,7 @@ function LandingPageContent() {
 
                 <div className="flex flex-col items-center gap-6">
                   <div className="w-24 h-24 bg-primary-600/50 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-primary-400">
-                    <ShieldCheck className="w-12 h-12 text-blue-200" />
+                    <ShieldCheck className="w-12 h-12 text-blue-300" />
                   </div>
                   <h3 className="text-xl font-bold">{t('step2')}</h3>
                   <p className="text-blue-100 text-lg leading-relaxed">{t('step2Desc')}</p>
@@ -491,7 +491,7 @@ function LandingPageContent() {
                           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium truncate">{t('against')} <span className="text-gray-700 dark:text-gray-200">{c.defendantName || t('notDefined')}</span></p>
                           <p className="text-xs text-gray-400 flex-shrink-0">{t('submittedOn')} {new Date(c.createdAt).toLocaleDateString('fr-DZ')}</p>
                           {c.trackingNumber && (
-                            <span className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded text-[10px] font-mono font-bold border border-blue-100 dark:border-blue-800">
+                            <span className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 px-2 py-0.5 rounded text-[10px] font-mono font-bold border border-blue-100 dark:border-blue-800">
                               #{c.trackingNumber}
                             </span>
                           )}
