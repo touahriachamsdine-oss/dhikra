@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { Scale, FileText, Gavel, FileCheck, ArrowLeft, Globe } from "lucide-react";
 import terms from "@/lib/i18n/legal-terms.json";
 import { ThemeToggle } from "@/components/theme-toggle";
+import IntakeForm from "@/components/intake-form";
 
 export default function ServicesPage() {
     const router = useRouter();
     const [lang, setLang] = useState<"ar" | "fr" | "en">("fr");
+    const [showIntake, setShowIntake] = useState(false);
     const t = (key: string) => (terms as any)[key]?.[lang] || key;
     const isRtl = lang === "ar";
 
@@ -30,6 +32,14 @@ export default function ServicesPage() {
             icon: <Gavel className="w-8 h-8 text-primary-600" />
         }
     ];
+
+    const handleGeneratePDF = async (formData: any, isReDownload?: boolean) => {
+        // Just redirect to home with a success query param or simply close the modal
+        // The IntakeForm already calls the cases API if implemented, or we can just pass a dummy to let them know it works
+        // Wait, on the home page handleGeneratePDF handles the PDF logic. 
+        // We should redirect them to home to do it, OR just redirect them straight to home when they click the button, but the user complained it wasn't there. 
+        // Actually, if we just want them to use the normal flow, let's redirect them to home with a specific category query param so it opens automatically.
+    };
 
     return (
         <div
@@ -90,11 +100,15 @@ export default function ServicesPage() {
 
                 <div className="mt-20 text-center">
                     <button 
-                        onClick={() => router.push('/')} 
-                        className="bg-primary-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-700 transition-transform hover:-translate-y-1 shadow-lg text-lg"
+                        onClick={() => router.push('/?action=start-intake')} 
+                        className="bg-primary-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-700 transition-transform hover:-translate-y-1 shadow-lg text-lg flex items-center justify-center gap-3 mx-auto"
                     >
+                        <FileText className="w-6 h-6" />
                         {lang === 'ar' ? 'اطلب الخدمة وارفع ملفاتك' : (lang === 'en' ? 'Request a Service & Upload Files' : 'Demander un Service et Uploader des Fichiers')}
                     </button>
+                    <p className="mt-4 text-gray-500 dark:text-gray-400">
+                         {lang === 'ar' ? 'يمكنك رفع المستندات الداعمة (حتى 40 ميغابايت) أثناء العملية.' : (lang === 'en' ? 'You can upload supporting documents (up to 40MB) during the process.' : 'Vous pouvez uploader des documents justificatifs (jusqu\'à 40 Mo) pendant le processus.')}
+                    </p>
                 </div>
             </main>
 

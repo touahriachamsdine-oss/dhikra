@@ -25,11 +25,17 @@ function LandingPageContent() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
   useEffect(() => {
+    setIsAuthLoading(true);
     fetch('/api/auth/me')
       .then(res => res.ok ? res.json() : { user: null })
-      .then(data => setUser(data.user))
-      .catch(() => setUser(null));
+      .then(data => {
+          setUser(data.user);
+      })
+      .catch(() => setUser(null))
+      .finally(() => setIsAuthLoading(false));
   }, []);
 
   useEffect(() => {
@@ -91,6 +97,11 @@ function LandingPageContent() {
   useEffect(() => {
     if (searchParams.get('view') === 'dashboard') {
       setView('dashboard');
+    }
+    if (searchParams.get('action') === 'start-intake') {
+      setTimeout(() => {
+        window.scrollTo({ top: 800, behavior: 'smooth' });
+      }, 500);
     }
   }, [searchParams]);
 
@@ -266,7 +277,9 @@ function LandingPageContent() {
           </div>
           
           {/* Auth Button */}
-          {user ? (
+          {isAuthLoading ? (
+            <div className="w-24 h-10 bg-gray-200 dark:bg-slate-700 rounded-full animate-pulse"></div>
+          ) : user ? (
             <div className="flex items-center gap-2 sm:gap-4">
               <span className="hidden lg:inline text-sm font-bold text-gray-700 bg-gray-100 dark:bg-slate-800 rounded-full px-3 py-1 truncate max-w-[120px]">{user.name || user.email}</span>
               <button
