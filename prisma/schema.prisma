@@ -15,6 +15,7 @@ model User {
   password  String
   name      String?
   role      String   @default("CUSTOMER") // "ADMIN" | "CUSTOMER"
+  isBanned  Boolean  @default(false)
   
   // New fields
   nationalId String?
@@ -54,7 +55,7 @@ model Case {
   referenceNumber String?
 
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   files     CaseFile[]
 
@@ -66,7 +67,7 @@ model Case {
 model Notification {
   id        String   @id @default(uuid())
   userId    String?  // If null, it's a system-wide or admin-targeted notification
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   message   String
   type      String   @default("INFO") // "INFO" | "SUCCESS" | "WARNING" | "ERROR"
   isRead    Boolean  @default(false)
@@ -79,7 +80,7 @@ model CaseFile {
   fileUrl   String
   fileType  String?
   caseId    String
-  case      Case     @relation(fields: [caseId], references: [id])
+  case      Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 

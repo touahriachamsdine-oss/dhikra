@@ -36,6 +36,7 @@ type User = {
   role: string
   phoneNumber?: string
   nationalId?: string
+  isBanned?: boolean
   createdAt: string
 }
 
@@ -109,8 +110,9 @@ export default function AdminDashboard() {
   const [lang, setLang] = useState<"ar" | "fr" | "en">("fr")
   const t = (key: string) => (terms as any)[key]?.[lang] || key;
 
-  const [currentView, setCurrentView] = useState<'overview' | 'users' | 'notifications'>('overview')
+  const [currentView, setCurrentView] = useState<'overview' | 'users' | 'notifications' | 'files'>('overview')
   const [users, setUsers] = useState<User[]>([])
+  const [allFiles, setAllFiles] = useState<CaseFile[]>([])
 
   const [cases, setCases] = useState<Case[]>([])
   const [filteredCases, setFilteredCases] = useState<Case[]>([])
@@ -146,7 +148,7 @@ export default function AdminDashboard() {
     fetchCases()
     fetchUsers()
     fetchNotifications()
-
+    fetchAllFiles()
   }, [router])
 
 
@@ -230,6 +232,18 @@ export default function AdminDashboard() {
     }
   }
 
+  const fetchAllFiles = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/files')
+      if (res.ok) {
+        const data = await res.json()
+        setAllFiles(data.files || [])
+      }
+    } catch (error) {
+      console.error('Error fetching all files', error)
+    }
+  }, [])
+
   useEffect(() => {
     if (selectedCase) {
       fetchCaseFiles(selectedCase.id)
@@ -307,6 +321,35 @@ export default function AdminDashboard() {
       setIsUpdating(null)
     }
   }
+  const handleBanUser = async (id: string, isBanned: boolean) => {
+    if (!confirm(isBanned ? 'Bannir cet utilisateur ?' : 'Débannir cet utilisateur ?')) return
+    try {
+      const res = await fetch(`/api/admin/users/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isBanned }),
+      })
+      if (!res.ok) throw new Error()
+      showNotification('success', isBanned ? 'Utilisateur banni.' : 'Utilisateur débanni.')
+      fetchUsers()
+    } catch {
+      showNotification('error', 'Action échouée.')
+    }
+  }
+
+  const handleDeleteUser = async (id: string) => {
+    if (!confirm('Supprimer cet utilisateur DÉFINITIVEMENT ? (cela supprimera aussi ses dossiers et fichiers)')) return
+    try {
+      const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error()
+      showNotification('success', 'Utilisateur supprimé.')
+      fetchUsers()
+      fetchCases()
+      fetchAllFiles()
+    } catch {
+      showNotification('error', 'Action échouée.')
+    }
+  }
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
@@ -356,13 +399,14 @@ export default function AdminDashboard() {
           {[
             { id: 'overview', icon: BarChart3, label: t('overview') },
             { id: 'users', icon: Users, label: t('users') },
+            { id: 'files', icon: FileText, label: 'Fichiers Globaux' },
             { id: 'notifications', icon: AlertCircle, label: 'Notifications' },
           ].map(({ id, icon: Icon, label }) => (
 
 
             <button
               key={id}
-              onClick={() => setCurrentView(id as 'overview' | 'users' | 'notifications')}
+              onClick={() => setCurrentView(id as any)}
 
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${currentView === id
                 ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20'
@@ -630,7 +674,18 @@ export default function AdminDashboard() {
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
                         {u.role}
                       </span>
+                      {u.isBanned && <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-500/20 text-red-500 border border-red-500/30">Banni</span>}
                       <p className="text-xs text-slate-500">{new Date(u.createdAt).toLocaleDateString('fr-DZ')}</p>
+                      {u.role !== 'ADMIN' && (
+                        <div className="flex gap-2">
+                          <button onClick={() => handleBanUser(u.id, !u.isBanned)} className={`p-1.5 rounded-md ${u.isBanned ? 'bg-emerald-100 text-emerald-600 hover:bg-emerald-200' : 'bg-orange-100 text-orange-600 hover:bg-orange-200'}`}>
+                            <Shield className="w-4 h-4" />
+                          </button>
+                          <button onClick={() => handleDeleteUser(u.id)} className="p-1.5 rounded-md bg-red-100 text-red-600 hover:bg-red-200">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -665,6 +720,35 @@ export default function AdminDashboard() {
                     <div className="p-12 text-center text-slate-500">Aucune notification système.</div>
                   )}
                 </div>
+              </div>
+            </div>
+          ) : currentView === 'files' as any ? (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+                <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                  Tous les Fichiers (Global)
+                </h3>
+              </div>
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                {allFiles.map((file: any) => (
+                  <div key={file.id} className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <div>
+                      <p className="font-semibold text-slate-900 dark:text-white truncate max-w-sm">{file.fileName}</p>
+                      <p className="text-xs text-slate-500 mt-1">Dossier: {file.case?.title || file.caseId}</p>
+                      <p className="text-xs text-slate-500 mt-1">Utilisateur: {file.case?.user?.email || 'Inconnu'}</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <p className="text-xs text-slate-500">{new Date(file.createdAt).toLocaleDateString('fr-DZ')}</p>
+                      <a href={file.fileUrl} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors">
+                        Ouvrir
+                      </a>
+                    </div>
+                  </div>
+                ))}
+                {allFiles.length === 0 && (
+                  <div className="p-8 text-center text-slate-500 text-sm">Aucun fichier trouvé sur la plateforme.</div>
+                )}
               </div>
             </div>
           ) : null}

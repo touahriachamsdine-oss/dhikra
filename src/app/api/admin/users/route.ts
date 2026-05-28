@@ -19,6 +19,7 @@ export async function GET() {
                 role: true,
                 phoneNumber: true,
                 nationalId: true,
+                isBanned: true,
                 createdAt: true,
             }
         })

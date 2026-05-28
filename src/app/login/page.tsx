@@ -15,6 +15,7 @@ const ERRORS: Record<string, string> = {
   'Email and password required': 'Veuillez remplir tous les champs.',
   'Server error': 'Erreur serveur. Réessayez.',
   'Email not verified': 'Veuillez vérifier votre email avant de vous connecter.',
+  'Your account has been banned. Please contact support.': 'Votre compte a été banni. Veuillez contacter le support.',
 };
 
 export default function LoginPage() {
