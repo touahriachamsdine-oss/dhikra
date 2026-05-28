@@ -5,26 +5,36 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
-  --primary-navy: #1e3a8a;
-  --accent-gold: #eab308;
-  --accent-emerald: #1d4ed8;
+  --primary-navy: #92B4EC;
+  --accent-gold: #FFE69A;
+  --accent-emerald: #92B4EC;
 }
 
 @theme {
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  --color-primary-50: #f4f8fd;
+  --color-primary-100: #e8effb;
+  --color-primary-200: #ceddf6;
+  --color-primary-300: #b5cbf1;
+  --color-primary-400: #92b4ec;
+  --color-primary-500: #92b4ec;
+  --color-primary-600: #7a9fdc;
+  --color-primary-700: #628acc;
+  --color-primary-800: #4a75bc;
+  --color-primary-900: #3360ac;
+
+  --color-blue-500: #92b4ec;
+  --color-blue-600: #92b4ec;
+  --color-blue-700: #7a9fdc;
+  --color-blue-800: #628acc;
+  --color-blue-900: #4a75bc;
+
+  --color-yellow-400: #ffe69a;
+  --color-yellow-500: #ffe69a;
+  --color-yellow-600: #f0d480;
   
-  --color-secondary-500: #eab308;
-  --color-secondary-600: #ca8a04;
-  --color-secondary-400: #facc15;
+  --color-secondary-400: #ffe69a;
+  --color-secondary-500: #ffe69a;
+  --color-secondary-600: #f0d480;
 }
 
 @theme inline {
@@ -59,11 +69,11 @@ body {
 }
 
 .premium-gradient {
-  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  background: linear-gradient(135deg, #92B4EC 0%, #7a9fdc 100%);
 }
 
 .accent-gradient {
-  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+  background: linear-gradient(135deg, #FFE69A 0%, #f0d480 100%);
 }
 
 @keyframes float {
@@ -81,12 +91,12 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #eff6ff;
+  background: #f4f8fd;
 }
 ::-webkit-scrollbar-thumb {
-  background: #93c5fd;
+  background: #92b4ec;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
+  background: #7a9fdc;
 }
