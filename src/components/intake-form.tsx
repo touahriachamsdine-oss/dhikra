@@ -31,6 +31,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         noticeType: "GENERAL",
         deadlineDays: 15,
         file: null as File | null,
+        agreedToTerms: false,
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDone, setIsDone] = useState(false);
@@ -43,7 +44,12 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
     const isRtl = localLang === "ar";
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value, type } = e.target;
+        if (type === 'checkbox') {
+            setFormData({ ...formData, [name]: (e.target as HTMLInputElement).checked });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -331,13 +337,23 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                     </p>
                                 </div>
                                 
-                                <div className="mt-4 text-center">
-                                    <p className="text-gray-500 dark:text-gray-400 text-xs">
-                                        {localLang === 'ar' ? 'بالنقر على تقديم، أنت توافق على ' : (localLang === 'en' ? 'By submitting, you agree to our ' : 'En soumettant, vous acceptez nos ')}
-                                        <a href="/terms" target="_blank" className="underline hover:text-blue-500">
-                                            {localLang === 'ar' ? 'شروط الخدمة' : (localLang === 'en' ? 'Terms of Service' : 'Conditions d\'Utilisation')}
-                                        </a>.
-                                    </p>
+                                <div className="mt-6 flex flex-col items-center">
+                                    <label className="flex items-center gap-3 cursor-pointer mb-2">
+                                        <input 
+                                            type="checkbox" 
+                                            name="agreedToTerms" 
+                                            checked={formData.agreedToTerms} 
+                                            onChange={handleChange} 
+                                            className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
+                                        />
+                                        <span className="text-gray-700 dark:text-gray-300 text-sm font-medium">
+                                            {localLang === 'ar' ? 'أوافق على ' : (localLang === 'en' ? 'I agree to the ' : 'J\'accepte les ')}
+                                            <a href="/terms" target="_blank" className="underline text-blue-600 hover:text-blue-500">
+                                                {localLang === 'ar' ? 'شروط الخدمة' : (localLang === 'en' ? 'Terms of Service' : 'Conditions d\'Utilisation')}
+                                            </a>
+                                        </span>
+                                    </label>
+                                    {!formData.agreedToTerms && <p className="text-red-500 text-xs">{localLang === 'ar' ? 'يجب الموافقة على شروط الخدمة للمتابعة' : (localLang === 'en' ? 'You must agree to the terms to continue' : 'Vous devez accepter les conditions pour continuer')}</p>}
                                 </div>
                             </div>
                         </div>
@@ -376,8 +392,8 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                         ) : (
                             <button
                                 onClick={submitForm}
-                                disabled={isSubmitting}
-                                className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-xl shadow-blue-200 font-bold transition-all text-base sm:text-lg disabled:opacity-50"
+                                disabled={isSubmitting || !formData.agreedToTerms}
+                                className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-xl shadow-blue-200 font-bold transition-all text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? t('processing') : t('submit')}
                             </button>
