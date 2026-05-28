@@ -30,6 +30,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         description: "",
         noticeType: "GENERAL",
         deadlineDays: 15,
+        file: null as File | null,
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDone, setIsDone] = useState(false);
@@ -43,6 +44,18 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 40 * 1024 * 1024) {
+                setValidationError(t('fileTooLarge') || 'File size exceeds 40MB limit.');
+                return;
+            }
+            setFormData({ ...formData, file });
+            setValidationError(null);
+        }
     };
 
 
@@ -251,6 +264,25 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             <div>
                                 <label className="block text-lg font-medium text-gray-700 mb-2">{t('description')} <span className="text-red-500">*</span></label>
                                 <textarea name="description" value={formData.description} onChange={handleChange} rows={5} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.description ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-500'}`} />
+                            </div>
+
+                            <div className="mt-4">
+                                <label className="block text-sm font-bold text-gray-400 uppercase mb-2">{t('uploadSupportingDocuments') || 'Upload Supporting Documents (Optional, Max 40MB)'}</label>
+                                <div className={`border-2 border-dashed ${formData.file ? 'border-green-400 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 dark:border-slate-700'} rounded-2xl p-6 text-center transition-all hover:bg-gray-50 dark:hover:bg-slate-800`}>
+                                    <input type="file" id="file-upload" accept=".pdf,image/*" onChange={handleFileChange} className="hidden" />
+                                    <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center">
+                                        <FileText className={`w-10 h-10 mb-2 ${formData.file ? 'text-green-500' : 'text-gray-400'}`} />
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                            {formData.file ? formData.file.name : (t('clickToUpload') || 'Click to upload PDF or Image')}
+                                        </span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum size: 40MB</span>
+                                    </label>
+                                    {formData.file && (
+                                        <button type="button" onClick={(e) => { e.preventDefault(); setFormData({...formData, file: null}) }} className="mt-2 text-xs text-red-500 hover:text-red-700">
+                                            {t('removeFile') || 'Remove file'}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                         </div>

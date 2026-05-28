@@ -24,6 +24,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [nationalId, setNationalId] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -31,7 +32,7 @@ export default function LoginPage() {
   const [isResending, setIsResending] = useState(false);
   const [showResendBtn, setShowResendBtn] = useState(false);
 
-  useState(() => {
+  useEffect(() => {
       if (typeof window !== 'undefined') {
           const params = new URLSearchParams(window.location.search);
           if (params.get('verified') === 'true') {
@@ -44,7 +45,24 @@ export default function LoginPage() {
               setErrorMsg(lang === 'ar' ? 'حدث خطأ في الخادم أثناء التفعيل.' : 'Erreur serveur lors de l\'activation.');
           }
       }
-  });
+
+      // Check if already logged in
+      fetch('/api/auth/me')
+        .then(res => {
+          if (res.ok) {
+            res.json().then(data => {
+              if (data.user) {
+                if (data.user.role === 'ADMIN') {
+                  router.push('/admin');
+                } else {
+                  router.push('/');
+                }
+              }
+            });
+          }
+        })
+        .catch(() => {});
+  }, [lang, router]);
 
   const t = (key: TermKey | string) => (terms as Record<string, Record<Language, string>>)[key]?.[lang] || key;
   const isRtl = lang === "ar";
@@ -61,7 +79,7 @@ export default function LoginPage() {
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name, nationalId }),
+          body: JSON.stringify({ email, password, name, nationalId, phoneNumber }),
         });
         const data = await res.json();
         if (!res.ok) {
@@ -212,6 +230,17 @@ export default function LoginPage() {
                     value={nationalId}
                     onChange={e => setNationalId(e.target.value)}
                     placeholder="1234567890123456"
+                    className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-primary-500 mb-2">{t('phoneNumber')}</label>
+                  <input
+                    type="tel"
+                    required={isSignUp}
+                    value={phoneNumber}
+                    onChange={e => setPhoneNumber(e.target.value)}
+                    placeholder="05xxxxxxxx"
                     className={`w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 outline-none transition-all ${isRtl ? 'text-right' : ''}`}
                   />
                 </div>

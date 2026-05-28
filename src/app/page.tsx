@@ -137,6 +137,23 @@ function LandingPageContent() {
         });
 
         if (!caseRes.ok) throw new Error('Failed to create case');
+        
+        const caseData = await caseRes.json();
+        const caseId = caseData.case?.id;
+
+        if (formData.file && caseId) {
+          const finalUrl = `https://storage.taswiya.dz/uploads/${caseId}/${Date.now()}_${formData.file.name}`;
+          await fetch(`/api/cases/${caseId}/files`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fileName: formData.file.name,
+              fileUrl: finalUrl,
+              fileType: formData.file.type
+            })
+          }).catch(console.error);
+        }
+
         await new Promise(r => setTimeout(r, 1000));
       }
 

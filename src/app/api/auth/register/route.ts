@@ -7,7 +7,7 @@ import { sendVerificationEmail } from '@/lib/mail'
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name, nationalId } = await request.json()
+    const { email, password, name, nationalId, phoneNumber } = await request.json()
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password required' }, { status: 400 })
@@ -28,6 +28,7 @@ export async function POST(request: Request) {
         password: hashedPassword,
         name: name || null,
         nationalId: nationalId || null,
+        phoneNumber: phoneNumber || null,
         role: 'CUSTOMER',
         verificationToken,
       },
