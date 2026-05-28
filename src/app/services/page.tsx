@@ -87,7 +87,28 @@ export default function ServicesPage() {
                         </div>
                     ))}
                 </div>
+
+                <div className="mt-20 text-center">
+                    <button 
+                        onClick={() => router.push('/')} 
+                        className="bg-primary-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-700 transition-transform hover:-translate-y-1 shadow-lg text-lg"
+                    >
+                        {lang === 'ar' ? 'اطلب الخدمة وارفع ملفاتك' : (lang === 'en' ? 'Request a Service & Upload Files' : 'Demander un Service et Uploader des Fichiers')}
+                    </button>
+                </div>
             </main>
+
+            <footer className="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 py-8 px-6 text-center">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <Scale className="w-5 h-5 text-primary-500" />
+                        <span className="text-lg font-black text-gray-900 dark:text-gray-100">Taswiya</span>
+                    </div>
+                    <a href="/terms" className="text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors underline">
+                        {lang === 'ar' ? 'شروط الخدمة' : (lang === 'en' ? 'Terms of Service' : 'Conditions d\'Utilisation')}
+                    </a>
+                </div>
+            </footer>
         </div>
     );
 }
