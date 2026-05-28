@@ -26,6 +26,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { AnimatedBackground } from "@/components/animated-background";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,6 +44,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <AnimatedBackground />
           {children}
         </ThemeProvider>
       </body>
