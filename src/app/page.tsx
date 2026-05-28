@@ -496,7 +496,7 @@ function LandingPageContent() {
                             </span>
                           )}
                           {c.deadlineDays && (
-                            <span className="bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded text-[10px] font-bold border border-amber-100 dark:border-amber-800">
+                            <span className="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded text-[10px] font-bold border border-yellow-100 dark:border-yellow-800">
                               {c.deadlineDays} {t('days')}
                             </span>
                           )}
@@ -523,7 +523,7 @@ function LandingPageContent() {
                         <span className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide
                            ${c.status === 'OPEN' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
 
-                            c.status === 'IN_PROGRESS' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                            c.status === 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
                               c.status === 'RESOLVED' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
                                 'bg-red-50 text-red-700 border border-red-100'}`}>
                           {c.status === 'OPEN' ? t('statusOpen') :
@@ -567,7 +567,7 @@ function LandingPageContent() {
                         {c.adminNotes && (
                           <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-800">
                             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">{t('adminNotes')}</h4>
-                            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
+                            <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/20 rounded-xl p-4 text-sm text-yellow-800 dark:text-yellow-200 leading-relaxed">
                               {c.adminNotes}
                             </div>
                           </div>

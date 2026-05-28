@@ -93,7 +93,7 @@ type Stats = {
 
 const STATUS_CONFIG: Record<string, any> = {
   OPEN: { labelKey: 'statusOpen', color: 'bg-blue-100 text-blue-700 border-blue-200', dot: 'bg-blue-500' },
-  IN_PROGRESS: { labelKey: 'statusInProgress', color: 'bg-amber-100 text-amber-700 border-amber-200', dot: 'bg-amber-500' },
+  IN_PROGRESS: { labelKey: 'statusInProgress', color: 'bg-yellow-100 text-yellow-700 border-yellow-200', dot: 'bg-yellow-500' },
   RESOLVED: { labelKey: 'statusResolved', color: 'bg-emerald-100 text-emerald-700 border-emerald-200', dot: 'bg-emerald-500' },
   REJECTED: { labelKey: 'statusRejected', color: 'bg-red-100 text-red-700 border-red-200', dot: 'bg-red-500' },
 }
@@ -384,12 +384,12 @@ export default function AdminDashboard() {
         {/* Logo */}
         <div className="p-6 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
+            <div className="w-10 h-10 rounded-xl bg-yellow-500 flex items-center justify-center shadow-lg shadow-yellow-500/20">
               <Scale className="w-5 h-5 text-slate-900" />
             </div>
             <div>
               <h1 className="font-extrabold text-slate-900 dark:text-white text-lg leading-none">Dhikra</h1>
-              <p className="text-amber-600 dark:text-amber-500 text-xs font-semibold tracking-wider uppercase mt-0.5">Admin Central</p>
+              <p className="text-yellow-600 dark:text-yellow-500 text-xs font-semibold tracking-wider uppercase mt-0.5">Admin Central</p>
             </div>
           </div>
         </div>
@@ -409,7 +409,7 @@ export default function AdminDashboard() {
               onClick={() => setCurrentView(id as any)}
 
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${currentView === id
-                ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20'
+                ? 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/20'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
             >
@@ -423,7 +423,7 @@ export default function AdminDashboard() {
         {/* Admin Info + Logout */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-3 px-2">
-            <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-amber-500/10">
+            <div className="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0 shadow-sm shadow-yellow-500/10">
               <Shield className="w-4 h-4 text-white" />
             </div>
             <div className="overflow-hidden">
@@ -514,7 +514,7 @@ export default function AdminDashboard() {
                     placeholder={t('searchPlaceholder')}
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-sm"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-sm"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -522,7 +522,7 @@ export default function AdminDashboard() {
                   <select
                     value={statusFilter}
                     onChange={e => setStatusFilter(e.target.value)}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-amber-500 transition-all shadow-sm"
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:border-yellow-500 transition-all shadow-sm"
                   >
                     <option value="ALL">{t('allStatuses')}</option>
                     <option value="OPEN">{t('statusOpen')}</option>
@@ -538,7 +538,7 @@ export default function AdminDashboard() {
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                   <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                    <FileText className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
                     {t('legalCase')}
                   </h3>
                   <button onClick={handleExport} className="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition-colors">
@@ -549,7 +549,7 @@ export default function AdminDashboard() {
 
                 {isLoading ? (
                   <div className="p-16 flex flex-col items-center gap-4">
-                    <RefreshCw className="w-8 h-8 text-amber-600 dark:text-amber-500 animate-spin" />
+                    <RefreshCw className="w-8 h-8 text-yellow-600 dark:text-yellow-500 animate-spin" />
                     <p className="text-slate-500 dark:text-slate-400 text-sm">{t('loadingCases')}</p>
                   </div>
                 ) : filteredCases.length === 0 ? (
@@ -605,7 +605,7 @@ export default function AdminDashboard() {
                               {c.trackingNumber && (
                                 <>
                                   <span>·</span>
-                                  <span className="font-mono font-bold text-amber-500">#{c.trackingNumber}</span>
+                                  <span className="font-mono font-bold text-yellow-500">#{c.trackingNumber}</span>
                                 </>
                               )}
                             </div>
@@ -634,14 +634,14 @@ export default function AdminDashboard() {
                                 value={c.status}
                                 onChange={e => updateCaseStatus(c.id, e.target.value)}
                                 disabled={isUpdating === c.id}
-                                className="appearance-none bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-lg pl-3 pr-7 py-1.5 text-xs font-medium focus:outline-none cursor-pointer disabled:opacity-50"
+                                className="appearance-none bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 rounded-lg pl-3 pr-7 py-1.5 text-xs font-medium focus:outline-none cursor-pointer disabled:opacity-50"
                               >
                                 <option value="OPEN">{t('statusOpen')}</option>
                                 <option value="IN_PROGRESS">{t('statusInProgress')}</option>
                                 <option value="RESOLVED">{t('statusResolved')}</option>
                                 <option value="REJECTED">{t('statusRejected')}</option>
                               </select>
-                              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-amber-400 pointer-events-none" />
+                              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-yellow-400 pointer-events-none" />
                             </div>
                           </div>
                         </div>
@@ -655,7 +655,7 @@ export default function AdminDashboard() {
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Users className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                  <Users className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
                   {t('userList')}
                 </h3>
               </div>
@@ -667,11 +667,11 @@ export default function AdminDashboard() {
                       <p className="text-sm text-slate-500 dark:text-slate-400">{u.email}</p>
                       <div className="flex gap-4 mt-1">
                         {u.phoneNumber && <p className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3 text-emerald-500" /> {u.phoneNumber}</p>}
-                        {u.nationalId && <p className="text-xs text-slate-500 flex items-center gap-1"><Activity className="w-3 h-3 text-amber-500" /> {u.nationalId}</p>}
+                        {u.nationalId && <p className="text-xs text-slate-500 flex items-center gap-1"><Activity className="w-3 h-3 text-yellow-500" /> {u.nationalId}</p>}
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.role === 'ADMIN' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.role === 'ADMIN' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
                         {u.role}
                       </span>
                       {u.isBanned && <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-500/20 text-red-500 border border-red-500/30">Banni</span>}
@@ -698,7 +698,7 @@ export default function AdminDashboard() {
           ) : currentView === 'notifications' as any ? (
             <div className="space-y-6">
               <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-amber-500" />
+                <AlertCircle className="w-5 h-5 text-yellow-500" />
                 Journal des Notifications
               </h3>
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
@@ -706,7 +706,7 @@ export default function AdminDashboard() {
                   {notifications.map(n => (
                     <div key={n.id} className="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                       <div className="flex items-start gap-4">
-                        <div className={`p-2 rounded-lg ${n.type === 'WARNING' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'}`}>
+                        <div className={`p-2 rounded-lg ${n.type === 'WARNING' ? 'bg-yellow-100 text-yellow-600' : 'bg-blue-100 text-blue-600'}`}>
                           <AlertCircle className="w-4 h-4" />
                         </div>
                         <div className="flex-1">
@@ -726,7 +726,7 @@ export default function AdminDashboard() {
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                  <FileText className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
                   Tous les Fichiers (Global)
                 </h3>
               </div>
@@ -740,7 +740,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex items-center gap-4">
                       <p className="text-xs text-slate-500">{new Date(file.createdAt).toLocaleDateString('fr-DZ')}</p>
-                      <a href={file.fileUrl} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors">
+                      <a href={file.fileUrl} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">
                         Ouvrir
                       </a>
                     </div>
@@ -769,7 +769,7 @@ export default function AdminDashboard() {
           >
             <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0">
               <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <FileText className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                <FileText className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
                 {t('caseDetail')}
               </h3>
               <button onClick={() => setSelectedCase(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">✕</button>
@@ -827,7 +827,7 @@ export default function AdminDashboard() {
                         href={file.fileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors"
+                        className="text-xs font-bold text-yellow-500 hover:text-yellow-400 transition-colors"
                       >
                         Visualiser
                       </a>
@@ -843,7 +843,7 @@ export default function AdminDashboard() {
               <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-6">
                 <div>
                   <h4 className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500" />
+                    <Shield className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-500" />
                     {t('changeStatus')}
                   </h4>
                   <div className="flex gap-2 flex-wrap">
@@ -875,12 +875,12 @@ export default function AdminDashboard() {
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
                     placeholder="Notes internes pour le suivi..."
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 mb-4 min-h-[120px] resize-none shadow-inner"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 mb-4 min-h-[120px] resize-none shadow-inner"
                   />
                   <button
                     onClick={() => updateCaseStatus(selectedCase.id, selectedCase.status, adminNotes)}
                     disabled={isUpdating === selectedCase.id}
-                    className="w-full h-11 bg-amber-500 hover:bg-amber-400 disabled:bg-slate-200 dark:disabled:bg-amber-800 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg"
+                    className="w-full h-11 bg-yellow-500 hover:bg-yellow-400 disabled:bg-slate-200 dark:disabled:bg-yellow-800 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg"
                   >
                     {isUpdating === selectedCase.id ? (
                       <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />

@@ -204,7 +204,7 @@ export default function SettingsPage() {
                         {/* Password Form */}
                         <div className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-xl border border-gray-100 dark:border-slate-800">
                             <div className="flex items-center gap-3 mb-8">
-                                <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
+                                <div className="p-2 bg-yellow-50 text-yellow-600 rounded-lg">
                                     <Lock className="w-5 h-5" />
                                 </div>
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Changer le mot de passe</h2>
@@ -218,7 +218,7 @@ export default function SettingsPage() {
                                         value={currentPassword}
                                         onChange={e => setCurrentPassword(e.target.value)}
                                         required
-                                        className="w-full border-2 border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 focus:border-amber-500 outline-none transition-all"
+                                        className="w-full border-2 border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 focus:border-yellow-500 outline-none transition-all"
                                     />
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -229,7 +229,7 @@ export default function SettingsPage() {
                                             value={newPassword}
                                             onChange={e => setNewPassword(e.target.value)}
                                             required
-                                            className="w-full border-2 border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 focus:border-amber-500 outline-none transition-all"
+                                            className="w-full border-2 border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 focus:border-yellow-500 outline-none transition-all"
                                         />
                                     </div>
                                     <div>
@@ -239,7 +239,7 @@ export default function SettingsPage() {
                                             value={confirmPassword}
                                             onChange={e => setConfirmPassword(e.target.value)}
                                             required
-                                            className="w-full border-2 border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 focus:border-amber-500 outline-none transition-all"
+                                            className="w-full border-2 border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 focus:border-yellow-500 outline-none transition-all"
                                         />
                                     </div>
                                 </div>

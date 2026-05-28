@@ -5,26 +5,26 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
-  --primary-navy: #1e293b;
-  --accent-gold: #c29d0b;
-  --accent-emerald: #10b981;
+  --primary-navy: #1e3a8a;
+  --accent-gold: #eab308;
+  --accent-emerald: #3b82f6;
 }
 
 @theme {
-  --color-primary-50: #f8fafc;
-  --color-primary-100: #f1f5f9;
-  --color-primary-200: #e2e8f0;
-  --color-primary-300: #cbd5e1;
-  --color-primary-400: #94a3b8;
-  --color-primary-500: #64748b;
-  --color-primary-600: #475569;
-  --color-primary-700: #334155;
-  --color-primary-800: #1e293b;
-  --color-primary-900: #0f172a;
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
   
-  --color-secondary-500: #c29d0b;
-  --color-secondary-600: #a18209;
-  --color-secondary-400: #dfb50d;
+  --color-secondary-500: #eab308;
+  --color-secondary-600: #ca8a04;
+  --color-secondary-400: #facc15;
 }
 
 @theme inline {
@@ -59,11 +59,11 @@ body {
 }
 
 .premium-gradient {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
 }
 
 .accent-gradient {
-  background: linear-gradient(135deg, #c29d0b 0%, #a18209 100%);
+  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
 }
 
 @keyframes float {
@@ -81,12 +81,12 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #eff6ff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #93c5fd;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #60a5fa;
 }
