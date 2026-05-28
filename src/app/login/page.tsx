@@ -304,6 +304,12 @@ export default function LoginPage() {
                 {isSignUp ? t('signInButton') : t('signUp')}
               </button>
             </p>
+            <p className="text-gray-400 dark:text-gray-500 text-xs mt-4">
+              {lang === 'ar' ? 'بمتابعتك، أنت توافق على ' : (lang === 'en' ? 'By continuing, you agree to our ' : 'En continuant, vous acceptez nos ')}
+              <a href="/terms" className="underline hover:text-primary-500">
+                {lang === 'ar' ? 'شروط الخدمة' : (lang === 'en' ? 'Terms of Service' : 'Conditions d\'Utilisation')}
+              </a>.
+            </p>
           </div>
         </div>
 

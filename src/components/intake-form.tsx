@@ -330,6 +330,15 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                         {t('legalWarning')}
                                     </p>
                                 </div>
+                                
+                                <div className="mt-4 text-center">
+                                    <p className="text-gray-500 dark:text-gray-400 text-xs">
+                                        {localLang === 'ar' ? 'بالنقر على تقديم، أنت توافق على ' : (localLang === 'en' ? 'By submitting, you agree to our ' : 'En soumettant, vous acceptez nos ')}
+                                        <a href="/terms" target="_blank" className="underline hover:text-blue-500">
+                                            {localLang === 'ar' ? 'شروط الخدمة' : (localLang === 'en' ? 'Terms of Service' : 'Conditions d\'Utilisation')}
+                                        </a>.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     )}
