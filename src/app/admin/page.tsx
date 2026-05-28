@@ -367,7 +367,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+    <div className="min-h-screen bg-transparent text-slate-900 dark:text-slate-100 font-sans">
       {/* Notification Toast */}
       {notification && (
         <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl border backdrop-blur-md transition-all ${notification.type === 'success'

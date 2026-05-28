@@ -12,7 +12,7 @@ export function AnimatedBackground() {
   if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none -z-50">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
       {/* Blue Blob 1 */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#92B4EC] opacity-20 blur-3xl mix-blend-multiply dark:mix-blend-screen animate-blob" />
       

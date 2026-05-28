@@ -154,7 +154,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950 font-sans ${isRtl ? 'rtl' : 'ltr'}`}
+      className={`min-h-screen flex items-center justify-center bg-transparent font-sans ${isRtl ? 'rtl' : 'ltr'}`}
       dir={isRtl ? 'rtl' : 'ltr'}
     >
       {/* Background */}

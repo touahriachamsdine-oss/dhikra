@@ -250,7 +250,7 @@ function LandingPageContent() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-8 bg-white dark:bg-slate-900/70 backdrop-blur-xl px-8 py-3 rounded-full shadow-sm border border-gray-100 dark:border-slate-800 font-semibold text-gray-700">
+        <nav className="hidden lg:flex items-center gap-8 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl px-8 py-3 rounded-full shadow-sm border border-gray-100 dark:border-slate-800 font-semibold text-gray-700">
           <button onClick={() => router.push('/services')} className="flex items-center gap-1 hover:text-primary-600 transition-colors">
             {t('services')}
           </button>
@@ -312,7 +312,7 @@ function LandingPageContent() {
       {view === 'landing' && (
         <main className="flex-1">
           {/* Hero Section */}
-          <section className="relative pt-32 pb-20 px-6 sm:px-12 border-b border-gray-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-950">
+          <section className="relative pt-32 pb-20 px-6 sm:px-12 border-b border-gray-100 dark:border-slate-800 overflow-hidden bg-transparent">
 
             {/* Split layout for Illustration and Text */}
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 relative z-10">
@@ -395,7 +395,7 @@ function LandingPageContent() {
           </section>
 
           {/* Categories Section */}
-          <section className="py-20 px-6 sm:px-12 bg-white dark:bg-slate-900 max-w-7xl mx-auto">
+          <section className="py-20 px-6 sm:px-12 bg-transparent max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-extrabold text-primary-500 mb-4">{t('categoriesTitle')}</h2>
               <div className="w-24 h-1.5 bg-secondary-500 mx-auto rounded-full"></div>
@@ -458,7 +458,7 @@ function LandingPageContent() {
       )}
 
       {view === 'dashboard' && (
-        <main className="flex-1 bg-gray-50 dark:bg-slate-950 pt-32 px-6 sm:px-12 pb-24">
+        <main className="flex-1 bg-transparent pt-32 px-6 sm:px-12 pb-24">
           <div className="max-w-5xl mx-auto">
             <div className="flex justify-between items-end mb-8">
               <h2 className="text-3xl font-extrabold text-primary-500">{t('myCases')}</h2>

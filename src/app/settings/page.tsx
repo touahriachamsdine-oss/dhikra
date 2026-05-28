@@ -100,14 +100,14 @@ export default function SettingsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950">
+            <div className="min-h-screen flex items-center justify-center bg-transparent">
                 <Loader2 className="w-10 h-10 animate-spin text-primary-600" />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-slate-950 font-sans pb-20">
+        <div className="min-h-screen bg-transparent font-sans pb-20">
             <div className="bg-primary-600 dark:bg-primary-900 h-64 w-full absolute top-0 -z-10 rounded-b-[3rem] shadow-xl"></div>
 
             <div className="max-w-4xl mx-auto px-4 pt-12">

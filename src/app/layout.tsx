@@ -45,7 +45,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AnimatedBackground />
-          {children}
+          <div className="relative z-10 flex flex-col min-h-screen">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
