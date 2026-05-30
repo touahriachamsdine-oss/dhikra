@@ -2,7 +2,22 @@
 
 import { useState } from "react";
 import terms from "@/lib/i18n/legal-terms.json";
-import { UserCircle, MapPin, Receipt, CheckCircle, ArrowLeft, ArrowRight, X, ShieldCheck, HelpCircle, Globe, FileText } from "lucide-react";
+import { 
+  UserCircle, 
+  MapPin, 
+  Receipt, 
+  CheckCircle, 
+  ArrowLeft, 
+  ArrowRight, 
+  X, 
+  ShieldCheck, 
+  HelpCircle, 
+  Globe, 
+  FileText,
+  CreditCard,
+  Lock,
+  Loader2
+} from "lucide-react";
 
 type Language = "ar" | "fr" | "en";
 type TermKey = keyof typeof terms;
@@ -33,9 +48,18 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         file: null as File | null,
         agreedToTerms: false,
     });
+    
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDone, setIsDone] = useState(false);
     const [validationError, setValidationError] = useState<string | null>(null);
+
+    // Mock credit card states
+    const [cardName, setCardName] = useState("");
+    const [cardNumber, setCardNumber] = useState("");
+    const [cardExpiry, setCardExpiry] = useState("");
+    const [cardCvv, setCardCvv] = useState("");
+    const [isCardFlipped, setIsCardFlipped] = useState(false);
+    const [simulationPhase, setSimulationPhase] = useState<"idle" | "verifying" | "securing" | "processing">("idle");
 
     const t = (key: TermKey | string) => {
         return (terms as any)[key]?.[localLang] || key;
@@ -64,7 +88,6 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         }
     };
 
-
     const validateStep = () => {
         if (step === 2) {
             if (!formData.plaintiffName || !formData.plaintiffAddress || !formData.plaintiffPhone) return false;
@@ -78,14 +101,60 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         return true;
     };
 
+    // Card formatting helpers
+    const handleCardNumberChange = (value: string) => {
+        const clean = value.replace(/\D/g, "").substring(0, 16);
+        const parts = [];
+        for (let i = 0; i < clean.length; i += 4) {
+            parts.push(clean.substring(i, i + 4));
+        }
+        setCardNumber(parts.join(" "));
+    };
+
+    const handleExpiryChange = (value: string) => {
+        let clean = value.replace(/\D/g, "").substring(0, 4);
+        if (clean.length > 2) {
+            clean = clean.substring(0, 2) + "/" + clean.substring(2);
+        }
+        setCardExpiry(clean);
+    };
+
+    const handleCvvChange = (value: string) => {
+        const clean = value.replace(/\D/g, "").substring(0, 3);
+        setCardCvv(clean);
+    };
+
+    // Card brand detection
+    const getCardBrand = (num: string) => {
+        const clean = num.replace(/\s+/g, "");
+        if (clean.startsWith("6280") || clean.startsWith("606")) return { name: "Dahabia", logo: "الذهبية", gradient: "bg-gradient-to-tr from-yellow-500 via-amber-600 to-yellow-800" };
+        if (clean.startsWith("981")) return { name: "CIB", logo: "CIB", gradient: "bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-700" };
+        if (clean.startsWith("4")) return { name: "Visa", logo: "VISA", gradient: "bg-gradient-to-tr from-indigo-900 via-slate-900 to-indigo-700" };
+        if (clean.startsWith("5")) return { name: "MasterCard", logo: "MasterCard", gradient: "bg-gradient-to-tr from-rose-600 via-red-700 to-amber-600" };
+        return { name: "Default", logo: "CARD", gradient: "bg-gradient-to-tr from-slate-700 via-slate-800 to-slate-900" };
+    };
+
+    const currentBrand = getCardBrand(cardNumber);
+
     const nextStep = () => {
+        if (step === 5) {
+            if (!formData.agreedToTerms) {
+                setValidationError(localLang === 'ar' ? 'يجب الموافقة على شروط الخدمة للمتابعة' : (localLang === 'en' ? 'You must agree to the terms to continue' : 'Vous devez accepter les conditions pour continuer'));
+                return;
+            }
+            setValidationError(null);
+            setStep(6);
+            return;
+        }
+
         if (validateStep()) {
             setValidationError(null);
-            setStep((s) => Math.min(s + 1, 5));
+            setStep((s) => Math.min(s + 1, 6));
         } else {
             setValidationError(t('fieldsRequired'));
         }
     };
+
     const prevStep = () => {
         setValidationError(null);
         setStep((s) => Math.max(s - 1, 0));
@@ -101,14 +170,32 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         setStep(2);
     };
 
-    const submitForm = async () => {
+    const handlePaymentAndSubmit = async () => {
+        if (!cardName || cardNumber.replace(/\s+/g, "").length < 16 || cardExpiry.length < 5 || cardCvv.length < 3) {
+            setValidationError(localLang === 'ar' ? 'يرجى إكمال بيانات البطاقة' : (localLang === 'en' ? 'Please complete card details' : 'Veuillez compléter les détails de la carte'));
+            return;
+        }
+
+        setValidationError(null);
         setIsSubmitting(true);
+        
+        // Simulating secure Algerian multi-bank payment phases
+        setSimulationPhase("verifying");
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
+        setSimulationPhase("securing");
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
+        setSimulationPhase("processing");
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
         try {
             await onComplete(formData, isDone);
             setIsDone(true);
         } catch (err) {
             console.error(err);
         } finally {
+            setSimulationPhase("idle");
             setIsSubmitting(false);
         }
     };
@@ -118,6 +205,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         { title: t('defendantInfo'), icon: <MapPin className="w-5 h-5" /> },
         { title: t('disputeDetails'), icon: <Receipt className="w-5 h-5" /> },
         { title: t('reviewSend'), icon: <ShieldCheck className="w-5 h-5" /> },
+        { title: t('payAndGenerate'), icon: <CreditCard className="w-5 h-5" /> },
     ];
 
     return (
@@ -170,7 +258,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
 
             {/* Form Content - Full Screen Centered */}
             <div className="flex-1 overflow-y-auto flex items-start sm:items-center justify-center p-4 sm:p-6 pb-40 sm:pb-32">
-                <div className="max-w-2xl w-full mx-auto py-8 sm:py-0">
+                <div className="max-w-2xl w-full mx-auto py-8 sm:py-0 relative">
                     {step === 0 && (
                         <div className="text-center animate-in zoom-in-95 duration-300">
                             <HelpCircle className="w-12 h-12 sm:w-16 sm:h-16 text-blue-700 mx-auto mb-6" />
@@ -207,16 +295,16 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('plaintiffInfo')}</h2>
                             <p className="text-gray-500 dark:text-gray-400 mb-8">{t('plaintiffHint')}</p>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('name')} <span className="text-red-500">*</span></label>
-                                <input type="text" name="plaintiffName" value={formData.plaintiffName} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.plaintiffName ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} autoFocus />
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('name')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="plaintiffName" value={formData.plaintiffName} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${validationError && !formData.plaintiffName ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} autoFocus />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('address')} <span className="text-red-500">*</span></label>
-                                <input type="text" name="plaintiffAddress" value={formData.plaintiffAddress} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.plaintiffAddress ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('address')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="plaintiffAddress" value={formData.plaintiffAddress} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${validationError && !formData.plaintiffAddress ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('phoneNumber')} <span className="text-red-500">*</span></label>
-                                <input type="tel" name="plaintiffPhone" value={formData.plaintiffPhone} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.plaintiffPhone ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} placeholder="05/06/07..." />
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('phoneNumber')} <span className="text-red-500">*</span></label>
+                                <input type="tel" name="plaintiffPhone" value={formData.plaintiffPhone} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${validationError && !formData.plaintiffPhone ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} placeholder="05/06/07..." />
                             </div>
                         </div>
                     )}
@@ -226,16 +314,16 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('defendantInfo')}</h2>
                             <p className="text-gray-500 dark:text-gray-400 mb-8">{t('defendantHint')}</p>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('name')} <span className="text-red-500">*</span></label>
-                                <input type="text" name="defendantName" value={formData.defendantName} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.defendantName ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} autoFocus />
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('name')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="defendantName" value={formData.defendantName} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${validationError && !formData.defendantName ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} autoFocus />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('address')} <span className="text-red-500">*</span></label>
-                                <input type="text" name="defendantAddress" value={formData.defendantAddress} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.defendantAddress ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('address')} <span className="text-red-500">*</span></label>
+                                <input type="text" name="defendantAddress" value={formData.defendantAddress} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${validationError && !formData.defendantAddress ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
                             </div>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('phoneNumber')} <span className="text-red-500">*</span></label>
-                                <input type="tel" name="defendantPhone" value={formData.defendantPhone} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.defendantPhone ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} placeholder="05/06/07..." />
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('phoneNumber')} <span className="text-red-500">*</span></label>
+                                <input type="tel" name="defendantPhone" value={formData.defendantPhone} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${validationError && !formData.defendantPhone ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} placeholder="05/06/07..." />
                             </div>
                         </div>
                     )}
@@ -244,9 +332,9 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                         <div className="space-y-6 animate-in slide-in-from-right duration-300">
                             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">{t('disputeDetails')}</h2>
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('amount')} <span className="text-red-500">*</span></label>
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('amount')} <span className="text-red-500">*</span></label>
                                 <div className="relative">
-                                    <input type="number" name="amount" value={formData.amount} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${isRtl ? 'pl-16' : 'pr-16'} ${validationError && !formData.amount ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} autoFocus />
+                                    <input type="number" name="amount" value={formData.amount} onChange={handleChange} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${isRtl ? 'pl-16' : 'pr-16'} ${validationError && !formData.amount ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} autoFocus />
                                     <span className={`absolute top-1/2 -translate-y-1/2 text-gray-400 font-semibold ${isRtl ? 'left-4' : 'right-4'}`}>DZD</span>
                                 </div>
                             </div>
@@ -263,13 +351,13 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-400 uppercase mb-2">{t('deadlineDays')} <span className="text-red-500">*</span></label>
-                                    <input type="number" name="deadlineDays" value={formData.deadlineDays} onChange={handleChange} className={`w-full border-2 rounded-xl p-3 focus:ring-4 focus:ring-blue-100 outline-none ${validationError && !formData.deadlineDays ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
+                                    <input type="number" name="deadlineDays" value={formData.deadlineDays} onChange={handleChange} className={`w-full border-2 rounded-xl p-3 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none bg-transparent ${validationError && !formData.deadlineDays ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-lg font-medium text-gray-700 mb-2">{t('description')} <span className="text-red-500">*</span></label>
-                                <textarea name="description" value={formData.description} onChange={handleChange} rows={5} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 outline-none transition-all ${validationError && !formData.description ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
+                                <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{t('description')} <span className="text-red-500">*</span></label>
+                                <textarea name="description" value={formData.description} onChange={handleChange} rows={5} className={`w-full border-2 rounded-2xl p-4 text-lg focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/20 outline-none transition-all bg-transparent ${validationError && !formData.description ? 'border-red-500' : 'border-gray-200 dark:border-slate-700 focus:border-blue-700'}`} />
                             </div>
 
                             <div className="mt-4">
@@ -290,7 +378,6 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                     )}
                                 </div>
                             </div>
-
                         </div>
                     )}
 
@@ -330,7 +417,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
 
                                 <hr className="my-6 border-gray-100 dark:border-slate-800" />
 
-                                <div className="bg-yellow-50 text-yellow-800 p-4 sm:p-5 rounded-2xl border border-yellow-200 flex items-start gap-3 sm:gap-4">
+                                <div className="bg-yellow-50 dark:bg-yellow-950/20 text-yellow-800 dark:text-yellow-400 p-4 sm:p-5 rounded-2xl border border-yellow-200 dark:border-yellow-900/30 flex items-start gap-3 sm:gap-4">
                                     <ShieldCheck className="w-5 h-5 shrink-0 text-yellow-600 mt-0.5" />
                                     <p className="font-medium text-xs sm:text-sm leading-relaxed">
                                         {t('legalWarning')}
@@ -358,12 +445,159 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             </div>
                         </div>
                     )}
+
+                    {/* Step 6: Visual Credit Card checkout with e-receipt */}
+                    {step === 6 && (
+                        <div className="space-y-6 animate-in slide-in-from-right duration-300">
+                            {simulationPhase !== "idle" && (
+                                <div className="absolute inset-0 bg-white/95 dark:bg-slate-950/95 z-[70] rounded-3xl flex flex-col items-center justify-center p-8 text-center animate-fade-in">
+                                    <div className="relative mb-6">
+                                        <Loader2 className="w-16 h-16 animate-spin text-blue-800" />
+                                        <ShieldCheck className="w-8 h-8 text-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                                        {simulationPhase === "verifying" && t('verifyingCard')}
+                                        {simulationPhase === "securing" && t('securingTransaction')}
+                                        {simulationPhase === "processing" && (localLang === 'ar' ? 'جاري معالجة الدفع التجريبي...' : (localLang === 'en' ? 'Processing simulated checkout...' : 'Traitement du paiement simulé...'))}
+                                    </h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 max-w-xs">
+                                        {localLang === 'ar' ? 'هذه محاكاة آمنة بالكامل على جانب العميل لتسهيل عملية التثبيت والتسجيل.' : 'This is a secure offline checkout simulation created to complete the document generation process.'}
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className="text-center">
+                                <CreditCard className="w-12 h-12 text-blue-800 mx-auto mb-2" />
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('checkoutSecure')}</h2>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm">{t('funnelQuestion2')}</p>
+                            </div>
+
+                            {/* Live Credit Card interactive visualizer */}
+                            <div className="w-full max-w-sm mx-auto mb-6 perspective-1000">
+                                <div className={`relative w-full h-48 rounded-2xl transition-transform duration-700 preserve-3d cursor-pointer ${isCardFlipped ? 'rotate-y-180' : ''}`}>
+                                    {/* Front */}
+                                    <div className={`absolute inset-0 w-full h-full rounded-2xl p-6 text-white backface-hidden flex flex-col justify-between shadow-xl ${currentBrand.gradient}`}>
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-[10px] uppercase opacity-75 tracking-wider font-semibold">Taswiya Pay Card</p>
+                                                <p className="text-xs font-bold mt-0.5">LEGAL AUTO NOTICE</p>
+                                            </div>
+                                            <span className="text-lg font-black italic tracking-wide">{currentBrand.logo}</span>
+                                        </div>
+
+                                        <div className="my-3">
+                                            <p className="text-xl font-mono tracking-widest text-center">{cardNumber || "•••• •••• •••• ••••"}</p>
+                                        </div>
+
+                                        <div className="flex justify-between items-end">
+                                            <div>
+                                                <p className="text-[9px] uppercase opacity-70">{t('cardholderName')}</p>
+                                                <p className="text-xs font-mono tracking-wider font-bold truncate max-w-[180px]">{cardName.toUpperCase() || "NAME SURNAME"}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] uppercase opacity-70">{t('expiryDate')}</p>
+                                                <p className="text-xs font-mono font-bold">{cardExpiry || "MM/YY"}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Back */}
+                                    <div className="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 text-white backface-hidden rotate-y-180 flex flex-col justify-between shadow-xl">
+                                        <div className="w-full h-10 bg-black -mx-6 mt-2 opacity-90" />
+                                        
+                                        <div className="my-2">
+                                            <p className="text-[9px] text-right opacity-70 mr-2 uppercase">Signature / CVV</p>
+                                            <div className="bg-white/10 w-full h-9 rounded flex items-center justify-end px-3 mt-1">
+                                                <span className="text-sm font-mono italic text-black bg-white px-2 py-0.5 rounded shadow tracking-widest">{cardCvv || "•••"}</span>
+                                            </div>
+                                        </div>
+
+                                        <p className="text-[8px] text-slate-400 leading-tight">
+                                            Simulated legal case processing fee: 2,000 DZD. Client-side payment simulation. No real financial operations.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* E-Receipt visualizer */}
+                            <div className="bg-gray-100 dark:bg-slate-900 p-5 rounded-3xl border border-gray-200 dark:border-slate-800 space-y-3 max-w-sm mx-auto shadow-sm">
+                                <h3 className="font-extrabold text-xs text-gray-500 uppercase tracking-wider">{t('receiptTitle')}</h3>
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-gray-500">{t('noticeType')}</span>
+                                    <span className="font-bold text-gray-800 dark:text-gray-200">
+                                        {t(`notice${formData.noticeType}`)}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-xs border-t border-dashed border-gray-200 dark:border-slate-800 pt-3">
+                                    <span className="text-gray-500 font-bold">{t('amountPaid')}</span>
+                                    <span className="font-black text-blue-800 dark:text-blue-400">2,000 DZD</span>
+                                </div>
+                            </div>
+
+                            {/* Payment inputs */}
+                            <div className="space-y-4 max-w-sm mx-auto">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('cardholderName')}</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={cardName}
+                                        onChange={(e) => setCardName(e.target.value)}
+                                        placeholder="E.g. CHAMSDINE TOUAHRI"
+                                        className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('cardNumber')}</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={cardNumber}
+                                        onChange={(e) => handleCardNumberChange(e.target.value)}
+                                        placeholder="6280 •••• •••• ••••"
+                                        className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent"
+                                    />
+                                    <span className="text-[10px] text-gray-400 mt-1 block">
+                                        {t('mockCardPlaceholder')} (Prefix 4 = Visa, 5 = MasterCard, 6280/606 = Dahabia, 981 = CIB)
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('expiryDate')}</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={cardExpiry}
+                                            onChange={(e) => handleExpiryChange(e.target.value)}
+                                            placeholder="MM/YY"
+                                            className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent text-center"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('cvv')}</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={cardCvv}
+                                            onChange={(e) => handleCvvChange(e.target.value)}
+                                            onFocus={() => setIsCardFlipped(true)}
+                                            onBlur={() => setIsCardFlipped(false)}
+                                            placeholder="123"
+                                            className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent text-center"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {validationError && (
-                <div className="fixed bottom-24 left-0 right-0 px-6 animate-in slide-in-from-bottom-2 duration-300">
-                    <div className="max-w-2xl mx-auto bg-red-100 border border-red-200 text-red-700 px-4 py-2 rounded-xl text-center text-sm font-bold shadow-lg">
+                <div className="fixed bottom-24 left-0 right-0 px-6 animate-in slide-in-from-bottom-2 duration-300 z-50">
+                    <div className="max-w-2xl mx-auto bg-red-100 dark:bg-red-950/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-2 rounded-xl text-center text-sm font-bold shadow-lg">
                         {validationError}
                     </div>
                 </div>
@@ -371,36 +605,38 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
 
             {/* Footer Controls Fixed */}
             {step > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t p-4 sm:p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+                <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t p-4 sm:p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-40">
                     <div className="max-w-3xl mx-auto flex justify-between items-center gap-4">
                         <button
                             onClick={prevStep}
-                            className={`flex items-center gap-2 px-4 sm:px-6 py-3 rounded-xl font-bold transition-colors text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-slate-800 text-sm sm:text-base`}
+                            className="flex items-center gap-2 px-4 sm:px-6 py-3 rounded-xl font-bold transition-colors text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:bg-slate-800 text-sm sm:text-base"
                         >
                             {isRtl ? <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" /> : <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />}
                             <span>{t('back')}</span>
                         </button>
 
-                        {step < 5 ? (
+                        {step < 6 ? (
                             <button
                                 onClick={nextStep}
                                 className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-blue-800 text-white rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-300 font-bold transition-all text-base sm:text-lg"
                             >
-                                <span>{t('next')}</span>
+                                <span>{step === 5 ? (localLang === 'ar' ? 'الذهاب للدفع' : (localLang === 'en' ? 'Proceed to Payment' : 'Passer au paiement')) : t('next')}</span>
                                 {isRtl ? <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" /> : <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
                             </button>
                         ) : (
                             <button
-                                onClick={submitForm}
-                                disabled={isSubmitting || !formData.agreedToTerms}
-                                className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-blue-800 text-white rounded-xl hover:bg-blue-700 shadow-xl shadow-blue-300 font-bold transition-all text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                onClick={handlePaymentAndSubmit}
+                                disabled={isSubmitting}
+                                className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-blue-800 text-white rounded-xl hover:bg-blue-700 shadow-xl shadow-blue-300 font-bold transition-all text-base sm:text-lg disabled:opacity-50"
                             >
-                                {isSubmitting ? t('processing') : t('submit')}
+                                <Lock className="w-4 h-4" />
+                                <span>{isSubmitting ? t('processing') : t('payAndGenerate')}</span>
                             </button>
                         )}
                     </div>
                 </div>
             )}
+            
             {isDone && (
                 <div className="fixed inset-0 z-[60] bg-white dark:bg-slate-950 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
                     <div className="max-w-md w-full">
@@ -414,7 +650,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                         
                         <div className="flex flex-col gap-4">
                             <button
-                                onClick={submitForm}
+                                onClick={handlePaymentAndSubmit}
                                 disabled={isSubmitting}
                                 className="w-full flex items-center justify-center gap-3 py-5 bg-blue-800 text-white rounded-2xl hover:bg-blue-700 shadow-2xl shadow-blue-300 font-bold transition-all text-xl disabled:opacity-50"
                             >

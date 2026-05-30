@@ -830,5 +830,125 @@
     "ar": "جميع الحقول مطلوبة",
     "fr": "Tous les champs sont obligatoires",
     "en": "All fields are required"
+  },
+  "planSelection": {
+    "ar": "اختر خطة الاشتراك",
+    "fr": "Choisir un plan d'abonnement",
+    "en": "Choose a Subscription Plan"
+  },
+  "selectPlanDesc": {
+    "ar": "اختر خطة لترقية حسابك والحصول على ميزات متميزة.",
+    "fr": "Sélectionnez un forfait pour mettre à niveau votre compte.",
+    "en": "Select a plan to upgrade your account and get premium features."
+  },
+  "basicPlan": {
+    "ar": "الخطة الأساسية",
+    "fr": "Forfait Basique",
+    "en": "Basic Plan"
+  },
+  "premiumPlan": {
+    "ar": "الخطة الممتازة",
+    "fr": "Forfait Premium",
+    "en": "Premium Plan"
+  },
+  "enterprisePlan": {
+    "ar": "خطة المؤسسات",
+    "fr": "Forfait Entreprise",
+    "en": "Enterprise Plan"
+  },
+  "dzdPerMonth": {
+    "ar": "د.ج / شهرياً",
+    "fr": "DA / mois",
+    "en": "DZD / month"
+  },
+  "payAndGenerate": {
+    "ar": "دفع وتوليد المستند",
+    "fr": "Payer & Générer le document",
+    "en": "Pay & Generate Document"
+  },
+  "cardholderName": {
+    "ar": "اسم صاحب البطاقة",
+    "fr": "Nom du titulaire",
+    "en": "Cardholder Name"
+  },
+  "cardNumber": {
+    "ar": "رقم البطاقة",
+    "fr": "Numéro de carte",
+    "en": "Card Number"
+  },
+  "expiryDate": {
+    "ar": "تاريخ الانتهاء",
+    "fr": "Date d'expiration",
+    "en": "Expiry Date"
+  },
+  "cvv": {
+    "ar": "رمز التحقق (CVV)",
+    "fr": "Code de sécurité (CVV)",
+    "en": "CVV Code"
+  },
+  "securingTransaction": {
+    "ar": "تأمين المعاملة...",
+    "fr": "Sécurisation de la transaction...",
+    "en": "Securing transaction..."
+  },
+  "verifyingCard": {
+    "ar": "التحقق من بيانات البطاقة التجريبية...",
+    "fr": "Vérification des détails de la carte fictive...",
+    "en": "Verifying mock card details..."
+  },
+  "paymentSuccess": {
+    "ar": "تمت محاكاة الدفع بنجاح!",
+    "fr": "Paiement simulé avec succès !",
+    "en": "Payment Simulated Successfully!"
+  },
+  "paymentFailed": {
+    "ar": "فشلت محاكاة الدفع",
+    "fr": "Échec de la simulation de paiement",
+    "en": "Payment Simulation Failed"
+  },
+  "mockCardPlaceholder": {
+    "ar": "اكتب أي رقم مكون من 16 رقمًا للمتابعة",
+    "fr": "Entrez n'importe quel numéro à 16 chiffres pour continuer",
+    "en": "Type any 16-digit number to proceed"
+  },
+  "receiptTitle": {
+    "ar": "وصل توليد القضية",
+    "fr": "Reçu de génération de dossier",
+    "en": "Case Generation Receipt"
+  },
+  "amountPaid": {
+    "ar": "المبلغ المدفوع",
+    "fr": "Montant payé",
+    "en": "Amount Paid"
+  },
+  "billingDetails": {
+    "ar": "تفاصيل الفاتورة",
+    "fr": "Détails de facturation",
+    "en": "Billing Details"
+  },
+  "checkoutSecure": {
+    "ar": "دفع آمن تجريبي",
+    "fr": "Paiement sécurisé fictif",
+    "en": "Mock Secure Checkout"
+  },
+  "continue": {
+    "ar": "متابعة",
+    "fr": "Continuer",
+    "en": "Continue"
+  },
+  "backStep": {
+    "ar": "الرجوع خطوة",
+    "fr": "Étape précédente",
+    "en": "Back"
+  },
+  "payAndRegister": {
+    "ar": "دفع وتأكيد الحساب",
+    "fr": "Simuler & Créer",
+    "en": "Simulate & Register"
+  },
+  "plansTitle": {
+    "ar": "خطط الأسعار",
+    "fr": "Nos Forfaits",
+    "en": "Pricing Plans"
   }
 }
