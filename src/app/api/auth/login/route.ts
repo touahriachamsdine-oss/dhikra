@@ -28,8 +28,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
-    // Check email verification
-    if (!user.emailVerified) {
+    // Check email verification (ADMIN role bypasses verification)
+    if (user.role !== 'ADMIN' && !user.emailVerified) {
         return NextResponse.json({ 
             error: 'Email not verified', 
             needsVerification: true 
