@@ -323,8 +323,11 @@ function LandingPageContent() {
                 <h1 className="text-4xl sm:text-6xl font-extrabold text-primary-500 mb-6 leading-tight tracking-tight">
                   {t('heroTitle')}
                 </h1>
-                <p className="text-lg sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl leading-relaxed">
+                <p className="text-lg sm:text-2xl text-gray-600 dark:text-gray-300 mb-4 max-w-2xl leading-relaxed">
                   {t('heroSubtitle')}
+                </p>
+                <p className="text-base sm:text-lg text-primary-600 dark:text-primary-400 mb-10 max-w-2xl leading-relaxed font-semibold">
+                  {t('heroSubtitle2')}
                 </p>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                   <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto bg-primary-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-700 transition-transform hover:-translate-y-1 shadow-lg text-lg">
