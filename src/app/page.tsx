@@ -314,6 +314,13 @@ function LandingPageContent() {
           {/* Hero Section */}
           <section className="relative pt-32 pb-20 px-6 sm:px-12 border-b border-gray-100 dark:border-slate-800 overflow-hidden bg-transparent">
 
+            {/* Centered Top Subtitle Pill */}
+            <div className="max-w-7xl mx-auto text-center mb-10 relative z-10">
+              <span className="inline-block bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-sm sm:text-base md:text-lg font-extrabold px-6 py-2.5 rounded-full border border-primary-100 dark:border-primary-900/50 shadow-sm">
+                {t('heroSubtitle2')}
+              </span>
+            </div>
+
             {/* Split layout for Illustration and Text */}
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 relative z-10">
               <div className="flex-1 text-left rtl:text-right">
@@ -323,11 +330,8 @@ function LandingPageContent() {
                 <h1 className="text-4xl sm:text-6xl font-extrabold text-primary-500 mb-6 leading-tight tracking-tight">
                   {t('heroTitle')}
                 </h1>
-                <p className="text-lg sm:text-2xl text-gray-600 dark:text-gray-300 mb-4 max-w-2xl leading-relaxed">
+                <p className="text-lg sm:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl leading-relaxed">
                   {t('heroSubtitle')}
-                </p>
-                <p className="text-base sm:text-lg text-primary-600 dark:text-primary-400 mb-10 max-w-2xl leading-relaxed font-semibold">
-                  {t('heroSubtitle2')}
                 </p>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                   <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto bg-primary-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-700 transition-transform hover:-translate-y-1 shadow-lg text-lg">
