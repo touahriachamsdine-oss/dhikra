@@ -866,6 +866,26 @@
     "fr": "DA / mois",
     "en": "DZD / month"
   },
+  "startFreeTrial": {
+    "ar": "نسخة تجريبية مجانية لمدة شهر",
+    "fr": "Essai gratuit d'un mois",
+    "en": "1-Month Free Trial"
+  },
+  "freeTrialSubtitle": {
+    "ar": "لا حاجة لبطاقة دفع أو معلومات فوترة. احصل على وصول كامل مجاني لمدة 30 يومًا.",
+    "fr": "Aucun paiement requis. Accès complet et illimité pendant 30 jours.",
+    "en": "No credit card or payment required. Full free access for 30 days."
+  },
+  "singleCasePayment": {
+    "ar": "دفع ثمن قضية واحدة",
+    "fr": "Paiement par dossier",
+    "en": "Single Case Payment"
+  },
+  "startTrialAndGenerate": {
+    "ar": "تفعيل الفترة التجريبية وتوليد المستند",
+    "fr": "Activer l'essai & Générer le document",
+    "en": "Activate Trial & Generate Document"
+  },
   "payAndGenerate": {
     "ar": "دفع وتوليد المستند",
     "fr": "Payer & Générer le document",
@@ -955,5 +975,145 @@
     "ar": "خطط الأسعار",
     "fr": "Nos Forfaits",
     "en": "Pricing Plans"
+  },
+  "globalFiles": {
+    "ar": "الملفات العامة",
+    "fr": "Fichiers Globaux",
+    "en": "Global Files"
+  },
+  "notifications": {
+    "ar": "الإشعارات",
+    "fr": "Notifications",
+    "en": "Notifications"
+  },
+  "banned": {
+    "ar": "محظور",
+    "fr": "Banni",
+    "en": "Banned"
+  },
+  "notificationLog": {
+    "ar": "سجل الإشعارات",
+    "fr": "Journal des Notifications",
+    "en": "Notification Log"
+  },
+  "noNotifications": {
+    "ar": "لا توجد إشعارات للنظام.",
+    "fr": "Aucune notification système.",
+    "en": "No system notifications."
+  },
+  "allFilesGlobal": {
+    "ar": "جميع الملفات (العامة)",
+    "fr": "Tous les Fichiers (Global)",
+    "en": "All Files (Global)"
+  },
+  "casePrefixLabel": {
+    "ar": "الملف: ",
+    "fr": "Dossier: ",
+    "en": "Case: "
+  },
+  "userLabel": {
+    "ar": "المستخدم: ",
+    "fr": "Utilisateur: ",
+    "en": "User: "
+  },
+  "unknown": {
+    "ar": "غير معروف",
+    "fr": "Inconnu",
+    "en": "Unknown"
+  },
+  "openButton": {
+    "ar": "فتح",
+    "fr": "Ouvrir",
+    "en": "Open"
+  },
+  "noFilesFoundPlatform": {
+    "ar": "لم يتم العثور على ملفات في المنصة.",
+    "fr": "Aucun fichier trouvé sur la plateforme.",
+    "en": "No files found on the platform."
+  },
+  "attachments": {
+    "ar": "الملحقات",
+    "fr": "Pièces Jointes",
+    "en": "Attachments"
+  },
+  "noAttachments": {
+    "ar": "لا توجد ملفات مرفقة بهذا الملف.",
+    "fr": "Aucun fichier joint à ce dossier.",
+    "en": "No files attached to this case."
+  },
+  "adminNotesPlaceholder": {
+    "ar": "ملاحظات داخلية للمتابعة...",
+    "fr": "Notes internes pour le suivi...",
+    "en": "Internal notes for tracking..."
+  },
+  "banUserConfirm": {
+    "ar": "هل تريد حظر هذا المستخدم؟",
+    "fr": "Bannir cet utilisateur ?",
+    "en": "Ban this user?"
+  },
+  "unbanUserConfirm": {
+    "ar": "هل تريد إلغاء حظر هذا المستخدم؟",
+    "fr": "Débannir cet utilisateur ?",
+    "en": "Unban this user?"
+  },
+  "userBannedSuccess": {
+    "ar": "تم حظر المستخدم.",
+    "fr": "Utilisateur banni.",
+    "en": "User banned."
+  },
+  "userUnbannedSuccess": {
+    "ar": "تم إلغاء حظر المستخدم.",
+    "fr": "Utilisateur débanni.",
+    "en": "User unbanned."
+  },
+  "deleteUserConfirm": {
+    "ar": "هل تريد حذف هذا المستخدم نهائيًا؟ (سيؤدي ذلك أيضًا إلى حذف ملفاته ومستنداته)",
+    "fr": "Supprimer cet utilisateur DÉFINITIVEMENT ? (cela supprimera aussi ses dossiers et fichiers)",
+    "en": "Delete this user PERMANENTLY? (this will also delete their cases and files)"
+  },
+  "userDeletedSuccess": {
+    "ar": "تم حذف المستخدم.",
+    "fr": "Utilisateur supprimé.",
+    "en": "User deleted."
+  },
+  "actionFailed": {
+    "ar": "فشلت العملية.",
+    "fr": "Action échouée.",
+    "en": "Action failed."
+  },
+  "caseDeletedSuccess": {
+    "ar": "تم حذف الملف بنجاح.",
+    "fr": "Dossier supprimé avec succès.",
+    "en": "Case deleted successfully."
+  },
+  "caseDeleteFailed": {
+    "ar": "فشل الحذف.",
+    "fr": "Échec de la suppression.",
+    "en": "Failed to delete case."
+  },
+  "caseUpdatedSuccess": {
+    "ar": "تم تحديث الملف بنجاح.",
+    "fr": "Dossier mis à jour avec succès.",
+    "en": "Case updated successfully."
+  },
+  "caseUpdateFailed": {
+    "ar": "فشل التحديث.",
+    "fr": "Échec de la mise à jour.",
+    "en": "Failed to update case."
+  },
+  "errorLoadingUsers": {
+    "ar": "خطأ أثناء تحميل المستخدمين.",
+    "fr": "Erreur chargement utilisateurs.",
+    "en": "Error loading users."
+  },
+  "errorLoadingCases": {
+    "ar": "خطأ أثناء تحميل الملفات.",
+    "fr": "Erreur lors du chargement des dossiers.",
+    "en": "Error loading cases."
+  },
+  "days": {
+    "ar": "أيام",
+    "fr": "jours",
+    "en": "days"
   }
 }

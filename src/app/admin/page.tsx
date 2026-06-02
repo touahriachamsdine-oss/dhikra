@@ -173,7 +173,7 @@ export default function AdminDashboard() {
     const csvContent = "data:text/csv;charset=utf-8,"
       + "ID,Titre,Statut,Type,Plaignant,Défendeur,Montant,Date\n"
       + filteredCases.map(c =>
-        `${c.id},"${(c.title || '').replace(/"/g, '""')}","${c.status}","${t(DOC_TYPE_LABELS[c.documentType || ''] || DOC_TYPE_LABELS.default).replace(/"/g, '""')}","${(c.plaintiffName || '').replace(/"/g, '""')}","${(c.defendantName || '').replace(/"/g, '""')}",${c.amount || ''},"${new Date(c.createdAt).toLocaleDateString('fr-DZ')}"`
+        `${c.id},"${(c.title || '').replace(/"/g, '""')}","${c.status}","${t(DOC_TYPE_LABELS[c.documentType || ''] || DOC_TYPE_LABELS.default).replace(/"/g, '""')}","${(c.plaintiffName || '').replace(/"/g, '""')}","${(c.defendantName || '').replace(/"/g, '""')}",${c.amount || ''},"${new Date(c.createdAt).toLocaleDateString(lang === 'ar' ? 'ar-DZ' : lang === 'en' ? 'en-US' : 'fr-DZ')}"`
       ).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -192,9 +192,9 @@ export default function AdminDashboard() {
         setUsers(data.users || [])
       }
     } catch {
-      showNotification('error', 'Erreur chargement utilisateurs.')
+      showNotification('error', t('errorLoadingUsers'))
     }
-  }, [])
+  }, [t])
 
   const fetchCases = useCallback(async () => {
     setIsLoading(true)
@@ -214,11 +214,11 @@ export default function AdminDashboard() {
           : 0,
       })
     } catch {
-      showNotification('error', 'Erreur lors du chargement des dossiers.')
+      showNotification('error', t('errorLoadingCases'))
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   const fetchCaseFiles = async (caseId: string) => {
     try {
@@ -287,11 +287,11 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`/api/admin/cases/${id}`, { method: 'DELETE' })
       if (!res.ok) throw new Error()
-      showNotification('success', 'Dossier supprimé avec succès.')
+      showNotification('success', t('caseDeletedSuccess'))
       fetchCases()
       setSelectedCase(null)
     } catch {
-      showNotification('error', 'Échec de la suppression.')
+      showNotification('error', t('caseDeleteFailed'))
     } finally {
       setIsUpdating(null)
     }
@@ -312,17 +312,17 @@ export default function AdminDashboard() {
         body: JSON.stringify(body),
       })
       if (!res.ok) throw new Error()
-      showNotification('success', 'Dossier mis à jour avec succès.')
+      showNotification('success', t('caseUpdatedSuccess'))
       fetchCases()
       setSelectedCase(null)
     } catch {
-      showNotification('error', 'Échec de la mise à jour.')
+      showNotification('error', t('caseUpdateFailed'))
     } finally {
       setIsUpdating(null)
     }
   }
   const handleBanUser = async (id: string, isBanned: boolean) => {
-    if (!confirm(isBanned ? 'Bannir cet utilisateur ?' : 'Débannir cet utilisateur ?')) return
+    if (!confirm(t(isBanned ? 'banUserConfirm' : 'unbanUserConfirm'))) return
     try {
       const res = await fetch(`/api/admin/users/${id}`, {
         method: 'PATCH',
@@ -330,24 +330,24 @@ export default function AdminDashboard() {
         body: JSON.stringify({ isBanned }),
       })
       if (!res.ok) throw new Error()
-      showNotification('success', isBanned ? 'Utilisateur banni.' : 'Utilisateur débanni.')
+      showNotification('success', t(isBanned ? 'userBannedSuccess' : 'userUnbannedSuccess'))
       fetchUsers()
     } catch {
-      showNotification('error', 'Action échouée.')
+      showNotification('error', t('actionFailed'))
     }
   }
 
   const handleDeleteUser = async (id: string) => {
-    if (!confirm('Supprimer cet utilisateur DÉFINITIVEMENT ? (cela supprimera aussi ses dossiers et fichiers)')) return
+    if (!confirm(t('deleteUserConfirm'))) return
     try {
       const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' })
       if (!res.ok) throw new Error()
-      showNotification('success', 'Utilisateur supprimé.')
+      showNotification('success', t('userDeletedSuccess'))
       fetchUsers()
       fetchCases()
       fetchAllFiles()
     } catch {
-      showNotification('error', 'Action échouée.')
+      showNotification('error', t('actionFailed'))
     }
   }
 
@@ -357,13 +357,16 @@ export default function AdminDashboard() {
   }
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('fr-DZ', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+    return new Date(dateStr).toLocaleDateString(
+      lang === 'ar' ? 'ar-DZ' : lang === 'en' ? 'en-US' : 'fr-DZ',
+      {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }
+    )
   }
 
   return (
@@ -389,7 +392,7 @@ export default function AdminDashboard() {
             </div>
             <div>
               <h1 className="font-extrabold text-slate-900 dark:text-white text-lg leading-none">Dhikra</h1>
-              <p className="text-yellow-600 dark:text-yellow-500 text-xs font-semibold tracking-wider uppercase mt-0.5">Admin Central</p>
+              <p className="text-yellow-600 dark:text-yellow-500 text-xs font-semibold tracking-wider uppercase mt-0.5">{t('adminCentral')}</p>
             </div>
           </div>
         </div>
@@ -399,8 +402,8 @@ export default function AdminDashboard() {
           {[
             { id: 'overview', icon: BarChart3, label: t('overview') },
             { id: 'users', icon: Users, label: t('users') },
-            { id: 'files', icon: FileText, label: 'Fichiers Globaux' },
-            { id: 'notifications', icon: AlertCircle, label: 'Notifications' },
+            { id: 'files', icon: FileText, label: t('globalFiles') },
+            { id: 'notifications', icon: AlertCircle, label: t('notifications') },
           ].map(({ id, icon: Icon, label }) => (
 
 
@@ -473,31 +476,71 @@ export default function AdminDashboard() {
               {/* Stats Cards */}
               <div className="grid grid-cols-4 gap-5">
                 {[
-                  { label: t('totalCases'), value: stats.total, icon: Briefcase, color: 'from-slate-700 to-slate-800', iconColor: 'text-slate-300' },
-                  { label: t('statusOpen'), value: stats.open, icon: Clock, color: 'from-blue-900/50 to-slate-900', iconColor: 'text-blue-400' },
-                  { label: t('statusResolved'), value: stats.resolved, icon: CheckCircle, color: 'from-emerald-900/50 to-slate-900', iconColor: 'text-emerald-400' },
-                  { label: t('solvePercentage'), value: `${stats.solveRate}%`, icon: Activity, color: 'from-purple-900/50 to-slate-900', iconColor: 'text-purple-400' },
-                ].map(({ label, value, icon: Icon, color, iconColor }) => (
-                  <div key={label} className={`relative rounded-2xl bg-gradient-to-br ${color} border border-slate-800 p-5 overflow-hidden`}>
+                  {
+                    label: t('totalCases'),
+                    value: stats.total,
+                    icon: Briefcase,
+                    iconBg: 'bg-slate-100 dark:bg-slate-800/80',
+                    iconColor: 'text-slate-600 dark:text-slate-400',
+                    barColor: 'bg-slate-500 dark:bg-slate-400',
+                    percent: 100,
+                    showBar: false,
+                    isRate: false
+                  },
+                  {
+                    label: t('statusOpen'),
+                    value: stats.open,
+                    icon: Clock,
+                    iconBg: 'bg-blue-50 dark:bg-blue-950/40',
+                    iconColor: 'text-blue-600 dark:text-blue-400',
+                    barColor: 'bg-blue-600 dark:bg-blue-500',
+                    percent: stats.total > 0 ? Math.round((stats.open / stats.total) * 100) : 0,
+                    showBar: true,
+                    isRate: false
+                  },
+                  {
+                    label: t('statusResolved'),
+                    value: stats.resolved,
+                    icon: CheckCircle,
+                    iconBg: 'bg-emerald-50 dark:bg-emerald-950/40',
+                    iconColor: 'text-emerald-600 dark:text-emerald-400',
+                    barColor: 'bg-emerald-600 dark:bg-emerald-500',
+                    percent: stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0,
+                    showBar: true,
+                    isRate: false
+                  },
+                  {
+                    label: t('solvePercentage'),
+                    value: `${stats.solveRate}%`,
+                    icon: Activity,
+                    iconBg: 'bg-purple-50 dark:bg-purple-950/40',
+                    iconColor: 'text-purple-600 dark:text-purple-400',
+                    barColor: 'bg-purple-600 dark:bg-purple-500',
+                    percent: stats.solveRate,
+                    showBar: true,
+                    isRate: true
+                  },
+                ].map(({ label, value, icon: Icon, iconBg, iconColor, barColor, percent, showBar, isRate }) => (
+                  <div key={label} className="relative rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 overflow-hidden transition-all shadow-sm">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">{label}</p>
-                        <p className="text-4xl font-black text-slate-900 dark:text-white">{isLoading ? '—' : value}</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm font-semibold mb-1">{label}</p>
+                        <p className="text-4xl font-extrabold text-slate-900 dark:text-white">{isLoading ? '—' : value}</p>
                       </div>
-                      <div className={`p-3 rounded-xl bg-slate-200/50 dark:bg-slate-900/5 ${iconColor}`}>
+                      <div className={`p-3 rounded-xl ${iconBg} ${iconColor}`}>
                         <Icon className="w-6 h-6" />
                       </div>
                     </div>
-                    {stats.total > 0 && !isLoading && (
+                    {showBar && stats.total > 0 && !isLoading && (
                       <div className="mt-4">
-                        <div className="h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                           <div
-                            className="h-full rounded-full bg-current opacity-50 transition-all duration-500"
-                            style={{ width: `${Math.round(((value as number) / stats.total) * 100)}%` }}
+                            className={`h-full rounded-full ${barColor} transition-all duration-500`}
+                            style={{ width: `${percent}%` }}
                           />
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1.5">
-                          {Math.round(((value as number) / stats.total) * 100)}% {t('ofTotal')}
+                        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1.5">
+                          {percent}% {isRate ? t('solvePercentage') : t('ofTotal')}
                         </p>
                       </div>
                     )}
@@ -674,8 +717,8 @@ export default function AdminDashboard() {
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${u.role === 'ADMIN' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
                         {u.role}
                       </span>
-                      {u.isBanned && <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-500/20 text-red-500 border border-red-500/30">Banni</span>}
-                      <p className="text-xs text-slate-500">{new Date(u.createdAt).toLocaleDateString('fr-DZ')}</p>
+                      {u.isBanned && <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-500/20 text-red-500 border border-red-500/30">{t('banned')}</span>}
+                      <p className="text-xs text-slate-500">{new Date(u.createdAt).toLocaleDateString(lang === 'ar' ? 'ar-DZ' : lang === 'en' ? 'en-US' : 'fr-DZ')}</p>
                       {u.role !== 'ADMIN' && (
                         <div className="flex gap-2">
                           <button onClick={() => handleBanUser(u.id, !u.isBanned)} className={`p-1.5 rounded-md ${u.isBanned ? 'bg-emerald-100 text-emerald-600 hover:bg-emerald-200' : 'bg-orange-100 text-orange-600 hover:bg-orange-200'}`}>
@@ -699,7 +742,7 @@ export default function AdminDashboard() {
             <div className="space-y-6">
               <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 text-yellow-500" />
-                Journal des Notifications
+                {t('notificationLog')}
               </h3>
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                 <div className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -711,13 +754,13 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-medium text-slate-900 dark:text-white">{n.message}</p>
-                          <p className="text-xs text-slate-500 mt-1">{new Date(n.createdAt).toLocaleString('fr-DZ')}</p>
+                          <p className="text-xs text-slate-500 mt-1">{new Date(n.createdAt).toLocaleString(lang === 'ar' ? 'ar-DZ' : lang === 'en' ? 'en-US' : 'fr-DZ')}</p>
                         </div>
                       </div>
                     </div>
                   ))}
                   {notifications.length === 0 && (
-                    <div className="p-12 text-center text-slate-500">Aucune notification système.</div>
+                    <div className="p-12 text-center text-slate-500">{t('noNotifications')}</div>
                   )}
                 </div>
               </div>
@@ -727,7 +770,7 @@ export default function AdminDashboard() {
               <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                   <FileText className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
-                  Tous les Fichiers (Global)
+                  {t('allFilesGlobal')}
                 </h3>
               </div>
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -735,19 +778,19 @@ export default function AdminDashboard() {
                   <div key={file.id} className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                     <div>
                       <p className="font-semibold text-slate-900 dark:text-white truncate max-w-sm">{file.fileName}</p>
-                      <p className="text-xs text-slate-500 mt-1">Dossier: {file.case?.title || file.caseId}</p>
-                      <p className="text-xs text-slate-500 mt-1">Utilisateur: {file.case?.user?.email || 'Inconnu'}</p>
+                      <p className="text-xs text-slate-500 mt-1">{t('casePrefixLabel')}{file.case?.title || file.caseId}</p>
+                      <p className="text-xs text-slate-500 mt-1">{t('userLabel')}{file.case?.user?.email || t('unknown')}</p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <p className="text-xs text-slate-500">{new Date(file.createdAt).toLocaleDateString('fr-DZ')}</p>
+                      <p className="text-xs text-slate-500">{new Date(file.createdAt).toLocaleDateString(lang === 'ar' ? 'ar-DZ' : lang === 'en' ? 'en-US' : 'fr-DZ')}</p>
                       <a href={file.fileUrl} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">
-                        Ouvrir
+                        {t('openButton')}
                       </a>
                     </div>
                   </div>
                 ))}
                 {allFiles.length === 0 && (
-                  <div className="p-8 text-center text-slate-500 text-sm">Aucun fichier trouvé sur la plateforme.</div>
+                  <div className="p-8 text-center text-slate-500 text-sm">{t('noFilesFoundPlatform')}</div>
                 )}
               </div>
             </div>
@@ -814,7 +857,7 @@ export default function AdminDashboard() {
               <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
                 <h4 className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
                   <Download className="w-3.5 h-3.5 text-blue-500" />
-                  Pièces Jointes
+                  {t('attachments')}
                 </h4>
                 <div className="space-y-2">
                   {caseFiles.map(file => (
@@ -829,12 +872,12 @@ export default function AdminDashboard() {
                         rel="noopener noreferrer"
                         className="text-xs font-bold text-yellow-500 hover:text-yellow-400 transition-colors"
                       >
-                        Visualiser
+                        {t('view')}
                       </a>
                     </div>
                   ))}
                   {caseFiles.length === 0 && (
-                    <p className="text-xs text-slate-500 italic">Aucun fichier joint à ce dossier.</p>
+                    <p className="text-xs text-slate-500 italic">{t('noAttachments')}</p>
                   )}
                 </div>
               </div>
@@ -874,7 +917,7 @@ export default function AdminDashboard() {
                   <textarea
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    placeholder="Notes internes pour le suivi..."
+                    placeholder={t('adminNotesPlaceholder')}
                     className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 mb-4 min-h-[120px] resize-none shadow-inner"
                   />
                   <button

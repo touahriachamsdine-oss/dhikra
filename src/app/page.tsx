@@ -496,7 +496,7 @@ function LandingPageContent() {
                         </h3>
                         <div className="flex flex-wrap items-center gap-4 mt-2">
                           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium truncate">{t('against')} <span className="text-gray-700 dark:text-gray-200">{c.defendantName || t('notDefined')}</span></p>
-                          <p className="text-xs text-gray-400 flex-shrink-0">{t('submittedOn')} {new Date(c.createdAt).toLocaleDateString('fr-DZ')}</p>
+                          <p className="text-xs text-gray-400 flex-shrink-0">{t('submittedOn')} {new Date(c.createdAt).toLocaleDateString(lang === 'ar' ? 'ar-DZ' : lang === 'en' ? 'en-US' : 'fr-DZ')}</p>
                           {c.trackingNumber && (
                             <span className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 px-2 py-0.5 rounded text-[10px] font-mono font-bold border border-blue-100 dark:border-blue-800">
                               #{c.trackingNumber}

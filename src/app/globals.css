@@ -2,12 +2,19 @@
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:is(.dark *));
 
+html {
+  font-size: 106%;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
   --primary-navy: #92B4EC;
   --accent-gold: #FFE69A;
   --accent-emerald: #92B4EC;
+  --slate-400: #334155;
+  --slate-500: #1e293b;
+  --slate-600: #0f172a;
 }
 
 @theme {
@@ -35,6 +42,10 @@
   --color-secondary-400: #ffe69a;
   --color-secondary-500: #ffe69a;
   --color-secondary-600: #f0d480;
+
+  --color-slate-400: var(--slate-400);
+  --color-slate-500: var(--slate-500);
+  --color-slate-600: var(--slate-600);
 }
 
 @theme inline {
@@ -47,6 +58,9 @@
 :root[data-theme='dark'], .dark {
   --background: #020617;
   --foreground: #f8fafc;
+  --slate-400: #cbd5e1;
+  --slate-500: #e2e8f0;
+  --slate-600: #f8fafc;
 }
 
 body {
