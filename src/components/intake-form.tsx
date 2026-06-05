@@ -174,10 +174,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
 
     const handlePaymentAndSubmit = async () => {
         if (paymentMode === "card") {
-            if (!cardName || cardNumber.replace(/\s+/g, "").length < 16 || cardExpiry.length < 5 || cardCvv.length < 3) {
-                setValidationError(localLang === 'ar' ? 'يرجى إكمال بيانات البطاقة' : (localLang === 'en' ? 'Please complete card details' : 'Veuillez compléter les détails de la carte'));
-                return;
-            }
+            // Mock card: passes with whatever information is filled
         }
 
         setValidationError(null);
@@ -469,7 +466,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                         <ShieldCheck className="w-8 h-8 text-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                                        {simulationPhase === "verifying" && (paymentMode === "card" ? t('verifyingCard') : (localLang === 'ar' ? 'جاري تفعيل النسخة التجريبية...' : (localLang === 'en' ? 'Activating free trial...' : 'Activation de l\'essai gratuit...')))}
+                                        {simulationPhase === "verifying" && (paymentMode === "card" ? t('verifyingCard') : (localLang === 'ar' ? 'جاري تفعيل المحاولات المجانية...' : (localLang === 'en' ? 'Activating free tries...' : 'Activation des essais gratuits...')))}
                                         {simulationPhase === "securing" && t('securingTransaction')}
                                         {simulationPhase === "processing" && (paymentMode === "card" ? (localLang === 'ar' ? 'جاري معالجة الدفع التجريبي...' : (localLang === 'en' ? 'Processing simulated checkout...' : 'Traitement du paiement simulé...')) : (localLang === 'ar' ? 'جاري توليد المستند...' : (localLang === 'en' ? 'Generating document...' : 'Génération du document...')))}
                                     </h3>
@@ -650,15 +647,15 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                             <ul className="space-y-2.5 text-xs font-semibold text-blue-50">
                                                 <li className="flex items-center gap-2">
                                                     <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                                                    <span>{localLang === 'ar' ? 'توليد غير محدود لجميع الوثائق القانونية' : (localLang === 'en' ? 'Unlimited document generation' : 'Génération de documents illimitée')}</span>
+                                                    <span>{localLang === 'ar' ? 'توليد 3 مستندات رسمية مجاناً' : (localLang === 'en' ? '3 official document generations for free' : '3 générations de documents officiels gratuites')}</span>
                                                 </li>
                                                 <li className="flex items-center gap-2">
                                                     <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                                                    <span>{localLang === 'ar' ? 'إرسال رسمي فوري وتتبع كامل للملف' : (localLang === 'en' ? 'Instant postal delivery & tracking' : 'Envoi postal instantané et suivi')}</span>
+                                                    <span>{localLang === 'ar' ? 'تنزيل فوري للمستندات بصيغة PDF عالية الجودة' : (localLang === 'en' ? 'Instant download of high-quality PDF files' : 'Téléchargement instantané des PDF de haute qualité')}</span>
                                                 </li>
                                                 <li className="flex items-center gap-2">
                                                     <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                                                    <span>{localLang === 'ar' ? 'لا توجد التزامات، إلغاء بنقرة واحدة في أي وقت' : (localLang === 'en' ? 'Cancel anytime with 1 click' : 'Annulez à tout moment en 1 clic')}</span>
+                                                    <span>{localLang === 'ar' ? 'لا حاجة لبطاقة دفع ولا التزام' : (localLang === 'en' ? 'No credit card or payment info needed' : 'Aucune carte de crédit ou information de paiement requise')}</span>
                                                 </li>
                                             </ul>
                                         </div>

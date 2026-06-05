@@ -867,14 +867,14 @@
     "en": "DZD / month"
   },
   "startFreeTrial": {
-    "ar": "نسخة تجريبية مجانية لمدة شهر",
-    "fr": "Essai gratuit d'un mois",
-    "en": "1-Month Free Trial"
+    "ar": "3 محاولات مجانية",
+    "fr": "3 essais gratuits",
+    "en": "3 Free Tries"
   },
   "freeTrialSubtitle": {
-    "ar": "لا حاجة لبطاقة دفع أو معلومات فوترة. احصل على وصول كامل مجاني لمدة 30 يومًا.",
-    "fr": "Aucun paiement requis. Accès complet et illimité pendant 30 jours.",
-    "en": "No credit card or payment required. Full free access for 30 days."
+    "ar": "لا حاجة لبطاقة دفع أو معلومات فوترة. احصل على 3 محاولات لتوليد المستندات مجاناً.",
+    "fr": "Aucun paiement requis. Obtenez 3 essais gratuits pour générer vos documents.",
+    "en": "No credit card or payment required. Get 3 free tries to generate your documents."
   },
   "singleCasePayment": {
     "ar": "دفع ثمن قضية واحدة",
@@ -882,9 +882,9 @@
     "en": "Single Case Payment"
   },
   "startTrialAndGenerate": {
-    "ar": "تفعيل الفترة التجريبية وتوليد المستند",
-    "fr": "Activer l'essai & Générer le document",
-    "en": "Activate Trial & Generate Document"
+    "ar": "تفعيل المحاولات المجانية وتوليد المستند",
+    "fr": "Activer les essais & Générer le document",
+    "en": "Activate Free Tries & Generate Document"
   },
   "payAndGenerate": {
     "ar": "دفع وتوليد المستند",
