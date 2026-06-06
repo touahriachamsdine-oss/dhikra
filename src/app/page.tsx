@@ -39,6 +39,21 @@ function LandingPageContent() {
   }, []);
 
   useEffect(() => {
+    const savedCat = localStorage.getItem("intake_active_category");
+    if (savedCat) {
+      setActiveCategory(savedCat);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeCategory) {
+      localStorage.setItem("intake_active_category", activeCategory);
+    } else {
+      localStorage.removeItem("intake_active_category");
+    }
+  }, [activeCategory]);
+
+  useEffect(() => {
     if (user && view === 'dashboard') {
       fetch('/api/cases')
         .then(res => res.json())

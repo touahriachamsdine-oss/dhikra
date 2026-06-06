@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import terms from "@/lib/i18n/legal-terms.json";
 import { 
   UserCircle, 
@@ -17,10 +18,65 @@ import {
   CreditCard,
   Lock,
   Loader2,
-  Sparkles
+  Sparkles,
+  LogIn
 } from "lucide-react";
 
 type Language = "ar" | "fr" | "en";
+
+const localTranslations = {
+    ar: {
+        threeFreeTries: "3 محاولات مجانية",
+        freeTriesLeft: "محاولات مجانية متبقية",
+        useFreeTry: "استخدام محاولة مجانية",
+        noFreeTriesLeft: "انتهت المحاولات المجانية",
+        useYourPlan: "استخدم خطتك",
+        pickPlan: "اختر خطة اشتراك",
+        unlimitedAccess: "وصول غير محدود",
+        unlockUnlimited: "افتح توليد مستندات غير محدود وميزات ممتازة",
+        generateWithFreeTry: "توليد بمحاولة مجانية",
+        activePlanConfirm: "اشتراكك نشط ومفعل!",
+        activePlanDesc: "حسابك مسجل في خطة نشطة. لديك وصول غير محدود لتوليد المستندات القانونية وتنزيلها.",
+        generateDocument: "توليد المستند",
+        pleaseLoginToSubmit: "يرجى تسجيل الدخول للمتابعة",
+        loginNow: "تسجيل الدخول الآن",
+        loadingUserData: "جاري تحميل بيانات الحساب...",
+    },
+    en: {
+        threeFreeTries: "3 Free Tries",
+        freeTriesLeft: "Free Tries Remaining",
+        useFreeTry: "Use Free Try",
+        noFreeTriesLeft: "No free tries left",
+        useYourPlan: "Use Your Plan",
+        pickPlan: "Pick a Plan",
+        unlimitedAccess: "Unlimited Access",
+        unlockUnlimited: "Unlock unlimited document generation and premium features",
+        generateWithFreeTry: "Generate with Free Try",
+        activePlanConfirm: "Your Plan is Active!",
+        activePlanDesc: "Your account is registered with an active plan. You have unlimited access to generate and download legal documents.",
+        generateDocument: "Generate Document",
+        pleaseLoginToSubmit: "Please log in to continue",
+        loginNow: "Log In Now",
+        loadingUserData: "Loading account data...",
+    },
+    fr: {
+        threeFreeTries: "3 Essais Gratuits",
+        freeTriesLeft: "Essais Gratuits Restants",
+        useFreeTry: "Utiliser un essai gratuit",
+        noFreeTriesLeft: "Plus d'essais gratuits",
+        useYourPlan: "Utiliser votre forfait",
+        pickPlan: "Choisir un forfait",
+        unlimitedAccess: "Accès Illimité",
+        unlockUnlimited: "Débloquez la génération illimitée et les fonctionnalités premium",
+        generateWithFreeTry: "Générer avec essai gratuit",
+        activePlanConfirm: "Votre forfait est actif !",
+        activePlanDesc: "Votre compte est enregistré avec un forfait actif. Vous avez un accès illimité pour générer et télécharger vos documents.",
+        generateDocument: "Générer le document",
+        pleaseLoginToSubmit: "Veuillez vous connecter pour continuer",
+        loginNow: "Se connecter maintenant",
+        loadingUserData: "Chargement des données du compte...",
+    }
+};
 type TermKey = keyof typeof terms;
 
 interface IntakeFormProps {
@@ -62,6 +118,111 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
     const [isCardFlipped, setIsCardFlipped] = useState(false);
     const [simulationPhase, setSimulationPhase] = useState<"idle" | "verifying" | "securing" | "processing">("idle");
     const [paymentMode, setPaymentMode] = useState<"card" | "trial">("card");
+
+    const [user, setUser] = useState<any>(null);
+    const [isAuthLoading, setIsAuthLoading] = useState(true);
+    const router = useRouter();
+
+    const fetchUser = async () => {
+        try {
+            const res = await fetch('/api/auth/me');
+            if (res.ok) {
+                const data = await res.json();
+                setUser(data.user);
+            } else {
+                setUser(null);
+            }
+        } catch (err) {
+            console.error(err);
+            setUser(null);
+        } finally {
+            setIsAuthLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUser();
+    }, [step]);
+
+    // Restore state on mount
+    useEffect(() => {
+        const saved = localStorage.getItem("intake_form_state");
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed.formData) setFormData(parsed.formData);
+                if (parsed.step !== undefined) setStep(parsed.step);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }, []);
+
+    // Save state on change
+    useEffect(() => {
+        if (!isDone) {
+            localStorage.setItem("intake_form_state", JSON.stringify({ formData, step }));
+        }
+    }, [formData, step, isDone]);
+
+    const handleUseTryAndSubmit = async () => {
+        setValidationError(null);
+        setIsSubmitting(true);
+        setSimulationPhase("verifying");
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
+        try {
+            const res = await fetch('/api/user/use-try', {
+                method: 'POST',
+            });
+            
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || 'Failed to use free try');
+            }
+            
+            setSimulationPhase("processing");
+            await new Promise((resolve) => setTimeout(resolve, 1200));
+
+            // Clear localStorage progress upon successful generation
+            localStorage.removeItem("intake_form_state");
+            localStorage.removeItem("intake_active_category");
+
+            await onComplete(formData, isDone);
+            setIsDone(true);
+        } catch (err: any) {
+            console.error(err);
+            setValidationError(err.message || 'An error occurred during submission');
+        } finally {
+            setSimulationPhase("idle");
+            setIsSubmitting(false);
+        }
+    };
+
+    const handlePlanSubmit = async () => {
+        setValidationError(null);
+        setIsSubmitting(true);
+        setSimulationPhase("verifying");
+        await new Promise((resolve) => setTimeout(resolve, 800));
+
+        setSimulationPhase("processing");
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
+        try {
+            // Clear localStorage progress upon successful generation
+            localStorage.removeItem("intake_form_state");
+            localStorage.removeItem("intake_active_category");
+
+            await onComplete(formData, isDone);
+            setIsDone(true);
+        } catch (err: any) {
+            console.error(err);
+            setValidationError(err.message || 'An error occurred');
+        } finally {
+            setSimulationPhase("idle");
+            setIsSubmitting(false);
+        }
+    };
 
     const t = (key: TermKey | string) => {
         return (terms as any)[key]?.[localLang] || key;
@@ -456,9 +617,32 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                         </div>
                     )}
 
-                    {/* Step 6: Visual Credit Card checkout with e-receipt */}
-                    {step === 6 && (
-                        <div className="space-y-6 animate-in slide-in-from-right duration-300">
+                    {/* Step 6: Visual Checkout or Plan/Free Tries selection */}
+                    {step === 6 && isAuthLoading && (
+                        <div className="space-y-6 text-center py-12 animate-pulse">
+                            <Loader2 className="w-12 h-12 text-blue-800 animate-spin mx-auto mb-4" />
+                            <p className="text-gray-500 dark:text-gray-400 font-semibold">{localTranslations[localLang].loadingUserData}</p>
+                        </div>
+                    )}
+
+                    {step === 6 && !isAuthLoading && !user && (
+                        <div className="space-y-6 text-center py-12 max-w-sm mx-auto">
+                            <LogIn className="w-16 h-16 text-blue-800 mx-auto mb-4" />
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{localTranslations[localLang].pleaseLoginToSubmit}</h2>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">
+                                {localLang === 'ar' ? 'يجب تسجيل الدخول لحفظ مستنداتك وإدارتها لاحقاً.' : 'You must log in to save your documents and manage them later.'}
+                            </p>
+                            <button
+                                onClick={() => router.push('/login')}
+                                className="w-full py-3 bg-blue-800 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all"
+                            >
+                                {localTranslations[localLang].loginNow}
+                            </button>
+                        </div>
+                    )}
+
+                    {step === 6 && !isAuthLoading && user && user.hasCard === false && (
+                        <div className="space-y-8 animate-in slide-in-from-right duration-300">
                             {simulationPhase !== "idle" && (
                                 <div className="absolute inset-0 bg-white/95 dark:bg-slate-950/95 z-[70] rounded-3xl flex flex-col items-center justify-center p-8 text-center animate-fade-in">
                                     <div className="relative mb-6">
@@ -466,221 +650,119 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                         <ShieldCheck className="w-8 h-8 text-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                                        {simulationPhase === "verifying" && (paymentMode === "card" ? t('verifyingCard') : (localLang === 'ar' ? 'جاري تفعيل المحاولات المجانية...' : (localLang === 'en' ? 'Activating free tries...' : 'Activation des essais gratuits...')))}
-                                        {simulationPhase === "securing" && t('securingTransaction')}
-                                        {simulationPhase === "processing" && (paymentMode === "card" ? (localLang === 'ar' ? 'جاري معالجة الدفع التجريبي...' : (localLang === 'en' ? 'Processing simulated checkout...' : 'Traitement du paiement simulé...')) : (localLang === 'ar' ? 'جاري توليد المستند...' : (localLang === 'en' ? 'Generating document...' : 'Génération du document...')))}
+                                        {simulationPhase === "verifying" ? (localLang === 'ar' ? 'جاري التحقق...' : 'Verifying...') : (localLang === 'ar' ? 'جاري توليد المستند...' : 'Generating document...')}
                                     </h3>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 max-w-xs">
-                                        {localLang === 'ar' ? 'هذه محاكاة آمنة بالكامل على جانب العميل لتسهيل عملية التثبيت والتسجيل.' : 'This is a secure offline checkout simulation created to complete the document generation process.'}
+                                        {localLang === 'ar' ? 'جاري معالجة وتوليد مستندك القانوني بأمان.' : 'Processing and securely generating your legal document.'}
                                     </p>
                                 </div>
                             )}
 
                             <div className="text-center">
-                                <CreditCard className="w-12 h-12 text-blue-800 mx-auto mb-2" />
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('checkoutSecure')}</h2>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm">{t('funnelQuestion2')}</p>
+                                <Sparkles className="w-12 h-12 text-blue-800 mx-auto mb-2 animate-pulse" />
+                                <h2 className="text-3xl font-black text-gray-900 dark:text-gray-100 mb-2">
+                                    {localLang === 'ar' ? 'اختر طريقة توليد المستند' : (localLang === 'en' ? 'Choose Generation Method' : 'Choisissez la méthode de génération')}
+                                </h2>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto">
+                                    {localLang === 'ar' ? 'يمكنك استخدام إحدى محاولاتك المجانية أو الاشتراك في خطة غير محدودة لتوليد جميع مستنداتك القانونية.' : 'Use one of your free tries or pick a subscription plan to unlock unlimited document generation.'}
+                                </p>
                             </div>
 
-                            {/* Payment mode selector */}
-                            <div className="flex border-2 border-gray-200 dark:border-slate-800 rounded-2xl p-1.5 max-w-sm mx-auto mb-6 bg-gray-50/50 dark:bg-slate-900/50">
-                                <button
-                                    onClick={() => { setPaymentMode("card"); setValidationError(null); }}
-                                    className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2 ${paymentMode === "card" ? 'bg-white dark:bg-slate-800 text-blue-800 dark:text-blue-400 shadow-md border border-gray-100 dark:border-slate-700' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
-                                >
-                                    <CreditCard className="w-4 h-4" />
-                                    <span>{t('singleCasePayment')}</span>
-                                </button>
-                                <button
-                                    onClick={() => { setPaymentMode("trial"); setValidationError(null); }}
-                                    className={`flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-2 ${paymentMode === "trial" ? 'bg-white dark:bg-slate-800 text-blue-800 dark:text-blue-400 shadow-md border border-gray-100 dark:border-slate-700' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
-                                >
-                                    <Sparkles className="w-4 h-4 text-amber-500" />
-                                    <span>{t('startFreeTrial')}</span>
-                                </button>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                                {/* Option 1: Free Tries */}
+                                <div className="bg-gradient-to-tr from-slate-900 to-slate-950 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden border border-slate-805 flex flex-col justify-between min-h-[260px]">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <span className="bg-blue-650 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                                {localTranslations[localLang].threeFreeTries}
+                                            </span>
+                                            <Sparkles className="w-5 h-5 text-amber-300" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xl font-extrabold tracking-tight">{localTranslations[localLang].freeTriesLeft}</h4>
+                                            <p className="text-4xl font-black mt-2 text-amber-400">{user.freeTries} / 3</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleUseTryAndSubmit}
+                                        disabled={user.freeTries <= 0 || isSubmitting}
+                                        className="relative z-10 w-full py-4 mt-6 bg-white hover:bg-gray-100 disabled:bg-slate-800 text-slate-900 disabled:text-slate-500 font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <CheckCircle className="w-5 h-5" />
+                                        <span>{user.freeTries <= 0 ? localTranslations[localLang].noFreeTriesLeft : localTranslations[localLang].useFreeTry}</span>
+                                    </button>
+                                </div>
+
+                                {/* Option 2: Choose Plan */}
+                                <div className="bg-gradient-to-tr from-blue-900 to-indigo-950 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden border border-blue-800 flex flex-col justify-between min-h-[260px]">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
+                                    <div className="relative z-10 space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <span className="bg-amber-400 text-slate-900 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                                {localTranslations[localLang].unlimitedAccess}
+                                            </span>
+                                            <CreditCard className="w-5 h-5 text-amber-300" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-xl font-extrabold tracking-tight">{localTranslations[localLang].useYourPlan}</h4>
+                                            <p className="text-xs text-blue-100/80 mt-2 leading-relaxed">
+                                                {localTranslations[localLang].unlockUnlimited}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => router.push('/pick-plan')}
+                                        className="relative z-10 w-full py-4 mt-6 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <CreditCard className="w-5 h-5" />
+                                        <span>{localTranslations[localLang].pickPlan}</span>
+                                    </button>
+                                </div>
                             </div>
+                        </div>
+                    )}
 
-                            {paymentMode === "card" ? (
-                                <>
-                                    {/* Live Credit Card interactive visualizer */}
-                                    <div className="w-full max-w-sm mx-auto mb-6 perspective-1000">
-                                        <div className={`relative w-full h-48 rounded-2xl transition-transform duration-700 preserve-3d cursor-pointer ${isCardFlipped ? 'rotate-y-180' : ''}`}>
-                                            {/* Front */}
-                                            <div className={`absolute inset-0 w-full h-full rounded-2xl p-6 text-white backface-hidden flex flex-col justify-between shadow-xl ${currentBrand.gradient}`}>
-                                                <div className="flex justify-between items-start">
-                                                    <div>
-                                                        <p className="text-[10px] uppercase opacity-75 tracking-wider font-semibold">Taswiya Pay Card</p>
-                                                        <p className="text-xs font-bold mt-0.5">LEGAL AUTO NOTICE</p>
-                                                    </div>
-                                                    <span className="text-lg font-black italic tracking-wide">{currentBrand.logo}</span>
-                                                </div>
-
-                                                <div className="my-3">
-                                                    <p className="text-xl font-mono tracking-widest text-center">{cardNumber || "•••• •••• •••• ••••"}</p>
-                                                </div>
-
-                                                <div className="flex justify-between items-end">
-                                                    <div>
-                                                        <p className="text-[9px] uppercase opacity-70">{t('cardholderName')}</p>
-                                                        <p className="text-xs font-mono tracking-wider font-bold truncate max-w-[180px]">{cardName.toUpperCase() || "NAME SURNAME"}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[9px] uppercase opacity-70">{t('expiryDate')}</p>
-                                                        <p className="text-xs font-mono font-bold">{cardExpiry || "MM/YY"}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Back */}
-                                            <div className="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 text-white backface-hidden rotate-y-180 flex flex-col justify-between shadow-xl">
-                                                <div className="w-full h-10 bg-black -mx-6 mt-2 opacity-90" />
-                                                
-                                                <div className="my-2">
-                                                    <p className="text-[9px] text-right opacity-70 mr-2 uppercase">Signature / CVV</p>
-                                                    <div className="bg-white/10 w-full h-9 rounded flex items-center justify-end px-3 mt-1">
-                                                        <span className="text-sm font-mono italic text-black bg-white px-2 py-0.5 rounded shadow tracking-widest">{cardCvv || "•••"}</span>
-                                                    </div>
-                                                </div>
-
-                                                <p className="text-[8px] text-slate-400 leading-tight">
-                                                    Simulated legal case processing fee: 2,000 DZD. Client-side payment simulation. No real financial operations.
-                                                </p>
-                                            </div>
-                                        </div>
+                    {step === 6 && !isAuthLoading && user && user.hasCard === true && (
+                        <div className="space-y-6 max-w-md mx-auto animate-in slide-in-from-right duration-300 text-center">
+                            {simulationPhase !== "idle" && (
+                                <div className="absolute inset-0 bg-white/95 dark:bg-slate-950/95 z-[70] rounded-3xl flex flex-col items-center justify-center p-8 text-center animate-fade-in">
+                                    <div className="relative mb-6">
+                                        <Loader2 className="w-16 h-16 animate-spin text-blue-800" />
+                                        <ShieldCheck className="w-8 h-8 text-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                                     </div>
-
-                                    {/* E-Receipt visualizer */}
-                                    <div className="bg-gray-100 dark:bg-slate-900 p-5 rounded-3xl border border-gray-200 dark:border-slate-800 space-y-3 max-w-sm mx-auto shadow-sm">
-                                        <h3 className="font-extrabold text-xs text-gray-500 uppercase tracking-wider">{t('receiptTitle')}</h3>
-                                        <div className="flex justify-between text-xs">
-                                            <span className="text-gray-500">{t('noticeType')}</span>
-                                            <span className="font-bold text-gray-800 dark:text-gray-200">
-                                                {t(`notice${formData.noticeType}`)}
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between text-xs border-t border-dashed border-gray-200 dark:border-slate-800 pt-3">
-                                            <span className="text-gray-500 font-bold">{t('amountPaid')}</span>
-                                            <span className="font-black text-blue-800 dark:text-blue-400">2,000 DZD</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Payment inputs */}
-                                    <div className="space-y-4 max-w-sm mx-auto">
-                                        <div>
-                                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('cardholderName')}</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                value={cardName}
-                                                onChange={(e) => setCardName(e.target.value)}
-                                                placeholder="E.g. CHAMSDINE TOUAHRI"
-                                                className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('cardNumber')}</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                value={cardNumber}
-                                                onChange={(e) => handleCardNumberChange(e.target.value)}
-                                                placeholder="6280 •••• •••• ••••"
-                                                className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent"
-                                            />
-                                            <span className="text-[10px] text-gray-400 mt-1 block">
-                                                {t('mockCardPlaceholder')} (Prefix 4 = Visa, 5 = MasterCard, 6280/606 = Dahabia, 981 = CIB)
-                                            </span>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('expiryDate')}</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    value={cardExpiry}
-                                                    onChange={(e) => handleExpiryChange(e.target.value)}
-                                                    placeholder="MM/YY"
-                                                    className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent text-center"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{t('cvv')}</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    value={cardCvv}
-                                                    onChange={(e) => handleCvvChange(e.target.value)}
-                                                    onFocus={() => setIsCardFlipped(true)}
-                                                    onBlur={() => setIsCardFlipped(false)}
-                                                    placeholder="123"
-                                                    className="w-full border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 focus:border-blue-700 outline-none transition-all bg-transparent text-center"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </>
-                            ) : (
-                                <div className="space-y-6 max-w-sm mx-auto animate-in fade-in duration-300">
-                                    {/* Premium Trial Promo Card */}
-                                    <div className="bg-gradient-to-tr from-blue-900 to-indigo-850 dark:from-slate-900 dark:to-blue-950 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden border border-blue-700/30">
-                                        {/* Background elements */}
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
-                                        <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-blue-500/20 rounded-full blur-lg"></div>
-                                        
-                                        <div className="relative z-10 space-y-4">
-                                            <div className="flex justify-between items-center">
-                                                <span className="bg-amber-400 text-slate-900 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                                                    {localLang === 'ar' ? 'عرض خاص' : (localLang === 'en' ? 'Special Offer' : 'Offre Spéciale')}
-                                                </span>
-                                                <Sparkles className="w-5 h-5 text-amber-300 animate-pulse animate-duration-1000" />
-                                            </div>
-                                            
-                                            <div>
-                                                <h4 className="text-xl font-extrabold tracking-tight">Taswiya Premium</h4>
-                                                <p className="text-xs text-blue-100/80 mt-1">{t('freeTrialSubtitle')}</p>
-                                            </div>
-                                            
-                                            <hr className="border-white/10 my-3" />
-                                            
-                                            <ul className="space-y-2.5 text-xs font-semibold text-blue-50">
-                                                <li className="flex items-center gap-2">
-                                                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                                                    <span>{localLang === 'ar' ? 'توليد 3 مستندات رسمية مجاناً' : (localLang === 'en' ? '3 official document generations for free' : '3 générations de documents officiels gratuites')}</span>
-                                                </li>
-                                                <li className="flex items-center gap-2">
-                                                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                                                    <span>{localLang === 'ar' ? 'تنزيل فوري للمستندات بصيغة PDF عالية الجودة' : (localLang === 'en' ? 'Instant download of high-quality PDF files' : 'Téléchargement instantané des PDF de haute qualité')}</span>
-                                                </li>
-                                                <li className="flex items-center gap-2">
-                                                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                                                    <span>{localLang === 'ar' ? 'لا حاجة لبطاقة دفع ولا التزام' : (localLang === 'en' ? 'No credit card or payment info needed' : 'Aucune carte de crédit ou information de paiement requise')}</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    {/* E-Receipt for Free Trial */}
-                                    <div className="bg-gray-100 dark:bg-slate-900 p-5 rounded-3xl border border-gray-200 dark:border-slate-800 space-y-3 shadow-sm">
-                                        <h3 className="font-extrabold text-xs text-gray-500 uppercase tracking-wider">{t('receiptTitle')}</h3>
-                                        <div className="flex justify-between text-xs">
-                                            <span className="text-gray-500">{t('noticeType')}</span>
-                                            <span className="font-bold text-gray-800 dark:text-gray-200">
-                                                {t(`notice${formData.noticeType}`)}
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between text-xs border-t border-dashed border-gray-200 dark:border-slate-800 pt-3">
-                                            <span className="text-gray-500">{localLang === 'ar' ? 'السعر العادي' : (localLang === 'en' ? 'Standard Price' : 'Prix Standard')}</span>
-                                            <span className="text-gray-500 line-through">2,000 DZD</span>
-                                        </div>
-                                        <div className="flex justify-between text-xs border-t border-dashed border-gray-200 dark:border-slate-800 pt-3">
-                                            <span className="text-gray-500 font-bold">{localLang === 'ar' ? 'المجموع المستحق' : (localLang === 'en' ? 'Total Due' : 'Total Dû')}</span>
-                                            <span className="font-black text-green-600 dark:text-green-400 text-sm">0 DZD</span>
-                                        </div>
-                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                                        {simulationPhase === "verifying" ? (localLang === 'ar' ? 'جاري التحقق...' : 'Verifying...') : (localLang === 'ar' ? 'جاري توليد المستند...' : 'Generating document...')}
+                                    </h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 max-w-xs">
+                                        {localLang === 'ar' ? 'جاري معالجة وتوليد مستندك القانوني بأمان.' : 'Processing and securely generating your legal document.'}
+                                    </p>
                                 </div>
                             )}
+
+                            <div className="bg-gradient-to-tr from-emerald-800 to-teal-950 dark:from-slate-900 dark:to-teal-950 p-8 rounded-3xl text-white shadow-xl relative overflow-hidden border border-emerald-700/30">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
+                                <div className="w-16 h-16 bg-emerald-500/20 text-emerald-300 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <CheckCircle className="w-8 h-8 animate-bounce" />
+                                </div>
+                                <h3 className="text-2xl font-black mb-3">{localTranslations[localLang].activePlanConfirm}</h3>
+                                <p className="text-sm text-emerald-100/90 leading-relaxed mb-6">
+                                    {localTranslations[localLang].activePlanDesc}
+                                </p>
+                                <div className="bg-white/10 rounded-2xl p-4 flex justify-between items-center text-xs">
+                                    <span className="opacity-80">{localLang === 'ar' ? 'الخطة الحالية:' : 'Current Plan:'}</span>
+                                    <span className="font-extrabold uppercase bg-emerald-500 px-2 py-0.5 rounded text-white tracking-widest">{user.plan || "PREMIUM"}</span>
+                                </div>
+
+                                <button
+                                    onClick={handlePlanSubmit}
+                                    disabled={isSubmitting}
+                                    className="w-full py-4 mt-6 bg-white hover:bg-gray-100 text-slate-900 font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                                >
+                                    <FileText className="w-5 h-5" />
+                                    <span>{localTranslations[localLang].generateDocument}</span>
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -715,14 +797,16 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                 {isRtl ? <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" /> : <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
                             </button>
                         ) : (
-                            <button
-                                onClick={handlePaymentAndSubmit}
-                                disabled={isSubmitting}
-                                className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-blue-800 text-white rounded-xl hover:bg-blue-700 shadow-xl shadow-blue-300 font-bold transition-all text-base sm:text-lg disabled:opacity-50"
-                            >
-                                <Lock className="w-4 h-4" />
-                                <span>{isSubmitting ? t('processing') : (paymentMode === "card" ? t('payAndGenerate') : t('startTrialAndGenerate'))}</span>
-                            </button>
+                            user?.hasCard === true && (
+                                <button
+                                    onClick={handlePlanSubmit}
+                                    disabled={isSubmitting}
+                                    className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-blue-800 text-white rounded-xl hover:bg-blue-700 shadow-xl shadow-blue-300 font-bold transition-all text-base sm:text-lg disabled:opacity-50"
+                                >
+                                    <FileText className="w-4 h-4" />
+                                    <span>{isSubmitting ? t('processing') : localTranslations[localLang].generateDocument}</span>
+                                </button>
+                            )
                         )}
                     </div>
                 </div>

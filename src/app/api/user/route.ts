@@ -16,6 +16,9 @@ export async function GET() {
             nationalId: true,
             image: true,
             role: true,
+            hasCard: true,
+            plan: true,
+            freeTries: true,
         }
     })
 
