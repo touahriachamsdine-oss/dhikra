@@ -28,7 +28,6 @@ export async function POST(request: Request) {
                 name: true,
                 hasCard: true,
                 plan: true,
-                freeTries: true,
             }
         })
 

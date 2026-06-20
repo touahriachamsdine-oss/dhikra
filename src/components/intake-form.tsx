@@ -26,15 +26,10 @@ type Language = "ar" | "fr" | "en";
 
 const localTranslations = {
     ar: {
-        threeFreeTries: "3 محاولات مجانية",
-        freeTriesLeft: "محاولات مجانية متبقية",
-        useFreeTry: "استخدام محاولة مجانية",
-        noFreeTriesLeft: "انتهت المحاولات المجانية",
         useYourPlan: "تفعيل الخدمة مدى الحياة",
         pickPlan: "تفعيل الخدمة (5,000 د.ج)",
         unlimitedAccess: "وصول غير محدود مدى الحياة",
         unlockUnlimited: "ادفع مرة واحدة بقيمة 5,000 د.ج للحصول على وصول غير محدود مدى الحياة لتوليد المستندات.",
-        generateWithFreeTry: "توليد بمحاولة مجانية",
         activePlanConfirm: "تم تفعيل الخدمة بنجاح!",
         activePlanDesc: "لقد قمت بدفع رسوم الخدمة لمرة واحدة. لديك الآن وصول غير محدود لتوليد وتنزيل جميع مستنداتك القانونية.",
         generateDocument: "توليد المستند",
@@ -43,15 +38,10 @@ const localTranslations = {
         loadingUserData: "جاري تحميل بيانات الحساب...",
     },
     en: {
-        threeFreeTries: "3 Free Tries",
-        freeTriesLeft: "Free Tries Remaining",
-        useFreeTry: "Use Free Try",
-        noFreeTriesLeft: "No free tries left",
         useYourPlan: "Lifetime Unlimited Service",
         pickPlan: "Activate Unlimited (5,000 DZD)",
         unlimitedAccess: "Lifetime Unlimited Access",
         unlockUnlimited: "Pay a one-time fee of 5,000 DZD to unlock lifetime unlimited document generation and premium features.",
-        generateWithFreeTry: "Generate with Free Try",
         activePlanConfirm: "Service Activated Successfully!",
         activePlanDesc: "You have successfully paid the one-time service fee. You now have unlimited access to generate and download all your legal documents.",
         generateDocument: "Generate Document",
@@ -60,15 +50,10 @@ const localTranslations = {
         loadingUserData: "Loading account data...",
     },
     fr: {
-        threeFreeTries: "3 Essais Gratuits",
-        freeTriesLeft: "Essais Gratuits Restants",
-        useFreeTry: "Utiliser un essai gratuit",
-        noFreeTriesLeft: "Plus d'essais gratuits",
         useYourPlan: "Service Illimité à Vie",
         pickPlan: "Activer l'illimité (5 000 DA)",
         unlimitedAccess: "Accès Illimité à Vie",
         unlockUnlimited: "Payez des frais uniques de 5 000 DA pour débloquer la génération illimitée à vie et les fonctionnalités premium.",
-        generateWithFreeTry: "Générer avec essai gratuit",
         activePlanConfirm: "Service activé avec succès !",
         activePlanDesc: "Vous avez payé les frais de service uniques. Vous avez maintenant un accès illimité pour générer et télécharger tous vos documents.",
         generateDocument: "Générer le document",
@@ -110,14 +95,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
     const [isDone, setIsDone] = useState(false);
     const [validationError, setValidationError] = useState<string | null>(null);
 
-    // Mock credit card states
-    const [cardName, setCardName] = useState("");
-    const [cardNumber, setCardNumber] = useState("");
-    const [cardExpiry, setCardExpiry] = useState("");
-    const [cardCvv, setCardCvv] = useState("");
-    const [isCardFlipped, setIsCardFlipped] = useState(false);
     const [simulationPhase, setSimulationPhase] = useState<"idle" | "verifying" | "securing" | "processing">("idle");
-    const [paymentMode, setPaymentMode] = useState<"card" | "trial">("card");
 
     const [user, setUser] = useState<any>(null);
     const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -164,40 +142,6 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
             localStorage.setItem("intake_form_state", JSON.stringify({ formData, step }));
         }
     }, [formData, step, isDone]);
-
-    const handleUseTryAndSubmit = async () => {
-        setValidationError(null);
-        setIsSubmitting(true);
-        setSimulationPhase("verifying");
-        await new Promise((resolve) => setTimeout(resolve, 1200));
-
-        try {
-            const res = await fetch('/api/user/use-try', {
-                method: 'POST',
-            });
-            
-            if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.error || 'Failed to use free try');
-            }
-            
-            setSimulationPhase("processing");
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-
-            // Clear localStorage progress upon successful generation
-            localStorage.removeItem("intake_form_state");
-            localStorage.removeItem("intake_active_category");
-
-            await onComplete(formData, isDone);
-            setIsDone(true);
-        } catch (err: any) {
-            console.error(err);
-            setValidationError(err.message || 'An error occurred during submission');
-        } finally {
-            setSimulationPhase("idle");
-            setIsSubmitting(false);
-        }
-    };
 
     const handlePlanSubmit = async () => {
         setValidationError(null);
@@ -264,40 +208,6 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         return true;
     };
 
-    // Card formatting helpers
-    const handleCardNumberChange = (value: string) => {
-        const clean = value.replace(/\D/g, "").substring(0, 16);
-        const parts = [];
-        for (let i = 0; i < clean.length; i += 4) {
-            parts.push(clean.substring(i, i + 4));
-        }
-        setCardNumber(parts.join(" "));
-    };
-
-    const handleExpiryChange = (value: string) => {
-        let clean = value.replace(/\D/g, "").substring(0, 4);
-        if (clean.length > 2) {
-            clean = clean.substring(0, 2) + "/" + clean.substring(2);
-        }
-        setCardExpiry(clean);
-    };
-
-    const handleCvvChange = (value: string) => {
-        const clean = value.replace(/\D/g, "").substring(0, 3);
-        setCardCvv(clean);
-    };
-
-    // Card brand detection
-    const getCardBrand = (num: string) => {
-        const clean = num.replace(/\s+/g, "");
-        if (clean.startsWith("6280") || clean.startsWith("606")) return { name: "Dahabia", logo: "الذهبية", gradient: "bg-gradient-to-tr from-yellow-500 via-amber-600 to-yellow-800" };
-        if (clean.startsWith("981")) return { name: "CIB", logo: "CIB", gradient: "bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-700" };
-        if (clean.startsWith("4")) return { name: "Visa", logo: "VISA", gradient: "bg-gradient-to-tr from-indigo-900 via-slate-900 to-indigo-700" };
-        if (clean.startsWith("5")) return { name: "MasterCard", logo: "MasterCard", gradient: "bg-gradient-to-tr from-rose-600 via-red-700 to-amber-600" };
-        return { name: "Default", logo: "CARD", gradient: "bg-gradient-to-tr from-slate-700 via-slate-800 to-slate-900" };
-    };
-
-    const currentBrand = getCardBrand(cardNumber);
 
     const nextStep = () => {
         if (step === 5) {
@@ -333,43 +243,6 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
         setStep(2);
     };
 
-    const handlePaymentAndSubmit = async () => {
-        if (paymentMode === "card") {
-            // Mock card: passes with whatever information is filled
-        }
-
-        setValidationError(null);
-        setIsSubmitting(true);
-        
-        if (paymentMode === "card") {
-            // Simulating secure Algerian multi-bank payment phases
-            setSimulationPhase("verifying");
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-
-            setSimulationPhase("securing");
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-
-            setSimulationPhase("processing");
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-        } else {
-            // Simulating free trial activation
-            setSimulationPhase("verifying");
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-
-            setSimulationPhase("processing");
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-        }
-
-        try {
-            await onComplete(formData, isDone);
-            setIsDone(true);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setSimulationPhase("idle");
-            setIsSubmitting(false);
-        }
-    };
 
     const steps = [
         { title: t('plaintiffInfo'), icon: <UserCircle className="w-5 h-5" /> },
@@ -659,43 +532,18 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             )}
 
                             <div className="text-center">
-                                <Sparkles className="w-12 h-12 text-blue-800 mx-auto mb-2 animate-pulse" />
+                                <CreditCard className="w-16 h-16 text-blue-800 dark:text-blue-400 mx-auto mb-4 animate-bounce" />
                                 <h2 className="text-3xl font-black text-gray-900 dark:text-gray-100 mb-2">
-                                    {localLang === 'ar' ? 'اختر طريقة توليد المستند' : (localLang === 'en' ? 'Choose Generation Method' : 'Choisissez la méthode de génération')}
+                                    {localLang === 'ar' ? 'تفعيل الخدمة مدى الحياة' : (localLang === 'en' ? 'Activate Lifetime Service' : 'Activer le service à vie')}
                                 </h2>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto">
-                                    {localLang === 'ar' ? 'يمكنك استخدام إحدى محاولاتك المجانية أو تفعيل الخدمة مدى الحياة لتوليد مستندات بلا حدود.' : (localLang === 'en' ? 'Use one of your free tries or activate the lifetime service for unlimited document generation.' : 'Utilisez l\'un de vos essais gratuits ou activez le service à vie pour une génération illimitée.')}
+                                <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto mb-8">
+                                    {localLang === 'ar' ? 'يرجى تفعيل الخدمة مدى الحياة لتتمكن من توليد مستندك القانوني.' : (localLang === 'en' ? 'Please activate the lifetime service to generate your legal document.' : 'Veuillez activer le service à vie pour générer votre document juridique.')}
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-                                {/* Option 1: Free Tries */}
-                                <div className="bg-gradient-to-tr from-slate-900 to-slate-950 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden border border-slate-805 flex flex-col justify-between min-h-[260px]">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
-                                    <div className="relative z-10 space-y-4">
-                                        <div className="flex justify-between items-center">
-                                            <span className="bg-blue-650 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
-                                                {localTranslations[localLang].threeFreeTries}
-                                            </span>
-                                            <Sparkles className="w-5 h-5 text-amber-300" />
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xl font-extrabold tracking-tight">{localTranslations[localLang].freeTriesLeft}</h4>
-                                            <p className="text-4xl font-black mt-2 text-amber-400">{user.freeTries} / 3</p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={handleUseTryAndSubmit}
-                                        disabled={user.freeTries <= 0 || isSubmitting}
-                                        className="relative z-10 w-full py-4 mt-6 bg-white hover:bg-gray-100 disabled:bg-slate-800 text-slate-900 disabled:text-slate-500 font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
-                                    >
-                                        <CheckCircle className="w-5 h-5" />
-                                        <span>{user.freeTries <= 0 ? localTranslations[localLang].noFreeTriesLeft : localTranslations[localLang].useFreeTry}</span>
-                                    </button>
-                                </div>
-
-                                {/* Option 2: Choose Plan */}
-                                <div className="bg-gradient-to-tr from-blue-900 to-indigo-950 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden border border-blue-800 flex flex-col justify-between min-h-[260px]">
+                            <div className="max-w-md mx-auto">
+                                {/* Option: Choose Plan */}
+                                <div className="bg-gradient-to-tr from-blue-900 to-indigo-950 p-8 rounded-3xl text-white shadow-xl relative overflow-hidden border border-blue-800 flex flex-col justify-between min-h-[280px]">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-10 -translate-y-10 blur-xl"></div>
                                     <div className="relative z-10 space-y-4">
                                         <div className="flex justify-between items-center">
@@ -705,15 +553,15 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                             <CreditCard className="w-5 h-5 text-amber-300" />
                                         </div>
                                         <div>
-                                            <h4 className="text-xl font-extrabold tracking-tight">{localTranslations[localLang].useYourPlan}</h4>
-                                            <p className="text-xs text-blue-100/80 mt-2 leading-relaxed">
+                                            <h4 className="text-2xl font-extrabold tracking-tight text-white">{localTranslations[localLang].useYourPlan}</h4>
+                                            <p className="text-sm text-blue-105/80 mt-2 leading-relaxed">
                                                 {localTranslations[localLang].unlockUnlimited}
                                             </p>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => router.push('/pick-plan')}
-                                        className="relative z-10 w-full py-4 mt-6 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                                        className="relative z-10 w-full py-4 mt-6 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-base"
                                     >
                                         <CreditCard className="w-5 h-5" />
                                         <span>{localTranslations[localLang].pickPlan}</span>
@@ -799,7 +647,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                 {isRtl ? <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" /> : <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
                             </button>
                         ) : (
-                            user?.hasCard === true && (
+                            user?.hasCard === true ? (
                                 <button
                                     onClick={handlePlanSubmit}
                                     disabled={isSubmitting}
@@ -807,6 +655,14 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                 >
                                     <FileText className="w-4 h-4" />
                                     <span>{isSubmitting ? t('processing') : localTranslations[localLang].generateDocument}</span>
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => router.push('/pick-plan')}
+                                    className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-6 sm:px-8 py-3 bg-amber-400 hover:bg-amber-300 text-slate-900 rounded-xl shadow-lg shadow-amber-300 font-bold transition-all text-base sm:text-lg"
+                                >
+                                    <CreditCard className="w-4 h-4" />
+                                    <span>{localTranslations[localLang].pickPlan}</span>
                                 </button>
                             )
                         )}

@@ -24,7 +24,6 @@ model User {
   
   hasCard   Boolean  @default(false)
   plan      String   @default("none")
-  freeTries Int      @default(3)
   
   emailVerified DateTime?
   verificationToken String? @unique

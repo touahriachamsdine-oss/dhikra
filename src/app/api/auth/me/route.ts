@@ -15,7 +15,6 @@ export async function GET() {
       name: true,
       hasCard: true,
       plan: true,
-      freeTries: true,
     }
   })
 

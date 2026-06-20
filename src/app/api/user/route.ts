@@ -18,7 +18,6 @@ export async function GET() {
             role: true,
             hasCard: true,
             plan: true,
-            freeTries: true,
         }
     })
 
