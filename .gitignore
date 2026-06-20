@@ -51,3 +51,7 @@ node-v*-linux-*/
 
 # Misc output files
 lint_output.txt
+
+# Scratch files
+/scratch
+

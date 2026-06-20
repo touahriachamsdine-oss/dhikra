@@ -13,9 +13,20 @@ export async function POST(request: Request) {
       <html dir="rtl" lang="ar">
         <head>
           <style>
-            @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+            @font-face {
+              font-family: 'CairoLocal';
+              font-style: normal;
+              font-weight: 400;
+              src: local('Cairo'), local('Noto Sans Arabic'), local('Amiri'), local('DejaVu Sans');
+            }
+            @font-face {
+              font-family: 'CairoLocal';
+              font-style: normal;
+              font-weight: 700;
+              src: local('Cairo Bold'), local('Cairo-Bold'), local('Noto Sans Arabic Bold'), local('Noto Sans Arabic-Bold'), local('Amiri-Bold');
+            }
             body {
-              font-family: 'Cairo', sans-serif;
+              font-family: 'CairoLocal', 'Cairo', 'Noto Sans Arabic', 'Amiri', sans-serif;
               padding: 40px;
               line-height: 1.6;
               color: #1a1a1b;
@@ -153,11 +164,17 @@ export async function POST(request: Request) {
     try {
       const browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-gpu',
+          '--font-render-hinting=none'
+        ]
       });
       const page = await browser.newPage();
 
       await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
+      await page.evaluateHandle('document.fonts.ready');
 
       const pdfBuffer = await page.pdf({
         format: 'A4',

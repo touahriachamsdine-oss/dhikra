@@ -837,14 +837,14 @@
     "en": "All fields are required"
   },
   "planSelection": {
-    "ar": "اختر خطة الاشتراك",
-    "fr": "Choisir un plan d'abonnement",
-    "en": "Choose a Subscription Plan"
+    "ar": "تفعيل الخدمة القانونية",
+    "fr": "Activer le Service Juridique",
+    "en": "Activate Legal Service"
   },
   "selectPlanDesc": {
-    "ar": "اختر خطة لترقية حسابك والحصول على ميزات متميزة.",
-    "fr": "Sélectionnez un forfait pour mettre à niveau votre compte.",
-    "en": "Select a plan to upgrade your account and get premium features."
+    "ar": "ادفع رسوم الخدمة لمرة واحدة بقيمة 5,000 د.ج للحصول على وصول غير محدود مدى الحياة لتوليد المستندات القانونية.",
+    "fr": "Payez des frais de service uniques de 5 000 DA pour un accès illimité à vie aux documents juridiques.",
+    "en": "Pay a one-time service fee of 5,000 DZD for lifetime unlimited access to generate legal documents."
   },
   "basicPlan": {
     "ar": "الخطة الأساسية",

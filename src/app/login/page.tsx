@@ -49,7 +49,7 @@ export default function LoginPage() {
 
   // Multi-step registration states
   const [signUpStep, setSignUpStep] = useState(1);
-  const [selectedPlan, setSelectedPlan] = useState<"basic" | "premium" | "enterprise">("premium");
+  const [selectedPlan, setSelectedPlan] = useState<string>("ONETIME_SERVICE");
   
   // Credit card states
   const [cardName, setCardName] = useState("");
@@ -454,56 +454,48 @@ export default function LoginPage() {
                 {t('planSelection')}
               </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Basic Plan */}
-                <div 
-                  onClick={() => setSelectedPlan("basic")}
-                  className={`border-2 rounded-2xl p-5 cursor-pointer transition-all flex flex-col justify-between relative ${selectedPlan === "basic" ? "border-primary-500 bg-primary-50/30 dark:bg-primary-950/10 shadow-lg scale-[1.02]" : "border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700"}`}
-                >
-                  <div>
-                    <h3 className="font-extrabold text-slate-800 dark:text-white">{t('basicPlan')}</h3>
-                    <p className="text-xs text-slate-400 mt-1">For single users</p>
-                    <div className="text-xl font-black text-primary-600 mt-3">1,500 <span className="text-xs font-normal text-slate-500">{t('dzdPerMonth')}</span></div>
+              {/* Single Premium One-Time Plan Presentation */}
+              <div className="max-w-md mx-auto w-full">
+                <div className="border-2 border-amber-500 bg-amber-50/10 dark:bg-amber-950/10 rounded-3xl p-6 relative overflow-hidden shadow-xl scale-[1.01] hover:scale-[1.02] transition-all duration-300">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-md">
+                    {lang === 'ar' ? 'رسوم لمرة واحدة' : (lang === 'en' ? 'ONE-TIME FEE' : 'FRAIS UNIQUES')}
                   </div>
-                  <ul className="text-xs text-slate-500 space-y-2 mt-4">
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-primary-500 flex-shrink-0" /> 1 Case/mo</li>
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-primary-500 flex-shrink-0" /> PDF Export</li>
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-primary-500 flex-shrink-0" /> Standard</li>
-                  </ul>
-                </div>
+                  
+                  <div className="text-center mt-3">
+                    <h3 className="text-2xl font-black text-slate-800 dark:text-white">
+                      {lang === 'ar' ? 'الخدمة القانونية مدى الحياة' : (lang === 'en' ? 'Lifetime Unlimited Service' : 'Service Juridique à Vie')}
+                    </h3>
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-semibold">
+                      {lang === 'ar' ? 'وصول كامل لكافة الميزات' : (lang === 'en' ? 'Full access to all premium features' : 'Accès complet à toutes les fonctionnalités')}
+                    </p>
+                    <div className="text-4xl font-black text-amber-600 dark:text-amber-500 mt-5 mb-2 flex items-center justify-center gap-1">
+                      <span>5,000</span>
+                      <span className="text-lg font-bold text-slate-500 dark:text-slate-400">DZD</span>
+                    </div>
+                    <p className="text-[10px] text-slate-400">
+                      {lang === 'ar' ? 'بدون رسوم متكررة أو اشتراك شهري' : (lang === 'en' ? 'No recurring fees or monthly subscriptions' : 'Aucun frais récurrent ni abonnement mensuel')}
+                    </p>
+                  </div>
 
-                {/* Premium Plan */}
-                <div 
-                  onClick={() => setSelectedPlan("premium")}
-                  className={`border-2 rounded-2xl p-5 cursor-pointer transition-all flex flex-col justify-between relative ${selectedPlan === "premium" ? "border-amber-500 bg-amber-50/20 dark:bg-amber-950/10 shadow-lg scale-[1.02]" : "border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700"}`}
-                >
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow">POPULAR</div>
-                  <div>
-                    <h3 className="font-extrabold text-slate-800 dark:text-white">{t('premiumPlan')}</h3>
-                    <p className="text-xs text-amber-600 mt-1">For professionals</p>
-                    <div className="text-xl font-black text-amber-600 mt-3">3,500 <span className="text-xs font-normal text-slate-500">{t('dzdPerMonth')}</span></div>
-                  </div>
-                  <ul className="text-xs text-slate-500 space-y-2 mt-4">
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" /> Unlimited</li>
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" /> Premium Templates</li>
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" /> Signature Removal</li>
-                  </ul>
-                </div>
+                  <div className="border-t border-gray-100 dark:border-slate-800/80 my-5" />
 
-                {/* Enterprise Plan */}
-                <div 
-                  onClick={() => setSelectedPlan("enterprise")}
-                  className={`border-2 rounded-2xl p-5 cursor-pointer transition-all flex flex-col justify-between relative ${selectedPlan === "enterprise" ? "border-primary-500 bg-primary-50/30 dark:bg-primary-950/10 shadow-lg scale-[1.02]" : "border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700"}`}
-                >
-                  <div>
-                    <h3 className="font-extrabold text-slate-800 dark:text-white">{t('enterprisePlan')}</h3>
-                    <p className="text-xs text-slate-400 mt-1">For law firms</p>
-                    <div className="text-xl font-black text-primary-600 mt-3">7,500 <span className="text-xs font-normal text-slate-500">{t('dzdPerMonth')}</span></div>
-                  </div>
-                  <ul className="text-xs text-slate-500 space-y-2 mt-4">
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-primary-500 flex-shrink-0" /> Firm Templates</li>
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-primary-500 flex-shrink-0" /> Team Accounts</li>
-                    <li className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-primary-500 flex-shrink-0" /> Custom Templating</li>
+                  <ul className="text-sm text-slate-650 dark:text-slate-350 space-y-3 px-2">
+                    <li className="flex items-center gap-2.5">
+                      <Check className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                      <span>{lang === 'ar' ? 'توليد مستندات قانونية غير محدود مدى الحياة' : (lang === 'en' ? 'Lifetime unlimited document generation' : 'Génération illimitée de documents à vie')}</span>
+                    </li>
+                    <li className="flex items-center gap-2.5">
+                      <Check className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                      <span>{lang === 'ar' ? 'الوصول لجميع النماذج الحالية والمستقبلية' : (lang === 'en' ? 'Access to all current & future templates' : 'Accès à tous les modèles actuels & futurs')}</span>
+                    </li>
+                    <li className="flex items-center gap-2.5">
+                      <Check className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                      <span>{lang === 'ar' ? 'تصدير بصيغة PDF عالية الجودة' : (lang === 'en' ? 'High-fidelity PDF export' : 'Exportation PDF haute fidélité')}</span>
+                    </li>
+                    <li className="flex items-center gap-2.5">
+                      <Check className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                      <span>{lang === 'ar' ? 'توقيعات رقمية وإزالة العلامات المائية' : (lang === 'en' ? 'Digital signatures & watermark removal' : 'Signatures numériques & retrait du filigrane')}</span>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -561,7 +553,7 @@ export default function LoginPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="text-[10px] uppercase opacity-75 tracking-wider font-semibold">Taswiya Premium Card</p>
-                        <p className="text-xs font-bold mt-0.5">{selectedPlan.toUpperCase()} MEMBER</p>
+                        <p className="text-xs font-bold mt-0.5">{selectedPlan === "ONETIME_SERVICE" ? "LIFETIME" : selectedPlan.toUpperCase()} MEMBER</p>
                       </div>
                       <span className="text-lg font-black italic tracking-wide">{currentBrand.logo}</span>
                     </div>

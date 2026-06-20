@@ -30,13 +30,13 @@ const localTranslations = {
         freeTriesLeft: "محاولات مجانية متبقية",
         useFreeTry: "استخدام محاولة مجانية",
         noFreeTriesLeft: "انتهت المحاولات المجانية",
-        useYourPlan: "استخدم خطتك",
-        pickPlan: "اختر خطة اشتراك",
-        unlimitedAccess: "وصول غير محدود",
-        unlockUnlimited: "افتح توليد مستندات غير محدود وميزات ممتازة",
+        useYourPlan: "تفعيل الخدمة مدى الحياة",
+        pickPlan: "تفعيل الخدمة (5,000 د.ج)",
+        unlimitedAccess: "وصول غير محدود مدى الحياة",
+        unlockUnlimited: "ادفع مرة واحدة بقيمة 5,000 د.ج للحصول على وصول غير محدود مدى الحياة لتوليد المستندات.",
         generateWithFreeTry: "توليد بمحاولة مجانية",
-        activePlanConfirm: "اشتراكك نشط ومفعل!",
-        activePlanDesc: "حسابك مسجل في خطة نشطة. لديك وصول غير محدود لتوليد المستندات القانونية وتنزيلها.",
+        activePlanConfirm: "تم تفعيل الخدمة بنجاح!",
+        activePlanDesc: "لقد قمت بدفع رسوم الخدمة لمرة واحدة. لديك الآن وصول غير محدود لتوليد وتنزيل جميع مستنداتك القانونية.",
         generateDocument: "توليد المستند",
         pleaseLoginToSubmit: "يرجى تسجيل الدخول للمتابعة",
         loginNow: "تسجيل الدخول الآن",
@@ -47,13 +47,13 @@ const localTranslations = {
         freeTriesLeft: "Free Tries Remaining",
         useFreeTry: "Use Free Try",
         noFreeTriesLeft: "No free tries left",
-        useYourPlan: "Use Your Plan",
-        pickPlan: "Pick a Plan",
-        unlimitedAccess: "Unlimited Access",
-        unlockUnlimited: "Unlock unlimited document generation and premium features",
+        useYourPlan: "Lifetime Unlimited Service",
+        pickPlan: "Activate Unlimited (5,000 DZD)",
+        unlimitedAccess: "Lifetime Unlimited Access",
+        unlockUnlimited: "Pay a one-time fee of 5,000 DZD to unlock lifetime unlimited document generation and premium features.",
         generateWithFreeTry: "Generate with Free Try",
-        activePlanConfirm: "Your Plan is Active!",
-        activePlanDesc: "Your account is registered with an active plan. You have unlimited access to generate and download legal documents.",
+        activePlanConfirm: "Service Activated Successfully!",
+        activePlanDesc: "You have successfully paid the one-time service fee. You now have unlimited access to generate and download all your legal documents.",
         generateDocument: "Generate Document",
         pleaseLoginToSubmit: "Please log in to continue",
         loginNow: "Log In Now",
@@ -64,13 +64,13 @@ const localTranslations = {
         freeTriesLeft: "Essais Gratuits Restants",
         useFreeTry: "Utiliser un essai gratuit",
         noFreeTriesLeft: "Plus d'essais gratuits",
-        useYourPlan: "Utiliser votre forfait",
-        pickPlan: "Choisir un forfait",
-        unlimitedAccess: "Accès Illimité",
-        unlockUnlimited: "Débloquez la génération illimitée et les fonctionnalités premium",
+        useYourPlan: "Service Illimité à Vie",
+        pickPlan: "Activer l'illimité (5 000 DA)",
+        unlimitedAccess: "Accès Illimité à Vie",
+        unlockUnlimited: "Payez des frais uniques de 5 000 DA pour débloquer la génération illimitée à vie et les fonctionnalités premium.",
         generateWithFreeTry: "Générer avec essai gratuit",
-        activePlanConfirm: "Votre forfait est actif !",
-        activePlanDesc: "Votre compte est enregistré avec un forfait actif. Vous avez un accès illimité pour générer et télécharger vos documents.",
+        activePlanConfirm: "Service activé avec succès !",
+        activePlanDesc: "Vous avez payé les frais de service uniques. Vous avez maintenant un accès illimité pour générer et télécharger tous vos documents.",
         generateDocument: "Générer le document",
         pleaseLoginToSubmit: "Veuillez vous connecter pour continuer",
         loginNow: "Se connecter maintenant",
@@ -664,7 +664,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                     {localLang === 'ar' ? 'اختر طريقة توليد المستند' : (localLang === 'en' ? 'Choose Generation Method' : 'Choisissez la méthode de génération')}
                                 </h2>
                                 <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto">
-                                    {localLang === 'ar' ? 'يمكنك استخدام إحدى محاولاتك المجانية أو الاشتراك في خطة غير محدودة لتوليد جميع مستنداتك القانونية.' : 'Use one of your free tries or pick a subscription plan to unlock unlimited document generation.'}
+                                    {localLang === 'ar' ? 'يمكنك استخدام إحدى محاولاتك المجانية أو تفعيل الخدمة مدى الحياة لتوليد مستندات بلا حدود.' : (localLang === 'en' ? 'Use one of your free tries or activate the lifetime service for unlimited document generation.' : 'Utilisez l\'un de vos essais gratuits ou activez le service à vie pour une génération illimitée.')}
                                 </p>
                             </div>
 
@@ -751,7 +751,9 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                 </p>
                                 <div className="bg-white/10 rounded-2xl p-4 flex justify-between items-center text-xs">
                                     <span className="opacity-80">{localLang === 'ar' ? 'الخطة الحالية:' : 'Current Plan:'}</span>
-                                    <span className="font-extrabold uppercase bg-emerald-500 px-2 py-0.5 rounded text-white tracking-widest">{user.plan || "PREMIUM"}</span>
+                                    <span className="font-extrabold uppercase bg-emerald-500 px-2 py-0.5 rounded text-white tracking-widest">
+                                        {user.plan === "ONETIME_SERVICE" ? (localLang === 'ar' ? 'مدى الحياة' : (localLang === 'en' ? 'LIFETIME' : 'À VIE')) : (user.plan || "PREMIUM")}
+                                    </span>
                                 </div>
 
                                 <button
