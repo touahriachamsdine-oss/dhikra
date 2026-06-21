@@ -209,22 +209,22 @@ export default function PickPlanPage() {
             <div className="max-w-md mx-auto">
               <div className="border-2 border-amber-500 bg-amber-50/10 dark:bg-amber-950/10 rounded-3xl p-6 relative overflow-hidden shadow-xl scale-[1.01] hover:scale-[1.02] transition-all duration-300">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-md">
-                  {lang === 'ar' ? 'رسوم لمرة واحدة' : (lang === 'en' ? 'ONE-TIME FEE' : 'FRAIS UNIQUES')}
+                  {lang === 'ar' ? 'رسوم الخدمة' : (lang === 'en' ? 'SERVICE FEE' : 'FRAIS DE SERVICE')}
                 </div>
                 
                 <div className="text-center mt-3">
                   <h3 className="text-2xl font-black text-slate-800 dark:text-white">
-                    {lang === 'ar' ? 'الخدمة القانونية مدى الحياة' : (lang === 'en' ? 'Lifetime Unlimited Service' : 'Service Juridique à Vie')}
+                    {lang === 'ar' ? 'تفعيل مستند قانوني واحد' : (lang === 'en' ? 'Single Legal Document' : 'Document Juridique Unique')}
                   </h3>
                   <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-semibold">
-                    {lang === 'ar' ? 'وصول كامل لكافة الميزات' : (lang === 'en' ? 'Full access to all premium features' : 'Accès complet à toutes les fonctionnalités')}
+                    {lang === 'ar' ? 'توليد وتنزيل مستندك الحالي' : (lang === 'en' ? 'Generate & download your current document' : 'Générer & télécharger votre document actuel')}
                   </p>
                   <div className="text-4xl font-black text-amber-600 dark:text-amber-500 mt-5 mb-2 flex items-center justify-center gap-1">
                     <span>5,000</span>
                     <span className="text-lg font-bold text-slate-500 dark:text-slate-400">DZD</span>
                   </div>
                   <p className="text-[10px] text-slate-400">
-                    {lang === 'ar' ? 'بدون رسوم متكررة أو اشتراك شهري' : (lang === 'en' ? 'No recurring fees or monthly subscriptions' : 'Aucun frais récurrent ni abonnement mensuel')}
+                    {lang === 'ar' ? 'الدفع لكل مستند تقوم بإنشائه' : (lang === 'en' ? 'Pay only for the document you create' : 'Payez uniquement pour le document que vous créez')}
                   </p>
                 </div>
 
@@ -233,7 +233,7 @@ export default function PickPlanPage() {
                 <ul className="text-sm text-slate-650 dark:text-slate-350 space-y-3 px-2">
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-amber-500 flex-shrink-0" />
-                    <span>{lang === 'ar' ? 'توليد مستندات قانونية غير محدود مدى الحياة' : (lang === 'en' ? 'Lifetime unlimited document generation' : 'Génération illimitée de documents à vie')}</span>
+                    <span>{lang === 'ar' ? 'توليد وتنزيل مستند قانوني كامل' : (lang === 'en' ? 'Generate and download one complete legal document' : 'Génération d\'un document juridique complet')}</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-amber-500 flex-shrink-0" />
@@ -266,7 +266,7 @@ export default function PickPlanPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="text-[10px] uppercase opacity-75 tracking-wider font-semibold">Taswiya Premium Card</p>
-                        <p className="text-xs font-bold mt-0.5">{selectedPlan === "ONETIME_SERVICE" ? "LIFETIME" : selectedPlan.toUpperCase()} MEMBER</p>
+                        <p className="text-xs font-bold mt-0.5">{selectedPlan === "ONETIME_SERVICE" ? "SINGLE DOCUMENT" : selectedPlan.toUpperCase()} ACCESS</p>
                       </div>
                       <span className="text-lg font-black italic tracking-wide">{currentBrand.logo}</span>
                     </div>

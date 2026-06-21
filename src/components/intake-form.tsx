@@ -26,36 +26,36 @@ type Language = "ar" | "fr" | "en";
 
 const localTranslations = {
     ar: {
-        useYourPlan: "تفعيل الخدمة مدى الحياة",
+        useYourPlan: "تفعيل الخدمة للمستند الحالي",
         pickPlan: "تفعيل الخدمة (5,000 د.ج)",
-        unlimitedAccess: "وصول غير محدود مدى الحياة",
-        unlockUnlimited: "ادفع مرة واحدة بقيمة 5,000 د.ج للحصول على وصول غير محدود مدى الحياة لتوليد المستندات.",
-        activePlanConfirm: "تم تفعيل الخدمة بنجاح!",
-        activePlanDesc: "لقد قمت بدفع رسوم الخدمة لمرة واحدة. لديك الآن وصول غير محدود لتوليد وتنزيل جميع مستنداتك القانونية.",
+        unlimitedAccess: "تفعيل المستند الحالي",
+        unlockUnlimited: "ادفع رسوم الخدمة بقيمة 5,000 د.ج لتوليد وتنزيل مستندك القانوني الحالي.",
+        activePlanConfirm: "تم دفع رسوم المستند بنجاح!",
+        activePlanDesc: "لقد قمت بدفع رسوم المستند الحالي. يمكنك الآن توليد وتنزيل مستندك القانوني.",
         generateDocument: "توليد المستند",
         pleaseLoginToSubmit: "يرجى تسجيل الدخول للمتابعة",
         loginNow: "تسجيل الدخول الآن",
         loadingUserData: "جاري تحميل بيانات الحساب...",
     },
     en: {
-        useYourPlan: "Lifetime Unlimited Service",
-        pickPlan: "Activate Unlimited (5,000 DZD)",
-        unlimitedAccess: "Lifetime Unlimited Access",
-        unlockUnlimited: "Pay a one-time fee of 5,000 DZD to unlock lifetime unlimited document generation and premium features.",
-        activePlanConfirm: "Service Activated Successfully!",
-        activePlanDesc: "You have successfully paid the one-time service fee. You now have unlimited access to generate and download all your legal documents.",
+        useYourPlan: "Activate Current Document",
+        pickPlan: "Pay for Document (5,000 DZD)",
+        unlimitedAccess: "Document Activation",
+        unlockUnlimited: "Pay a service fee of 5,000 DZD to generate and download your current legal document.",
+        activePlanConfirm: "Document Payment Successful!",
+        activePlanDesc: "You have successfully paid the document fee. You can now generate and download your legal document.",
         generateDocument: "Generate Document",
         pleaseLoginToSubmit: "Please log in to continue",
         loginNow: "Log In Now",
         loadingUserData: "Loading account data...",
     },
     fr: {
-        useYourPlan: "Service Illimité à Vie",
-        pickPlan: "Activer l'illimité (5 000 DA)",
-        unlimitedAccess: "Accès Illimité à Vie",
-        unlockUnlimited: "Payez des frais uniques de 5 000 DA pour débloquer la génération illimitée à vie et les fonctionnalités premium.",
-        activePlanConfirm: "Service activé avec succès !",
-        activePlanDesc: "Vous avez payé les frais de service uniques. Vous avez maintenant un accès illimité pour générer et télécharger tous vos documents.",
+        useYourPlan: "Activer le document actuel",
+        pickPlan: "Payer le document (5 000 DA)",
+        unlimitedAccess: "Activation du document",
+        unlockUnlimited: "Payez des frais de service de 5 000 DA pour générer et télécharger votre document juridique actuel.",
+        activePlanConfirm: "Paiement du document réussi !",
+        activePlanDesc: "Vous avez payé les frais de service pour ce document. Vous pouvez maintenant générer et télécharger votre document juridique.",
         generateDocument: "Générer le document",
         pleaseLoginToSubmit: "Veuillez vous connecter pour continuer",
         loginNow: "Se connecter maintenant",
@@ -534,10 +534,10 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                             <div className="text-center">
                                 <CreditCard className="w-16 h-16 text-blue-800 dark:text-blue-400 mx-auto mb-4 animate-bounce" />
                                 <h2 className="text-3xl font-black text-gray-900 dark:text-gray-100 mb-2">
-                                    {localLang === 'ar' ? 'تفعيل الخدمة مدى الحياة' : (localLang === 'en' ? 'Activate Lifetime Service' : 'Activer le service à vie')}
+                                    {localLang === 'ar' ? 'تفعيل المستند القانوني' : (localLang === 'en' ? 'Activate Legal Document' : 'Activer le document juridique')}
                                 </h2>
                                 <p className="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto mb-8">
-                                    {localLang === 'ar' ? 'يرجى تفعيل الخدمة مدى الحياة لتتمكن من توليد مستندك القانوني.' : (localLang === 'en' ? 'Please activate the lifetime service to generate your legal document.' : 'Veuillez activer le service à vie pour générer votre document juridique.')}
+                                    {localLang === 'ar' ? 'يرجى دفع رسوم الخدمة لتتمكن من توليد مستندك القانوني الحالي.' : (localLang === 'en' ? 'Please pay the service fee to generate your current legal document.' : 'Veuillez payer les frais de service pour générer votre document juridique actuel.')}
                                 </p>
                             </div>
 
@@ -600,7 +600,7 @@ export default function IntakeForm({ lang, caseCategory, onCancel, onComplete }:
                                 <div className="bg-white/10 rounded-2xl p-4 flex justify-between items-center text-xs">
                                     <span className="opacity-80">{localLang === 'ar' ? 'الخطة الحالية:' : 'Current Plan:'}</span>
                                     <span className="font-extrabold uppercase bg-emerald-500 px-2 py-0.5 rounded text-white tracking-widest">
-                                        {user.plan === "ONETIME_SERVICE" ? (localLang === 'ar' ? 'مدى الحياة' : (localLang === 'en' ? 'LIFETIME' : 'À VIE')) : (user.plan || "PREMIUM")}
+                                        {user.plan === "ONETIME_SERVICE" ? (localLang === 'ar' ? 'مستند واحد' : (localLang === 'en' ? 'SINGLE DOCUMENT' : 'PAR DOCUMENT')) : (user.plan || "PREMIUM")}
                                     </span>
                                 </div>
 

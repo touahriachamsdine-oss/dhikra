@@ -842,9 +842,9 @@
     "en": "Activate Legal Service"
   },
   "selectPlanDesc": {
-    "ar": "ادفع رسوم الخدمة لمرة واحدة بقيمة 5,000 د.ج للحصول على وصول غير محدود مدى الحياة لتوليد المستندات القانونية.",
-    "fr": "Payez des frais de service uniques de 5 000 DA pour un accès illimité à vie aux documents juridiques.",
-    "en": "Pay a one-time service fee of 5,000 DZD for lifetime unlimited access to generate legal documents."
+    "ar": "ادفع رسوم الخدمة بقيمة 5,000 د.ج لتوليد وتنزيل مستندك القانوني الحالي.",
+    "fr": "Payez des frais de service de 5 000 DA pour générer et télécharger votre document juridique actuel.",
+    "en": "Pay a service fee of 5,000 DZD to generate and download your current legal document."
   },
   "basicPlan": {
     "ar": "الخطة الأساسية",

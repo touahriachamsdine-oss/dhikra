@@ -219,6 +219,10 @@ function LandingPageContent() {
       a.click();
       a.remove();
 
+      if (!isReDownload) {
+        setUser((prev: any) => prev ? { ...prev, hasCard: false } : null);
+      }
+
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 5000);
 

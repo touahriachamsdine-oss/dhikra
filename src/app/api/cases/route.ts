@@ -10,6 +10,15 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
+        const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { hasCard: true }
+        })
+
+        if (!dbUser || !dbUser.hasCard) {
+            return NextResponse.json({ error: 'Payment required to generate a document' }, { status: 402 })
+        }
+
         const body = await request.json()
         const { 
             title, 
@@ -31,24 +40,30 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Title and description are required' }, { status: 400 })
         }
 
-        const newCase = await prisma.case.create({
-            data: {
-                title,
-                description,
-                documentType,
-                plaintiffName,
-                plaintiffPhone,
-                plaintiffAddress,
-                defendantName,
-                defendantPhone,
-                defendantAddress,
-                amount: amount ? parseFloat(amount) : null,
-                defendantType,
-                noticeType,
-                deadlineDays: deadlineDays ? parseInt(deadlineDays) : 15,
-                userId: user.id
-            }
-        })
+        const [newCase] = await prisma.$transaction([
+            prisma.case.create({
+                data: {
+                    title,
+                    description,
+                    documentType,
+                    plaintiffName,
+                    plaintiffPhone,
+                    plaintiffAddress,
+                    defendantName,
+                    defendantPhone,
+                    defendantAddress,
+                    amount: amount ? parseFloat(amount) : null,
+                    defendantType,
+                    noticeType,
+                    deadlineDays: deadlineDays ? parseInt(deadlineDays) : 15,
+                    userId: user.id
+                }
+            }),
+            prisma.user.update({
+                where: { id: user.id },
+                data: { hasCard: false }
+            })
+        ])
 
         return NextResponse.json({ success: true, case: newCase }, { status: 201 })
     } catch (error) {
